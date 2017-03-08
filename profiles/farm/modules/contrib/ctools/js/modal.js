@@ -121,18 +121,18 @@
    */
   Drupal.theme.prototype.CToolsModalDialog = function () {
     var html = ''
-    html += '  <div id="ctools-modal">'
-    html += '    <div class="ctools-modal-content">' // panels-modal-content
-    html += '      <div class="modal-header">';
-    html += '        <a class="close" href="#">';
-    html +=            Drupal.CTools.Modal.currentSettings.closeText + Drupal.CTools.Modal.currentSettings.closeImage;
-    html += '        </a>';
-    html += '        <span id="modal-title" class="modal-title">&nbsp;</span>';
-    html += '      </div>';
-    html += '      <div id="modal-content" class="modal-content">';
-    html += '      </div>';
+    html += '<div id="ctools-modal">'
+    html += '  <div class="ctools-modal-content">' // panels-modal-content
+    html += '    <div class="modal-header">';
+    html += '      <a class="close" href="#">';
+    html +=          Drupal.CTools.Modal.currentSettings.closeText + Drupal.CTools.Modal.currentSettings.closeImage;
+    html += '      </a>';
+    html += '      <span id="modal-title" class="modal-title">&nbsp;</span>';
+    html += '    </div>';
+    html += '    <div id="modal-content" class="modal-content">';
     html += '    </div>';
     html += '  </div>';
+    html += '</div>';
 
     return html;
   }
@@ -142,11 +142,11 @@
    */
   Drupal.theme.prototype.CToolsModalThrobber = function () {
     var html = '';
-    html += '  <div id="modal-throbber">';
-    html += '    <div class="modal-throbber-wrapper">';
-    html +=        Drupal.CTools.Modal.currentSettings.throbber;
-    html += '    </div>';
+    html += '<div id="modal-throbber">';
+    html += '  <div class="modal-throbber-wrapper">';
+    html +=      Drupal.CTools.Modal.currentSettings.throbber;
     html += '  </div>';
+    html += '</div>';
 
     return html;
   };
@@ -314,10 +314,6 @@
       // button by the show() function called above.)
       $('#modal-content :focusable:first').focus();
     }
-
-    // Trigger a window resize after 100 milliseconds to ensure that the modal is centered properly.
-    // See https://www.drupal.org/node/1803104
-    setTimeout(function() { $(window).trigger('resize'); }, 100);
   }
 
   /**
