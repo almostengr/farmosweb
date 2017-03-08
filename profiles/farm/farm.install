@@ -1,0 +1,477 @@
+<?php
+
+/**
+ * @file
+ * farmOS install file.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function farm_install() {
+
+  // Enable farm theme and set as default.
+  theme_enable(array('farm_theme'));
+  variable_set('theme_default', 'farm_theme');
+
+  // Disable the default Bartik theme
+  theme_disable(array('bartik'));
+
+  // Set the front page to the farm dashboard (provided by the farm_admin).
+  variable_set('site_frontpage', 'farm');
+
+  // Use the farm menu for primary links (provided by farm_admin).
+  variable_set('menu_main_links_source', 'farm');
+
+  // Load Openlayers 3.11.2 from CDNJS.
+  \Drupal\openlayers\Config::set('openlayers.variant', 'cdnjs:ol3:3.11.2');
+}
+
+/**
+ * Implements hook_install_tasks().
+ */
+function farm_install_tasks(&$install_state) {
+  $tasks = array(
+    'farm_install_configure_form' => array(
+      'display_name' => st('Configure farmOS'),
+      'type' => 'form',
+    ),
+    'farm_install_optional_modules' => array(
+      'display_name' => st('Install optional modules'),
+      'type' => 'batch',
+    ),
+  );
+  return $tasks;
+}
+
+/**
+ * Form callback for farmOS configuration install task.
+ */
+function farm_install_configure_form($form, &$form_state) {
+
+  // Set the page title.
+  drupal_set_title(st('Configure farmOS'));
+
+  // Allow user to choose which high-level farm modules to install.
+  // Default modules will be selected by default.
+  $default_modules = array(
+    'farm_crop' => st('Crops'),
+    'farm_livestock' => st('Livestock'),
+    'farm_livestock_eggs' => st('Livestock: Egg logs'),
+    'farm_equipment' => st('Equipment'),
+    'farm_soil_nrcs' => st('NRCS Soil Survey'),
+    'farm_soil_test' => st('Soil test logs'),
+    'farm_area_generate' => st('Area generator (for generating parallel beds within an area)'),
+    'farm_tour' => st('farmOS Tours'),
+  );
+  // Extra modules will not be selected by default.
+  $extra_modules = array(
+    'farm_sensor' => st('Sensor'),
+    'farm_sensor_listener' => st('Sensor: Listener'),
+  );
+  $form['farm_modules'] = array(
+    '#type' => 'checkboxes',
+    '#title' => st('farmOS Modules'),
+    '#description' => st('Select the farmOS modules that you would like installed by default.'),
+    '#options' => array_merge($default_modules, $extra_modules),
+    '#default_value' => array_keys($default_modules),
+  );
+
+  // Allow the user to select their default system of measurement.
+  $form['farm_quantity_unit_system'] = array(
+    '#type' => 'radios',
+    '#title' => t('System of measurement'),
+    '#description' => t('Select the system of measurement you would like to use in farmOS.'),
+    '#options' => array(
+      'metric' => t('Metric'),
+      'us' => t('US/Imperial'),
+    ),
+    '#default_value' => variable_get('farm_quantity_unit_system', 'metric'),
+  );
+
+  // Form actions.
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+
+  // Return the form.
+  return $form;
+}
+
+/**
+ * Submit function for farmOS configuration install task form.
+ */
+function farm_install_configure_form_submit($form, &$form_state) {
+
+  // Save the list of selected modules to a variable.
+  if (!empty($form_state['values']['farm_modules'])) {
+    variable_set('farm_install_optional_modules', $form_state['values']['farm_modules']);
+  }
+
+  // Save the selected system of measure.
+  if (!empty($form_state['values']['farm_quantity_unit_system'])) {
+    variable_set('farm_quantity_unit_system', $form_state['values']['farm_quantity_unit_system']);
+  }
+}
+
+/**
+ * Callback function for installing optional farmOS modules via Batch API.
+ */
+function farm_install_optional_modules() {
+
+  // Load the list of modules to install.
+  $modules = variable_get('farm_install_optional_modules', array());
+
+  // Load list of module names.
+  $files = system_rebuild_module_data();
+
+  // Start an array of batch operations.
+  $operations = array();
+
+  // Add operation to enable selected modules.
+  foreach ($modules as $module => $enable) {
+    if (!empty($enable)) {
+      $operations[] = array('_farm_install_enable_module', array($module, $files[$module]->info['name']));
+    }
+  }
+
+  // Assemble the Batch API.
+  $batch = array(
+    'title' => t('Installing optional modules'),
+    'operations' => $operations,
+  );
+
+  // Return the Batch API.
+  return $batch;
+}
+
+/**
+ * BatchAPI callback: enable a module.
+ *
+ * @see farm_install_optional_modules()
+ */
+function _farm_install_enable_module($module, $module_name, &$context) {
+  module_enable(array($module));
+  $context['message'] = st('Installed %module module.', array('%module' => $module_name));
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function farm_update_dependencies() {
+
+  // farm_livestock_7000() and farm_equipment_update_7000 both depend on
+  // farm_update_7000() because they use the new field_bases provided by
+  // farm_fields.
+  $farm_7000 = array(
+    'farm' => 7000,
+  );
+  $dependencies['farm_equipment'][7000] = $farm_7000;
+  $dependencies['farm_livestock'][7000] = $farm_7000;
+  return $dependencies;
+}
+
+/**
+ * Enable the Farm Fields module.
+ */
+function farm_update_7000(&$sandbox) {
+
+  // Install the farm_fields module and revert the field_base component on it,
+  // so that they are available to update hooks in other modules.
+  //
+  // Between farmOS 7.x-1.0-beta2 and 7.x-1.0-beta3, we upgraded from
+  // Features 1.x to 2.x. This replaced the 'field' component with
+  // 'field_base' and 'field_instance'. At the same time, a new module was
+  // introduced, to serve as a place to put common field_bases: farm_fields.
+  if (!module_exists('farm_fields')) {
+
+    // Enable the farm_fields module.
+    module_enable(array('farm_fields'));
+
+    // Reset the "default_hook" static cache for field_base Features components.
+    module_load_include('inc', 'features', 'features.export');
+    features_get_default_hooks('field_base', TRUE);
+
+    // Load the farm_fields field_base Features include file, otherwise
+    // feature_get_default() will not see it, and the revert will fail.
+    module_load_include('inc', 'farm_fields', 'farm_fields.features.field_base');
+
+    // Revert the field_base component of farm_fields.
+    features_revert(array('farm_fields' => array('field_base')));
+  }
+}
+
+/**
+ * Update to Openlayers 3
+ */
+function farm_update_7001(&$sandbox) {
+
+  // Enable new module dependencies.
+  $modules = array(
+    'openlayers_geofield',
+    'views_geojson',
+  );
+  _farm_update_enable_modules($modules);
+}
+
+/**
+ * Enable Entity Reference View Widget.
+ */
+function farm_update_7002(&$sandbox) {
+
+  // Enable new module dependencies.
+  $modules = array(
+    'entityreference_view_widget',
+  );
+  _farm_update_enable_modules($modules);
+}
+
+/**
+ * Use the farm menu for primary links.
+ */
+function farm_update_7003(&$sandbox) {
+  variable_set('menu_main_links_source', 'farm');
+}
+
+/**
+ * Enable the RESTful Web Services module.
+ */
+function farm_update_7004(&$sandbox) {
+  _farm_update_enable_modules(array('restws'));
+}
+
+/**
+ * Load Openlayers via CDN.
+ */
+function farm_update_7005(&$sandbox) {
+
+  // Enable the Libraries CDN module.
+  _farm_update_enable_modules(array('libraries_cdn'));
+
+  // Load Openlayers 3.8.2 from JSDelivr CDN.
+  \Drupal\openlayers\Config::set('openlayers.variant', 'jsdelivr:ol3:3.8.2');
+}
+
+/**
+ * Autorotate images.
+ */
+function farm_update_7006(&$sandbox) {
+
+  // Enable the EXIF Orientation module.
+  _farm_update_enable_modules(array('exif_orientation'));
+}
+
+/**
+ * Install Farm Access and Role Delegation, uninstall Farm Manager.
+ */
+function farm_update_7007(&$sandbox) {
+
+  // Enable the Farm Access and Role Delegation modules.
+  _farm_update_enable_modules(array('farm_access', 'role_delegation'));
+
+  // Disable and uninstall the Farm Manager module.
+  $module = 'farm_manager';
+  if (module_exists($module)) {
+    module_disable(array($module));
+    drupal_uninstall_modules(array($module));
+  }
+}
+
+/**
+ * Install Farm Tour.
+ */
+function farm_update_7008(&$sandbox) {
+
+  // Enable the Farm Access and Role Delegation modules.
+  _farm_update_enable_modules(array('farm_tour'));
+}
+
+/**
+ * Enable "Request new password" link on 403 pages (via LoginToboggan).
+ */
+function farm_update_7009(&$sandbox) {
+  variable_set('logintoboggan_site_403_user_login_block', TRUE);
+}
+
+/**
+ * Recalculate all Geofield metadata, using BCMath (patched GeoPHP module), so
+ * centroids are correct.
+ */
+function farm_update_7010(&$sandbox) {
+
+  // Process this in passes of 50 at a time.
+  $sandbox['#finished'] = 0;
+  $limit = 50;
+
+  // Keep track of progress.
+  if (!isset($sandbox['progress'])) {
+
+    // Start out at zero.
+    $sandbox['progress'] = 0;
+
+    // Figure out which entity types/bundles have geofields.
+    $sandbox['geofields'] = array();
+    $query = "SELECT fci.entity_type, fci.bundle, fc.field_name FROM {field_config_instance} fci LEFT JOIN {field_config} fc ON fc.id = fci.field_id WHERE fc.type = 'geofield'";
+    $result = db_query($query);
+    foreach ($result as $row) {
+      $sandbox['geofields'][$row->entity_type][$row->bundle] = $row->field_name;
+    }
+
+    // Build an array of all the entities that need to be processed, and take a
+    // count of the total.
+    $sandbox['entities'] = array();
+    $sandbox['total'] = 0;
+    foreach ($sandbox['geofields'] as $entity_type => $bundles) {
+      $sandbox['entities'][$entity_type] = array();
+      foreach ($bundles as $bundle => $field_name) {
+        $query = new EntityFieldQuery;
+        $query->entityCondition('entity_type', $entity_type)
+          ->entityCondition('bundle', $bundle);
+        $results = $query->execute();
+        if (isset($results[$entity_type])) {
+          $sandbox['entities'][$entity_type] = array_merge($sandbox['entities'][$entity_type], $results[$entity_type]);
+          $sandbox['total'] += count($results[$entity_type]);
+        }
+      }
+    }
+  }
+
+  // Process the next set of entities.
+  $i = 0;
+  while ($i < $limit && $sandbox['progress'] < $sandbox['total']) {
+
+    // Get the entity array keys, which correspond to the entity types.
+    $keys = array_keys($sandbox['entities']);
+
+    // If the first array in the list of entities is empty, remove it.
+    if (empty($sandbox['entities'][$keys[0]])) {
+      array_shift($sandbox['entities']);
+      array_shift($keys);
+    }
+
+    // The first key is the entity type we're currently working with.
+    $entity_type = $keys[0];
+
+    // Shift the next entity off the front of the list.
+    $info = array_shift($sandbox['entities'][$entity_type]);
+
+    // Load the entity.
+    $id = reset($info);
+    $entities = entity_load($entity_type, array($id));
+    $entity = reset($entities);
+
+    // Look up which field this bundle is using.
+    $wrapper = entity_metadata_wrapper($entity_type, $id);
+    $bundle = $wrapper->getBundle();
+    $field_name = $sandbox['geofields'][$entity_type][$bundle];
+
+    // If the geofield 'geom' value is not empty...
+    if (!empty($entity->{$field_name}[LANGUAGE_NONE][0]['geom'])) {
+
+      // Save the entity, so that geofield_field_presave() runs and regenerates
+      // the other geometry metadata values.
+      entity_save($entity_type, $entity);
+    }
+
+    // Increment $i and $sandbox['progress'].
+    $i++;
+    $sandbox['progress']++;
+  }
+
+  // Tell Drupal whether or not we're finished.
+  if ($sandbox['total'] > 0) {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+  }
+  else {
+    $sandbox['#finished'] = 1;
+  }
+}
+
+/**
+ * Load Openlayers 3.10.1 from CDNJS.
+ */
+function farm_update_7011(&$sandbox) {
+  \Drupal\openlayers\Config::set('openlayers.variant', 'cdnjs:ol3:3.10.1');
+}
+
+/**
+ * Load Openlayers 3.11.2 from CDNJS.
+ */
+function farm_update_7012(&$sandbox) {
+  \Drupal\openlayers\Config::set('openlayers.variant', 'cdnjs:ol3:3.11.2');
+}
+
+/**
+ * Uninstall Views Data Export.
+ */
+function farm_update_7013(&$sandbox) {
+  $module = 'views_data_export';
+  if (module_exists($module)) {
+    module_disable(array($module));
+    drupal_uninstall_modules(array($module));
+  }
+}
+
+/**
+ * Uninstall Filefield Paths.
+ */
+function farm_update_7014(&$sandbox) {
+  $module = 'filefield_paths';
+  if (module_exists($module)) {
+    module_disable(array($module));
+    drupal_uninstall_modules(array($module));
+  }
+}
+
+/**
+ * Uninstall Panels and Page Manager.
+ */
+function farm_update_7015(&$sandbox) {
+  $modules = array(
+    'page_manager',
+    'panels',
+  );
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+}
+
+/**
+ * Uninstall Logintoboggan.
+ */
+function farm_update_7016(&$sandbox) {
+  variable_del('site_403');
+  variable_del('logintoboggan_login_with_email');
+  variable_del('logintoboggan_site_403_user_login_block');
+}
+
+/**
+ * Install Farm Quantity and Farm Area Generator modules.
+ */
+function farm_update_7017(&$sandbox) {
+  _farm_update_enable_modules(array('farm_area_generate', 'farm_quantity'));
+}
+
+/**
+ * Uninstall Log Plan module.
+ */
+function farm_update_7018(&$sandbox) {
+  $modules = array(
+    'log_plan',
+  );
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+}
+
+/**
+ * Update helper function: enable modules.
+ */
+function _farm_update_enable_modules($modules = array()) {
+  foreach ($modules as $module) {
+    if (!module_exists($module)) {
+      module_enable(array($module));
+    }
+  }
+}
+

@@ -1,0 +1,43 @@
+<?php
+/**
+ * @file
+ * Farm equipment install file.
+ */
+
+/**
+ * Migrate Equipment Description field to plain Description field (from farm_fields).
+ */
+function farm_equipment_update_7000(&$sandbox) {
+
+  // Revert this module's field_instance Features component.
+  features_revert(array('farm_equipment' => array('field_instance')));
+
+  // If the new description field database tables exist...
+  if (db_table_exists('field_data_field_farm_description') && db_table_exists('field_revision_field_farm_description')) {
+
+    // Copy all descriptions from the old database tables to the new ones.
+    db_query('INSERT INTO {field_data_field_farm_description} SELECT * FROM {field_data_field_farm_equipment_description}');
+    db_query('INSERT INTO {field_revision_field_farm_description} SELECT * FROM {field_revision_field_farm_equipment_description}');
+
+    // Delete the old field.
+    $field = field_info_instance('farm_asset', 'field_farm_equipment_description', 'equipment');
+    field_delete_instance($field);
+  }
+}
+
+/**
+ * Migrate equipment reference field to new asset reference field.
+ */
+function farm_equipment_update_7001(&$sandbox) {
+
+  // Revert this module's field_instance Features component.
+  features_revert(array('farm_equipment' => array('field_instance')));
+
+  // Copy all field data from the old database tables to the new ones.
+  db_query("INSERT INTO {field_data_field_farm_asset} (SELECT * FROM {field_data_field_farm_equipment} WHERE entity_type = 'log' AND bundle = 'farm_maintenance')");
+  db_query("INSERT INTO {field_revision_field_farm_asset} (SELECT * FROM {field_revision_field_farm_equipment} WHERE entity_type = 'log' AND bundle = 'farm_maintenance')");
+
+  // Delete the old equipment reference field.
+  $field = field_info_instance('log', 'field_farm_equipment', 'farm_maintenance');
+  field_delete_instance($field);
+}

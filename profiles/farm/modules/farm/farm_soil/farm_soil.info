@@ -1,0 +1,22 @@
+name = Farm Soil
+description = Provides features for soil health management.
+core = 7.x
+package = farmOS
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = geofield
+dependencies[] = strongarm
+dependencies[] = taxonomy
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[field_base][] = field_farm_soil_names
+features[field_base][] = field_farm_soil_sample_points
+features[taxonomy][] = farm_soil_names
+features[variable][] = pathauto_taxonomy_term_farm_soil_names_pattern
+
+; Information added by Drupal.org packaging script on 2016-04-13
+version = "7.x-1.0-beta11"
+core = "7.x"
+project = "farm_soil"
+datestamp = "1460560445"
+
