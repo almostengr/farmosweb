@@ -98,6 +98,7 @@ function farm_sensor_farm_taxonomy_term_view_views($term) {
   return array(
     array(
       'name' => 'farm_sensors',
+      'always' => TRUE,
     ),
   );
 }
@@ -325,8 +326,17 @@ function farm_sensor_form_alter(&$form, &$form_state, $form_id) {
     $sensor_type = $form_state['values']['sensor_type'];
   }
 
+  // Add a sensor fieldset.
+  $form['sensor'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Sensor configuration'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => 99,
+  );
+
   // Add a sensor type selection field to the form.
-  $form['sensor_type'] = array(
+  $form['sensor']['sensor_type'] = array(
     '#type' => 'select',
     '#title' => t('Sensor type'),
     '#description' => t('What type of sensor is this?'),
@@ -343,7 +353,7 @@ function farm_sensor_form_alter(&$form, &$form_state, $form_id) {
   $sensor_settings = !empty($farm_asset->sensor_settings) ? $farm_asset->sensor_settings : array();
 
   // Sensor settings fieldset.
-  $form['sensor_settings'] = array(
+  $form['sensor']['sensor_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Sensor settings'),
     '#description' => t('Configure settings for the sensor type selected above.'),
@@ -359,7 +369,7 @@ function farm_sensor_form_alter(&$form, &$form_state, $form_id) {
     $settings_form = call_user_func_array($sensor_types[$sensor_type]['form'], array($farm_asset, $sensor_settings));
 
     // Add it to the fieldset.
-    $form['sensor_settings'] = array_merge($form['sensor_settings'], $settings_form);
+    $form['sensor']['sensor_settings'] = array_merge($form['sensor_settings'], $settings_form);
   }
 }
 
@@ -488,6 +498,11 @@ function farm_sensor_views_post_render(&$view, &$output, &$cache) {
   // If this is the Farm Sensors page...
   if ($view->name == 'farm_sensors' && $view->current_display == 'page') {
 
+    // If dashboard maps are disabled in the farm_map module settings, bail.
+    if (!variable_get('farm_map_show', TRUE)) {
+      return;
+    }
+
     // If there are any arguments, bail.
     /**
      * @todo
@@ -502,8 +517,10 @@ function farm_sensor_views_post_render(&$view, &$output, &$cache) {
 
       // Add the Sensors asset map to the top of the View.
       $map = \Drupal\openlayers\Openlayers::load('Map', 'farm_assets_sensor');
-      $map_build = $map->build();
-      $output = drupal_render($map_build) . $output;
+      if (!empty($map)) {
+        $map_build = $map->build();
+        $output = drupal_render($map_build) . $output;
+      }
     }
   }
 }

@@ -7,22 +7,25 @@ dependencies[] = entity
 dependencies[] = entity_token
 dependencies[] = entityreference
 dependencies[] = entityreference_view_widget
+dependencies[] = farm_area
 dependencies[] = farm_asset
 dependencies[] = farm_log_activity
 dependencies[] = farm_log_harvest
 dependencies[] = farm_log_input
 dependencies[] = farm_log_movement
 dependencies[] = farm_log_observation
+dependencies[] = farm_map
 dependencies[] = features
 dependencies[] = views
+dependencies[] = views_data_export
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[views_view][] = farm_asset_entityreference_view
 features[views_view][] = farm_log
 
-; Information added by Drupal.org packaging script on 2016-07-13
-version = "7.x-1.0-beta12"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta13"
 core = "7.x"
 project = "farm_log"
-datestamp = "1468440861"
+datestamp = "1495309987"
 

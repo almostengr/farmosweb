@@ -13,7 +13,7 @@ function farm_sensor_views_default_views() {
   $view = new view();
   $view->name = 'farm_sensors';
   $view->description = '';
-  $view->tag = 'farm_livestock';
+  $view->tag = 'farm_sensor';
   $view->base_table = 'farm_asset';
   $view->human_name = 'Farm Sensors';
   $view->core = 7;
@@ -84,7 +84,7 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['relationships']['latest_movement']['field'] = 'latest_movement';
   /* Field: Bulk operations: Farm asset */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'farm_asset';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_farm_asset';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -103,6 +103,7 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'farm_asset';
   $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['label'] = 'Asset ID';
   $handler->display->display_options['fields']['id']['exclude'] = TRUE;
   $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Farm asset: Name */
@@ -111,7 +112,7 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name']['alter']['path'] = 'farm/asset/[id]';
-  /* Field: Log: To */
+  /* Field: Field collection item: Movement to */
   $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
@@ -123,13 +124,13 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['name']['expose']['label'] = 'Name';
-  /* Contextual filter: Log: To (field_farm_move_to) */
+  /* Contextual filter: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['relationship'] = 'latest_movement';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_move_to_tid']['title'] = 'Equipment in %1';
+  $handler->display->display_options['arguments']['field_farm_move_to_tid']['title'] = 'Sensors in %1';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['summary']['format'] = 'default_summary';
@@ -158,7 +159,7 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  /* Filter criterion: Log: To (field_farm_move_to) */
+  /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
@@ -198,6 +199,26 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['tab_options']['title'] = 'Sensors';
   $handler->display->display_options['tab_options']['weight'] = '100';
   $handler->display->display_options['tab_options']['name'] = 'farm';
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/assets/sensors/csv';
+  $handler->display->display_options['displays'] = array(
+    'page' => 'page',
+    'default' => 0,
+  );
   $translatables['farm_sensors'] = array(
     t('Master'),
     t('Sensors'),
@@ -218,14 +239,15 @@ function farm_sensor_views_default_views() {
     t('Latest movement'),
     t('Farm asset'),
     t('- Choose an operation -'),
-    t('Farm asset ID'),
+    t('Asset ID'),
     t('.'),
     t('Name'),
     t('Location'),
     t('All'),
-    t('Equipment in %1'),
+    t('Sensors in %1'),
     t('Active'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_sensors'] = $view;
 

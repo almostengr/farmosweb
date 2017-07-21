@@ -37,19 +37,20 @@ settings[bootstrap_fluid_container] = 1
 
 ; Forms
 ; --------------
+; Disable smart form descriptions. See https://www.drupal.org/node/2879967
 settings[bootstrap_forms_smart_descriptions] = 0
 
 ; Advanced
 ; --------------
 settings[bootstrap_cdn_provider] = 'custom'
-settings[bootstrap_cdn_custom_css] = '//cdn.jsdelivr.net/bootswatch/3.3.5/paper/bootstrap.css'
-settings[bootstrap_cdn_custom_css_min] = '//cdn.jsdelivr.net/bootswatch/3.3.5/paper/bootstrap.min.css'
-settings[bootstrap_cdn_custom_js] = '//cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.js'
-settings[bootstrap_cdn_custom_js_min] = '//cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js'
+settings[bootstrap_cdn_custom_css] = '//cdn.jsdelivr.net/bootswatch/3.3.7/simplex/bootstrap.css'
+settings[bootstrap_cdn_custom_css_min] = '//cdn.jsdelivr.net/bootswatch/3.3.7/simplex/bootstrap.min.css'
+settings[bootstrap_cdn_custom_js] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.js'
+settings[bootstrap_cdn_custom_js_min] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js'
 
-; Information added by Drupal.org packaging script on 2016-07-13
-version = "7.x-1.0-beta12"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta13"
 core = "7.x"
 project = "farm_theme"
-datestamp = "1468441452"
+datestamp = "1495308189"
 

@@ -14,9 +14,9 @@ features[bootstrap_tour][] = farm_intro
 features[bootstrap_tour][] = farm_plantings
 features[features_api][] = api:2
 
-; Information added by Drupal.org packaging script on 2017-03-06
-version = "7.x-1.0-beta6"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta7"
 core = "7.x"
 project = "farm_tour"
-datestamp = "1488812885"
+datestamp = "1495310592"
 

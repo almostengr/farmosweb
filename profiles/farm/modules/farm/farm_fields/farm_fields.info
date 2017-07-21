@@ -21,9 +21,9 @@ features[field_base][] = field_farm_images
 features[field_base][] = field_farm_notes
 features[filter][] = farm_format
 
-; Information added by Drupal.org packaging script on 2016-02-03
-version = "7.x-1.0-beta4"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta5"
 core = "7.x"
 project = "farm_fields"
-datestamp = "1454467468"
+datestamp = "1495309387"
 

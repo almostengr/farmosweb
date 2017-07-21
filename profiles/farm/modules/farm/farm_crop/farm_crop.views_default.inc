@@ -272,9 +272,19 @@ function farm_crop_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No seedings found.';
+  /* Relationship: Field: Quantity (field_farm_quantity) */
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['delta'] = '0';
+  /* Relationship: Log: Movement (field_farm_movement) */
+  $handler->display->display_options['relationships']['field_farm_movement_value']['id'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['table'] = 'field_data_field_farm_movement';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['field'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['delta'] = '-1';
   /* Field: Bulk operations: Log */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'log';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_log';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -311,12 +321,6 @@ function farm_crop_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: Log: Log ID */
-  $handler->display->display_options['fields']['id']['id'] = 'id';
-  $handler->display->display_options['fields']['id']['table'] = 'log';
-  $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Done */
   $handler->display->display_options['fields']['done']['id'] = 'done';
   $handler->display->display_options['fields']['done']['table'] = 'log';
@@ -324,6 +328,11 @@ function farm_crop_views_default_views() {
   $handler->display->display_options['fields']['done']['type'] = 'custom';
   $handler->display->display_options['fields']['done']['type_custom_true'] = '✔';
   $handler->display->display_options['fields']['done']['not'] = 0;
+  /* Field: Log: Log ID */
+  $handler->display->display_options['fields']['id']['id'] = 'id';
+  $handler->display->display_options['fields']['id']['table'] = 'log';
+  $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'log';
@@ -341,14 +350,29 @@ function farm_crop_views_default_views() {
   $handler->display->display_options['fields']['name_1']['label'] = 'Seeding';
   $handler->display->display_options['fields']['name_1']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name_1']['alter']['path'] = 'log/[id]';
-  /* Field: Field: Quantity */
-  $handler->display->display_options['fields']['field_farm_quantity']['id'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['table'] = 'field_data_field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['field'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['type'] = 'field_collection_fields';
-  $handler->display->display_options['fields']['field_farm_quantity']['settings'] = array(
-    'view_mode' => 'full',
+  /* Field: Field collection item: Value */
+  $handler->display->display_options['fields']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['label'] = 'Quantity';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['settings'] = array(
+    'precision' => '0',
+    'auto_precision' => 1,
   );
+  /* Field: Field collection item: Units */
+  $handler->display->display_options['fields']['field_farm_quantity_units']['id'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['table'] = 'field_data_field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['field'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Field collection item: Movement to */
+  $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_move_to']['delta_offset'] = '0';
   /* Sort criterion: Log: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'log';
@@ -361,25 +385,21 @@ function farm_crop_views_default_views() {
   $handler->display->display_options['sorts']['id']['table'] = 'log';
   $handler->display->display_options['sorts']['id']['field'] = 'id';
   $handler->display->display_options['sorts']['id']['order'] = 'DESC';
-  /* Contextual filter: Log: Planting (field_farm_planting) */
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['id'] = 'field_farm_planting_target_id';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['table'] = 'field_data_field_farm_planting';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['field'] = 'field_farm_planting_target_id';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['title'] = 'Seedings of %1';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['validate_options']['code'] = '// Attempt to load the asset.
-$farm_asset = farm_asset_load($argument);
-if (!empty($farm_asset)) {
-  // Set the title.
-  $handler->validated_title = entity_label(\'farm_asset\', $farm_asset);
-  return TRUE;
-}';
+  /* Contextual filter: Log: Assets (field_farm_asset) */
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['id'] = 'field_farm_asset_target_id';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['field'] = 'field_farm_asset_target_id';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title'] = 'Seedings of %1';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'farm_asset';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate_options']['types'] = array(
+    'planting' => 'planting',
+  );
   /* Filter criterion: Log: Log type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'log';
@@ -436,6 +456,26 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['menu']['name'] = 'farm';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/log/seedings/csv';
+  $handler->display->display_options['displays'] = array(
+    'page_1' => 'page_1',
+    'default' => 0,
+  );
   $translatables['farm_log_seeding'] = array(
     t('Master'),
     t('Seedings'),
@@ -453,21 +493,24 @@ if (!empty($farm_asset)) {
     t('next ›'),
     t('last »'),
     t('No seedings found.'),
+    t('field collection item from field_farm_quantity'),
     t('Log'),
     t('- Choose an operation -'),
     t('Done'),
     t('Not Done'),
+    t('✔'),
     t('Log ID'),
     t('.'),
-    t('✔'),
     t('Date'),
     t('Seeding'),
     t('Quantity'),
+    t('Units'),
     t('All'),
     t('Seedings of %1'),
     t('Start date'),
     t('End date'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_log_seeding'] = $view;
 
@@ -555,9 +598,19 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No transplantings found.';
+  /* Relationship: Field: Quantity (field_farm_quantity) */
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['delta'] = '0';
+  /* Relationship: Log: Movement (field_farm_movement) */
+  $handler->display->display_options['relationships']['field_farm_movement_value']['id'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['table'] = 'field_data_field_farm_movement';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['field'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['delta'] = '-1';
   /* Field: Bulk operations: Log */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'log';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_log';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -594,12 +647,6 @@ if (!empty($farm_asset)) {
       'label' => '',
     ),
   );
-  /* Field: Log: Log ID */
-  $handler->display->display_options['fields']['id']['id'] = 'id';
-  $handler->display->display_options['fields']['id']['table'] = 'log';
-  $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Done */
   $handler->display->display_options['fields']['done']['id'] = 'done';
   $handler->display->display_options['fields']['done']['table'] = 'log';
@@ -607,6 +654,11 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['fields']['done']['type'] = 'custom';
   $handler->display->display_options['fields']['done']['type_custom_true'] = '✔';
   $handler->display->display_options['fields']['done']['not'] = 0;
+  /* Field: Log: Log ID */
+  $handler->display->display_options['fields']['id']['id'] = 'id';
+  $handler->display->display_options['fields']['id']['table'] = 'log';
+  $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'log';
@@ -624,14 +676,29 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['fields']['name_1']['label'] = 'Transplanting';
   $handler->display->display_options['fields']['name_1']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name_1']['alter']['path'] = 'log/[id]';
-  /* Field: Field: Quantity */
-  $handler->display->display_options['fields']['field_farm_quantity']['id'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['table'] = 'field_data_field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['field'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['type'] = 'field_collection_fields';
-  $handler->display->display_options['fields']['field_farm_quantity']['settings'] = array(
-    'view_mode' => 'full',
+  /* Field: Field collection item: Value */
+  $handler->display->display_options['fields']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['label'] = 'Quantity';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['settings'] = array(
+    'precision' => '0',
+    'auto_precision' => 1,
   );
+  /* Field: Field collection item: Units */
+  $handler->display->display_options['fields']['field_farm_quantity_units']['id'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['table'] = 'field_data_field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['field'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Field collection item: Movement to */
+  $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
+  $handler->display->display_options['fields']['field_farm_move_to']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_move_to']['delta_offset'] = '0';
   /* Sort criterion: Log: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'log';
@@ -644,25 +711,21 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['sorts']['id']['table'] = 'log';
   $handler->display->display_options['sorts']['id']['field'] = 'id';
   $handler->display->display_options['sorts']['id']['order'] = 'DESC';
-  /* Contextual filter: Log: Planting (field_farm_planting) */
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['id'] = 'field_farm_planting_target_id';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['table'] = 'field_data_field_farm_planting';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['field'] = 'field_farm_planting_target_id';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['title'] = 'Transplantings of %1';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['field_farm_planting_target_id']['validate_options']['code'] = '// Attempt to load the asset.
-$farm_asset = farm_asset_load($argument);
-if (!empty($farm_asset)) {
-  // Set the title.
-  $handler->validated_title = entity_label(\'farm_asset\', $farm_asset);
-  return TRUE;
-}';
+  /* Contextual filter: Log: Assets (field_farm_asset) */
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['id'] = 'field_farm_asset_target_id';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['field'] = 'field_farm_asset_target_id';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title'] = 'Transplantings of %1';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'farm_asset';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate_options']['types'] = array(
+    'planting' => 'planting',
+  );
   /* Filter criterion: Log: Log type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'log';
@@ -719,6 +782,26 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['menu']['name'] = 'farm';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/logs/transplantings/csv';
+  $handler->display->display_options['displays'] = array(
+    'page_1' => 'page_1',
+    'default' => 0,
+  );
   $translatables['farm_log_transplanting'] = array(
     t('Master'),
     t('Transplantings'),
@@ -736,21 +819,24 @@ if (!empty($farm_asset)) {
     t('next ›'),
     t('last »'),
     t('No transplantings found.'),
+    t('field collection item from field_farm_quantity'),
     t('Log'),
     t('- Choose an operation -'),
     t('Done'),
     t('Not Done'),
+    t('✔'),
     t('Log ID'),
     t('.'),
-    t('✔'),
     t('Date'),
     t('Transplanting'),
     t('Quantity'),
+    t('Units'),
     t('All'),
     t('Transplantings of %1'),
     t('Start date'),
     t('End date'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_log_transplanting'] = $view;
 
@@ -838,7 +924,7 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['relationships']['latest_movement']['field'] = 'latest_movement';
   /* Field: Bulk operations: Farm asset */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'farm_asset';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_farm_asset';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -857,7 +943,7 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'farm_asset';
   $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['id']['label'] = 'Asset ID';
   $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Field: Photo(s) */
   $handler->display->display_options['fields']['field_farm_images']['id'] = 'field_farm_images';
@@ -882,7 +968,7 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['fields']['field_farm_crop']['id'] = 'field_farm_crop';
   $handler->display->display_options['fields']['field_farm_crop']['table'] = 'field_data_field_farm_crop';
   $handler->display->display_options['fields']['field_farm_crop']['field'] = 'field_farm_crop';
-  /* Field: Log: To */
+  /* Field: Field collection item: Movement to */
   $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
@@ -899,19 +985,13 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['name']['expose']['label'] = 'Name';
-  /* Sort criterion: Farm asset: Crop/Variety (field_farm_crop) */
-  $handler->display->display_options['sorts']['field_farm_crop_tid']['id'] = 'field_farm_crop_tid';
-  $handler->display->display_options['sorts']['field_farm_crop_tid']['table'] = 'field_data_field_farm_crop';
-  $handler->display->display_options['sorts']['field_farm_crop_tid']['field'] = 'field_farm_crop_tid';
-  $handler->display->display_options['sorts']['field_farm_crop_tid']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['field_farm_crop_tid']['expose']['label'] = 'Crop/Variety';
   /* Sort criterion: Farm asset: Season (field_farm_season) */
   $handler->display->display_options['sorts']['field_farm_season_tid']['id'] = 'field_farm_season_tid';
   $handler->display->display_options['sorts']['field_farm_season_tid']['table'] = 'field_data_field_farm_season';
   $handler->display->display_options['sorts']['field_farm_season_tid']['field'] = 'field_farm_season_tid';
   $handler->display->display_options['sorts']['field_farm_season_tid']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['field_farm_season_tid']['expose']['label'] = 'Season';
-  /* Contextual filter: Log: To (field_farm_move_to) */
+  /* Contextual filter: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
@@ -975,7 +1055,7 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['filters']['field_farm_crop_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_farm_crop_tid']['vocabulary'] = 'farm_crops';
   $handler->display->display_options['filters']['field_farm_crop_tid']['hierarchy'] = 1;
-  /* Filter criterion: Log: To (field_farm_move_to) */
+  /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
@@ -1029,6 +1109,26 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['tab_options']['title'] = 'Plantings';
   $handler->display->display_options['tab_options']['weight'] = '0';
   $handler->display->display_options['tab_options']['name'] = 'farm';
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/assets/plantings/csv';
+  $handler->display->display_options['displays'] = array(
+    'page' => 'page',
+    'default' => 0,
+  );
   $translatables['farm_plantings'] = array(
     t('Master'),
     t('Plantings'),
@@ -1049,7 +1149,7 @@ if (!empty($farm_asset)) {
     t('Latest movement'),
     t('Farm asset'),
     t('- Choose an operation -'),
-    t('Farm asset ID'),
+    t('Asset ID'),
     t('.'),
     t('Name'),
     t('Crop/Variety'),
@@ -1060,6 +1160,7 @@ if (!empty($farm_asset)) {
     t('Plantings of %2'),
     t('Active'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_plantings'] = $view;
 

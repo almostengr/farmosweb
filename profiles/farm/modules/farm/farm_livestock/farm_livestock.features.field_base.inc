@@ -38,7 +38,7 @@ function farm_livestock_field_default_field_bases() {
   // Exported field_base: 'field_farm_animal_group'.
   $field_bases['field_farm_animal_group'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_farm_animal_group',
@@ -82,41 +82,6 @@ function farm_livestock_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_farm_animal_parents'.
-  $field_bases['field_farm_animal_parents'] = array(
-    'active' => 1,
-    'cardinality' => 2,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_farm_animal_parents',
-    'indexes' => array(
-      'target_id' => array(
-        0 => 'target_id',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'entityreference',
-    'settings' => array(
-      'handler' => 'base',
-      'handler_settings' => array(
-        'behaviors' => array(
-          'views-select-list' => array(
-            'status' => 0,
-          ),
-        ),
-        'sort' => array(
-          'type' => 'none',
-        ),
-        'target_bundles' => array(
-          'animal' => 'animal',
-        ),
-      ),
-      'target_type' => 'farm_asset',
-    ),
-    'translatable' => 0,
-    'type' => 'entityreference',
-  );
-
   // Exported field_base: 'field_farm_animal_sex'.
   $field_bases['field_farm_animal_sex'] = array(
     'active' => 1,
@@ -153,11 +118,15 @@ function farm_livestock_field_default_field_bases() {
       'revision_id' => array(
         0 => 'revision_id',
       ),
+      'value' => array(
+        0 => 'value',
+      ),
     ),
     'locked' => 0,
     'module' => 'field_collection',
     'settings' => array(
       'hide_blank_items' => 1,
+      'hide_initial_item' => FALSE,
       'path' => '',
     ),
     'translatable' => 0,
@@ -226,6 +195,8 @@ function farm_livestock_field_default_field_bases() {
         'Ear tag' => 'Ear tag',
         'Tattoo' => 'Tattoo',
         'Leg band' => 'Leg band',
+        'Chip' => 'Chip',
+        'Other' => 'Other',
       ),
       'allowed_values_function' => '',
     ),

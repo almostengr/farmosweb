@@ -147,6 +147,11 @@ function openlayers_geofield_field_formatter_view($entity_type, $entity, $field,
     }
   }
 
+  // If there are no items, stop here. We won't show anything.
+  if (empty($items)) {
+    return $element;
+  }
+
   // Ensure geophp is available.
   geophp_load();
 

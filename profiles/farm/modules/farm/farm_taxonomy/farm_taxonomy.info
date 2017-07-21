@@ -20,9 +20,9 @@ features[variable][] = field_bundle_settings_taxonomy_term__farm_season
 features[variable][] = pathauto_taxonomy_term_farm_materials_pattern
 features[variable][] = pathauto_taxonomy_term_farm_season_pattern
 
-; Information added by Drupal.org packaging script on 2016-07-13
-version = "7.x-1.0-beta7"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta8"
 core = "7.x"
 project = "farm_taxonomy"
-datestamp = "1468441449"
+datestamp = "1495310587"
 

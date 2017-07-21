@@ -43,7 +43,7 @@ function farm_livestock_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -77,7 +77,7 @@ function farm_livestock_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 2,
+      'weight' => 5,
     ),
   );
 
@@ -111,44 +111,7 @@ function farm_livestock_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 1,
-    ),
-  );
-
-  // Exported field_instance: 'farm_asset-animal-field_farm_animal_parents'.
-  $field_instances['farm_asset-animal-field_farm_animal_parents'] = array(
-    'bundle' => 'animal',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => FALSE,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 7,
-      ),
-    ),
-    'entity_type' => 'farm_asset',
-    'field_name' => 'field_farm_animal_parents',
-    'label' => 'Parents',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'entityreference',
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'path' => '',
-        'size' => 60,
-      ),
-      'type' => 'entityreference_autocomplete',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -179,7 +142,7 @@ function farm_livestock_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -212,7 +175,7 @@ function farm_livestock_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 3,
+      'weight' => 8,
     ),
   );
 
@@ -290,12 +253,12 @@ function farm_livestock_field_default_field_instances() {
         'input_format' => 'M j Y - g:i:sa',
         'input_format_custom' => '',
         'label_position' => 'above',
-        'repeat_collapsed' => 0,
+        'no_fieldset' => 1,
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 7,
+      'weight' => 3,
     ),
   );
 
@@ -311,7 +274,7 @@ function farm_livestock_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -329,13 +292,14 @@ function farm_livestock_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 11,
     ),
   );
 
   // Exported field_instance: 'farm_asset-animal-field_farm_files'.
   $field_instances['farm_asset-animal-field_farm_files'] = array(
     'bundle' => 'animal',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -344,7 +308,7 @@ function farm_livestock_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 10,
+        'weight' => 11,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -360,18 +324,19 @@ function farm_livestock_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'bar',
       ),
-      'type' => 'file_generic',
-      'weight' => 11,
+      'type' => 'file_mfw',
+      'weight' => 5,
     ),
   );
 
   // Exported field_instance: 'farm_asset-animal-field_farm_images'.
   $field_instances['farm_asset-animal-field_farm_images'] = array(
     'bundle' => 'animal',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -389,7 +354,7 @@ function farm_livestock_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 9,
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -409,13 +374,55 @@ function farm_livestock_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
-      'weight' => 10,
+      'type' => 'image_miw',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'farm_asset-animal-field_farm_parent'.
+  $field_instances['farm_asset-animal-field_farm_parent'] = array(
+    'bundle' => 'animal',
+    'default_value' => array(),
+    'deleted' => 0,
+    'description' => 'Specify the parent(s) of this animal.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'farm_asset',
+    'field_name' => 'field_farm_parent',
+    'label' => 'Parent(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference_view_widget',
+      'settings' => array(
+        'allow_duplicates' => 0,
+        'close_modal' => 1,
+        'pass_argument' => 1,
+        'pass_arguments' => '',
+        'rendered_entity' => 0,
+        'view' => 'farm_asset_entityreference_view|entityreference_view_widget',
+        'view_mode' => 'full',
+      ),
+      'type' => 'entityreference_view_widget',
+      'weight' => 3,
     ),
   );
 
@@ -525,12 +532,13 @@ function farm_livestock_field_default_field_instances() {
   $field_instances['log-farm_medical-field_farm_asset'] = array(
     'bundle' => 'farm_medical',
     'deleted' => 0,
-    'description' => 'What assets do this medical log pertain to?',
+    'description' => 'What animals do this medical log pertain to?',
     'display' => array(
       'default' => array(
         'label' => 'inline',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -539,7 +547,7 @@ function farm_livestock_field_default_field_instances() {
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_asset',
-    'label' => 'Assets',
+    'label' => 'Animals',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -557,13 +565,14 @@ function farm_livestock_field_default_field_instances() {
         'view_mode' => 'full',
       ),
       'type' => 'entityreference_view_widget',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
   // Exported field_instance: 'log-farm_medical-field_farm_files'.
   $field_instances['log-farm_medical-field_farm_files'] = array(
     'bundle' => 'farm_medical',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -588,18 +597,19 @@ function farm_livestock_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'bar',
       ),
-      'type' => 'file_generic',
-      'weight' => 5,
+      'type' => 'file_mfw',
+      'weight' => 6,
     ),
   );
 
   // Exported field_instance: 'log-farm_medical-field_farm_images'.
   $field_instances['log-farm_medical-field_farm_images'] = array(
     'bundle' => 'farm_medical',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -637,13 +647,46 @@ function farm_livestock_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
-      'weight' => 4,
+      'type' => 'image_miw',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_medical-field_farm_movement'.
+  $field_instances['log-farm_medical-field_farm_movement'] = array(
+    'bundle' => 'farm_medical',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_movement',
+    'label' => 'Movement',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 2,
     ),
   );
 
@@ -683,7 +726,7 @@ function farm_livestock_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Assets');
+  t('Animals');
   t('Assign this animal to a particular group, herd, flock, etc. You can manage the list of available groups in the ' . l('Animal Groups', 'farm/assets/animals/groups') . ' vocabulary.');
   t('Body Location');
   t('Castrated');
@@ -696,14 +739,17 @@ function farm_livestock_field_default_field_instances() {
   t('ID Tag(s)');
   t('List any identification tags that this animal has. These can be ear tags, tattoos, leg bands, etc. Use the fields below to describe the type, location, and ID of each.');
   t('List any nickname(s) of this animal.');
+  t('Movement');
   t('Nickname(s)');
   t('Notes');
-  t('Parents');
+  t('Parent(s)');
   t('Photo(s)');
   t('Sex');
+  t('Specify the parent(s) of this animal.');
   t('Tag Type');
   t('Type');
-  t('What assets do this medical log pertain to?');
+  t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
+  t('What animals do this medical log pertain to?');
   t('What is the species/breed of this animal? You can manage the list of available species/breeds in the ' . l('Animal Species/Breeds', 'farm/assets/animals/types') . ' vocabulary.');
 
   return $field_instances;

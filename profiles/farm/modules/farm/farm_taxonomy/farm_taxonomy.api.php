@@ -53,12 +53,15 @@ function hook_farm_taxonomy_breadcrumb($term) {
  *   Each element in the array can either be the name of a View,
  *   or an array of options, including:
  *     'name' - the machine name of the View
+ *     'display' - which display of the View should be used
  *     'arg' - which argument the term id should be passed to in the View
  *       (this is useful if the View has more than one contextual filter)
  *     'weight' - the weight of the View in the taxonomy page
  *       (this is useful for changing the order of Views)
+ *     'always' - always display, even if there are no View results
+ *       (default is FALSE)
  */
-function hook_taxonomy_term_view_views($term) {
+function hook_farm_taxonomy_term_view_views($term) {
 
   // If the term is not a crop, bail.
   if ($term->vocabulary_machine_name != 'farm_crops') {
@@ -77,6 +80,7 @@ function hook_taxonomy_term_view_views($term) {
       'display' => 'block',
       'arg' => 2,
       'weight' => 10,
+      'always' => TRUE,
     ),
   );
 }

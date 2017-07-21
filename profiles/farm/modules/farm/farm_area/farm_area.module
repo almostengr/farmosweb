@@ -339,6 +339,16 @@ function farm_area_openlayers_object_preprocess_alter(&$build, $context) {
  */
 function farm_area_page_build(&$page) {
 
+  // If the user doesn't have access to view farm areas, bail.
+  if (!user_access('view farm areas')) {
+    return;
+  }
+
+  // If dashboard maps are disabled in the farm_map module settings, bail.
+  if (!variable_get('farm_map_show', TRUE)) {
+    return;
+  }
+
   // If this is the farm dashboard, display the areas map.
   $current_path = current_path();
   $map_paths = array(
@@ -361,6 +371,54 @@ function farm_area_page_build(&$page) {
     // Set the content region #sorted flag to FALSE so that it resorts.
     $page['content']['#sorted'] = FALSE;
   }
+}
+
+/**
+ * Helper function to extract geometries from areas.
+ *
+ * @param array $ids
+ *   An array of area term IDs.
+ *
+ * @return array
+ *   Returns an array of geometry strings in WKT format.
+ */
+function farm_area_extract_geoms($ids = array()) {
+
+  // Start an empty array of geometries to return.
+  $geoms = array();
+
+  // If the array of IDs is empty, bail.
+  if (empty($ids)) {
+    return $geoms;
+  }
+
+  // Load the areas.
+  $areas = array();
+  foreach ($ids as $id) {
+    if ($area = taxonomy_term_load($id)) {
+      $areas[] = $area;
+    }
+  }
+
+  // If no areas are referenced, bail.
+  if (empty($areas)) {
+    return $geoms;
+  }
+
+  // Iterate over the areas to find geometries.
+  $geoms = array();
+  foreach ($areas as $area) {
+    if (!empty($area->field_farm_geofield[LANGUAGE_NONE])) {
+      foreach ($area->field_farm_geofield[LANGUAGE_NONE] as $geofield) {
+        if (!empty($geofield['geom'])) {
+          $geoms[] = $geofield['geom'];
+        }
+      }
+    }
+  }
+
+  // Return the geometries.
+  return $geoms;
 }
 
 /**

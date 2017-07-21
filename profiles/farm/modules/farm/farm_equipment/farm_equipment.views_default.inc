@@ -84,7 +84,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['relationships']['latest_movement']['field'] = 'latest_movement';
   /* Field: Bulk operations: Farm asset */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'farm_asset';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_farm_asset';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -103,7 +103,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'farm_asset';
   $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['id']['label'] = 'Asset ID';
   $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Field: Photo(s) */
   $handler->display->display_options['fields']['field_farm_images']['id'] = 'field_farm_images';
@@ -124,7 +124,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name']['alter']['path'] = 'farm/asset/[id]';
-  /* Field: Log: To */
+  /* Field: Field collection item: Movement to */
   $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
@@ -136,7 +136,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['name']['expose']['label'] = 'Name';
-  /* Contextual filter: Log: To (field_farm_move_to) */
+  /* Contextual filter: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
@@ -171,7 +171,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  /* Filter criterion: Log: To (field_farm_move_to) */
+  /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
@@ -211,6 +211,26 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['tab_options']['title'] = 'Equipment';
   $handler->display->display_options['tab_options']['weight'] = '10';
   $handler->display->display_options['tab_options']['name'] = 'farm';
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/assets/equipment/csv';
+  $handler->display->display_options['displays'] = array(
+    'page' => 'page',
+    'default' => 0,
+  );
   $translatables['farm_equipment'] = array(
     t('Master'),
     t('Equipment'),
@@ -231,7 +251,7 @@ function farm_equipment_views_default_views() {
     t('Latest movement'),
     t('Farm asset'),
     t('- Choose an operation -'),
-    t('Farm asset ID'),
+    t('Asset ID'),
     t('.'),
     t('Name'),
     t('Location'),
@@ -239,6 +259,7 @@ function farm_equipment_views_default_views() {
     t('Equipment in %1'),
     t('Active'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_equipment'] = $view;
 
@@ -326,7 +347,7 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No maintenance logs found.';
   /* Field: Bulk operations: Log */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'log';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_log';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -363,12 +384,6 @@ function farm_equipment_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: Log: Log ID */
-  $handler->display->display_options['fields']['id']['id'] = 'id';
-  $handler->display->display_options['fields']['id']['table'] = 'log';
-  $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Done */
   $handler->display->display_options['fields']['done']['id'] = 'done';
   $handler->display->display_options['fields']['done']['table'] = 'log';
@@ -376,6 +391,11 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['fields']['done']['type'] = 'custom';
   $handler->display->display_options['fields']['done']['type_custom_true'] = '✔';
   $handler->display->display_options['fields']['done']['not'] = 0;
+  /* Field: Log: Log ID */
+  $handler->display->display_options['fields']['id']['id'] = 'id';
+  $handler->display->display_options['fields']['id']['table'] = 'log';
+  $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'log';
@@ -418,20 +438,13 @@ function farm_equipment_views_default_views() {
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['field'] = 'field_farm_asset_target_id';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title'] = '%1\'s maintenance';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['title'] = 'Maintenance of %1';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate_options']['code'] = '// Attempt to load the asset.
-$farm_asset = farm_asset_load($argument);
-if (!empty($farm_asset)) {
-  // Set the title.
-  $handler->validated_title = entity_label(\'farm_asset\', $farm_asset);
-  return TRUE;
-}';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'farm_asset';
   /* Filter criterion: Log: Log type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'log';
@@ -488,6 +501,26 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['menu']['name'] = 'farm';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/logs/maintenance/csv';
+  $handler->display->display_options['displays'] = array(
+    'page' => 'page',
+    'default' => 0,
+  );
   $translatables['farm_log_maintenance'] = array(
     t('Master'),
     t('Maintenance'),
@@ -509,16 +542,17 @@ if (!empty($farm_asset)) {
     t('- Choose an operation -'),
     t('Done'),
     t('Not Done'),
+    t('✔'),
     t('Log ID'),
     t('.'),
-    t('✔'),
     t('Date'),
     t('Assets'),
     t('All'),
-    t('%1\'s maintenance'),
+    t('Maintenance of %1'),
     t('Start date'),
     t('End date'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_log_maintenance'] = $view;
 

@@ -22,7 +22,7 @@ function farm_equipment_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -40,13 +40,14 @@ function farm_equipment_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 1,
+      'weight' => 7,
     ),
   );
 
   // Exported field_instance: 'farm_asset-equipment-field_farm_files'.
   $field_instances['farm_asset-equipment-field_farm_files'] = array(
     'bundle' => 'equipment',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -55,7 +56,7 @@ function farm_equipment_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 2,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -71,18 +72,19 @@ function farm_equipment_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'bar',
       ),
-      'type' => 'file_generic',
-      'weight' => 3,
+      'type' => 'file_mfw',
+      'weight' => 9,
     ),
   );
 
   // Exported field_instance: 'farm_asset-equipment-field_farm_images'.
   $field_instances['farm_asset-equipment-field_farm_images'] = array(
     'bundle' => 'equipment',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -100,7 +102,7 @@ function farm_equipment_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 1,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'farm_asset',
@@ -120,13 +122,115 @@ function farm_equipment_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
-      'weight' => 2,
+      'type' => 'image_miw',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'farm_asset-equipment-field_farm_manufacturer'.
+  $field_instances['farm_asset-equipment-field_farm_manufacturer'] = array(
+    'bundle' => 'equipment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'farm_asset',
+    'field_name' => 'field_farm_manufacturer',
+    'label' => 'Manufacturer',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'farm_asset-equipment-field_farm_model'.
+  $field_instances['farm_asset-equipment-field_farm_model'] = array(
+    'bundle' => 'equipment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'farm_asset',
+    'field_name' => 'field_farm_model',
+    'label' => 'Model',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'farm_asset-equipment-field_farm_serial_number'.
+  $field_instances['farm_asset-equipment-field_farm_serial_number'] = array(
+    'bundle' => 'equipment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'farm_asset',
+    'field_name' => 'field_farm_serial_number',
+    'label' => 'Serial Number',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 6,
     ),
   );
 
@@ -140,6 +244,7 @@ function farm_equipment_field_default_field_instances() {
         'label' => 'inline',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -173,6 +278,7 @@ function farm_equipment_field_default_field_instances() {
   // Exported field_instance: 'log-farm_maintenance-field_farm_files'.
   $field_instances['log-farm_maintenance-field_farm_files'] = array(
     'bundle' => 'farm_maintenance',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -197,18 +303,19 @@ function farm_equipment_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'bar',
       ),
-      'type' => 'file_generic',
-      'weight' => 5,
+      'type' => 'file_mfw',
+      'weight' => 6,
     ),
   );
 
   // Exported field_instance: 'log-farm_maintenance-field_farm_images'.
   $field_instances['log-farm_maintenance-field_farm_images'] = array(
     'bundle' => 'farm_maintenance',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -246,13 +353,46 @@ function farm_equipment_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
-      'weight' => 4,
+      'type' => 'image_miw',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_maintenance-field_farm_movement'.
+  $field_instances['log-farm_maintenance-field_farm_movement'] = array(
+    'bundle' => 'farm_maintenance',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_movement',
+    'label' => 'Movement',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 3,
     ),
   );
 
@@ -295,8 +435,13 @@ function farm_equipment_field_default_field_instances() {
   t('Assets');
   t('Description');
   t('Files');
+  t('Manufacturer');
+  t('Model');
+  t('Movement');
   t('Notes');
   t('Photo(s)');
+  t('Serial Number');
+  t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
   t('What assets do this maintenance log pertain to?');
 
   return $field_instances;

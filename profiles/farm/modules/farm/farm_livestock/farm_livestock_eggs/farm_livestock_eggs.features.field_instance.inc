@@ -13,7 +13,7 @@ function farm_livestock_eggs_field_default_field_instances() {
   // Exported field_instance: 'log-farm_eggs-field_farm_animal_group'.
   $field_instances['log-farm_eggs-field_farm_animal_group'] = array(
     'bundle' => 'farm_eggs',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => 'What group/flock were these eggs collected from?',
     'display' => array(
@@ -34,13 +34,13 @@ function farm_livestock_eggs_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 0,
-      'module' => 'taxonomy',
+      'module' => 'options',
       'settings' => array(
         'autocomplete_path' => 'taxonomy/autocomplete',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 2,
+      'type' => 'options_buttons',
+      'weight' => 3,
     ),
   );
 
@@ -80,7 +80,7 @@ function farm_livestock_eggs_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 

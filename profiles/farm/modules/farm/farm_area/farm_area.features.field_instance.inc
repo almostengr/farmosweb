@@ -37,13 +37,14 @@ function farm_area_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
   // Exported field_instance: 'taxonomy_term-farm_areas-field_farm_files'.
   $field_instances['taxonomy_term-farm_areas-field_farm_files'] = array(
     'bundle' => 'farm_areas',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -68,11 +69,11 @@ function farm_area_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'throbber',
       ),
-      'type' => 'file_generic',
+      'type' => 'file_mfw',
       'weight' => 5,
     ),
   );
@@ -82,7 +83,7 @@ function farm_area_field_default_field_instances() {
     'bundle' => 'farm_areas',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Use this field to define the geometry of this area on a map. Points, lines, and polygons can be drawn using the controls below.',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -119,6 +120,11 @@ function farm_area_field_default_field_instances() {
         'handler_settings' => array(
           'google' => array(
             'all_results' => 0,
+            'biasing' => array(
+              'bounds' => '',
+              'components' => '',
+              'region' => '',
+            ),
             'geometry_type' => 'point',
             'reject_results' => array(
               'APPROXIMATE' => 0,
@@ -133,13 +139,14 @@ function farm_area_field_default_field_instances() {
         'use_geocoder' => 1,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
   // Exported field_instance: 'taxonomy_term-farm_areas-field_farm_images'.
   $field_instances['taxonomy_term-farm_areas-field_farm_images'] = array(
     'bundle' => 'farm_areas',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -177,12 +184,12 @@ function farm_area_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
+      'type' => 'image_miw',
       'weight' => 4,
     ),
   );
@@ -193,7 +200,6 @@ function farm_area_field_default_field_instances() {
   t('Files');
   t('Geometry');
   t('Photo(s)');
-  t('Use this field to define the geometry of this area on a map. Points, lines, and polygons can be drawn using the controls below.');
   t('What type of area is this? Area types will be color coded on maps. If left blank, the area will not appear on maps.');
 
   return $field_instances;

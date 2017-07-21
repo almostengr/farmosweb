@@ -5,6 +5,15 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function farm_log_input_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
 function farm_log_input_views_api($module = NULL, $api = NULL) {
@@ -20,7 +29,7 @@ function farm_log_input_default_log_type() {
     "type" : "farm_input",
     "label" : "Input",
     "weight" : 0,
-    "name_pattern" : "[log:field-farm-material] [log:field-farm-area] [log:field-farm-asset]",
+    "name_pattern" : "Input: [log:field-farm-material] [log:field-farm-area] [log:field-farm-asset]",
     "name_edit" : "1",
     "done" : "1",
     "rdf_mapping" : []

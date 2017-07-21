@@ -5,9 +5,9 @@ package = farmOS
 dependencies[] = farm_area
 dependencies[] = geophp
 
-; Information added by Drupal.org packaging script on 2016-04-13
-version = "7.x-1.0-beta11"
+; Information added by Drupal.org packaging script on 2017-05-20
+version = "7.x-1.0-beta12"
 core = "7.x"
 project = "farm_area"
-datestamp = "1460563143"
+datestamp = "1495308793"
 

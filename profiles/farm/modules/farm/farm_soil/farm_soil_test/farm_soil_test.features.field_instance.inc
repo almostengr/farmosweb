@@ -13,9 +13,9 @@ function farm_soil_test_field_default_field_instances() {
   // Exported field_instance: 'log-farm_soil_test-field_farm_area'.
   $field_instances['log-farm_soil_test-field_farm_area'] = array(
     'bundle' => 'farm_soil_test',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
-    'description' => 'What area(s) were this soil sample taken from?',
+    'description' => 'What areas were this soil sample taken from?',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -27,19 +27,16 @@ function farm_soil_test_field_default_field_instances() {
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_area',
-    'label' => 'Area',
+    'label' => 'Areas',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
       'weight' => 2,
     ),
   );
@@ -47,6 +44,7 @@ function farm_soil_test_field_default_field_instances() {
   // Exported field_instance: 'log-farm_soil_test-field_farm_files'.
   $field_instances['log-farm_soil_test-field_farm_files'] = array(
     'bundle' => 'farm_soil_test',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -71,18 +69,19 @@ function farm_soil_test_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'multiupload_filefield_widget',
       'settings' => array(
         'progress_indicator' => 'bar',
       ),
-      'type' => 'file_generic',
-      'weight' => 8,
+      'type' => 'file_mfw',
+      'weight' => 7,
     ),
   );
 
   // Exported field_instance: 'log-farm_soil_test-field_farm_images'.
   $field_instances['log-farm_soil_test-field_farm_images'] = array(
     'bundle' => 'farm_soil_test',
+    'default_value' => array(),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -120,13 +119,13 @@ function farm_soil_test_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'image',
+      'module' => 'multiupload_imagefield_widget',
       'settings' => array(
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'bar',
       ),
-      'type' => 'image_image',
-      'weight' => 7,
+      'type' => 'image_miw',
+      'weight' => 6,
     ),
   );
 
@@ -194,7 +193,7 @@ function farm_soil_test_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -295,7 +294,7 @@ function farm_soil_test_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Area');
+  t('Areas');
   t('Files');
   t('Laboratory');
   t('List the names of soils that are included in this sample. For soil maps and soil names, visit http://websoilsurvey.nrcs.usda.gov/app');
@@ -304,7 +303,7 @@ function farm_soil_test_field_default_field_instances() {
   t('Sample Points');
   t('Soil Names');
   t('Use the map to pinpoint the location(s) from which this sample is taken. If you are preparing a soil test, you may be sampling multiple points within a given area. All the points that comprise this sample should be included.');
-  t('What area(s) were this soil sample taken from?');
+  t('What areas were this soil sample taken from?');
   t('What laboratory performed the soil test?');
 
   return $field_instances;

@@ -8,6 +8,9 @@
  * Implements hook_ctools_plugin_api().
  */
 function farm_equipment_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -43,7 +46,7 @@ function farm_equipment_default_log_type() {
     "type" : "farm_maintenance",
     "label" : "Maintenance",
     "weight" : 0,
-    "name_pattern" : "[log:name]",
+    "name_pattern" : "Maintenance: [log:field-farm-asset]",
     "name_edit" : "1",
     "done" : "1",
     "rdf_mapping" : []

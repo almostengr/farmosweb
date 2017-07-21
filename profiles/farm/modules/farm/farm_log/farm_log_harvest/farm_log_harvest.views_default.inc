@@ -94,9 +94,14 @@ function farm_log_harvest_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No harvests found.';
+  /* Relationship: Field: Quantity (field_farm_quantity) */
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['relationships']['field_farm_quantity_value']['delta'] = '0';
   /* Field: Bulk operations: Log */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'log';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_log';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -133,13 +138,6 @@ function farm_log_harvest_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: Log: Log ID */
-  $handler->display->display_options['fields']['id']['id'] = 'id';
-  $handler->display->display_options['fields']['id']['table'] = 'log';
-  $handler->display->display_options['fields']['id']['field'] = 'id';
-  $handler->display->display_options['fields']['id']['label'] = 'Harvest ID';
-  $handler->display->display_options['fields']['id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Done */
   $handler->display->display_options['fields']['done']['id'] = 'done';
   $handler->display->display_options['fields']['done']['table'] = 'log';
@@ -147,6 +145,11 @@ function farm_log_harvest_views_default_views() {
   $handler->display->display_options['fields']['done']['type'] = 'custom';
   $handler->display->display_options['fields']['done']['type_custom_true'] = '✔';
   $handler->display->display_options['fields']['done']['not'] = 0;
+  /* Field: Log: Log ID */
+  $handler->display->display_options['fields']['id']['id'] = 'id';
+  $handler->display->display_options['fields']['id']['table'] = 'log';
+  $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'log';
@@ -163,15 +166,23 @@ function farm_log_harvest_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name']['alter']['path'] = 'log/[id]';
-  /* Field: Field: Quantity */
-  $handler->display->display_options['fields']['field_farm_quantity']['id'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['table'] = 'field_data_field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['field'] = 'field_farm_quantity';
-  $handler->display->display_options['fields']['field_farm_quantity']['relationship'] = 'field_farm_harvest_list_value';
-  $handler->display->display_options['fields']['field_farm_quantity']['type'] = 'field_collection_fields';
-  $handler->display->display_options['fields']['field_farm_quantity']['settings'] = array(
-    'view_mode' => 'full',
+  /* Field: Field collection item: Value */
+  $handler->display->display_options['fields']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['label'] = 'Quantity';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['type'] = 'fraction_decimal';
+  $handler->display->display_options['fields']['field_farm_quantity_value']['settings'] = array(
+    'precision' => '0',
+    'auto_precision' => 1,
   );
+  /* Field: Field collection item: Units */
+  $handler->display->display_options['fields']['field_farm_quantity_units']['id'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['table'] = 'field_data_field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['field'] = 'field_farm_quantity_units';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['relationship'] = 'field_farm_quantity_value';
+  $handler->display->display_options['fields']['field_farm_quantity_units']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Log: Assets */
   $handler->display->display_options['fields']['field_farm_asset']['id'] = 'field_farm_asset';
   $handler->display->display_options['fields']['field_farm_asset']['table'] = 'field_data_field_farm_asset';
@@ -203,14 +214,7 @@ function farm_log_harvest_views_default_views() {
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'php';
-  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate_options']['code'] = '// Attempt to load the asset.
-$farm_asset = farm_asset_load($argument);
-if (!empty($farm_asset)) {
-  // Set the title.
-  $handler->validated_title = entity_label(\'farm_asset\', $farm_asset);
-  return TRUE;
-}';
+  $handler->display->display_options['arguments']['field_farm_asset_target_id']['validate']['type'] = 'farm_asset';
   /* Filter criterion: Log: Log type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'log';
@@ -267,6 +271,26 @@ if (!empty($farm_asset)) {
   $handler->display->display_options['menu']['name'] = 'farm';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view-%exposed-%timestamp-full.csv';
+  $handler->display->display_options['style_options']['parent_sort'] = 1;
+  $handler->display->display_options['style_options']['quote'] = 1;
+  $handler->display->display_options['style_options']['trim'] = 1;
+  $handler->display->display_options['style_options']['replace_newlines'] = 0;
+  $handler->display->display_options['style_options']['newline_token'] = '1';
+  $handler->display->display_options['style_options']['header'] = 1;
+  $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['path'] = 'farm/logs/harvests/csv';
+  $handler->display->display_options['displays'] = array(
+    'page' => 'page',
+    'default' => 0,
+  );
   $translatables['farm_log_harvest'] = array(
     t('Master'),
     t('Harvests'),
@@ -284,22 +308,25 @@ if (!empty($farm_asset)) {
     t('next ›'),
     t('last »'),
     t('No harvests found.'),
+    t('field collection item from field_farm_quantity'),
     t('Log'),
     t('- Choose an operation -'),
     t('Done'),
     t('Not Done'),
-    t('Harvest ID'),
-    t('.'),
     t('✔'),
+    t('Log ID'),
+    t('.'),
     t('Date'),
     t('Name'),
     t('Quantity'),
+    t('Units'),
     t('Assets'),
     t('All'),
     t('Harvests of %1'),
     t('Start date'),
     t('End date'),
     t('Page'),
+    t('Data export'),
   );
   $export['farm_log_harvest'] = $view;
 

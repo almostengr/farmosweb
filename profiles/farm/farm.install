@@ -170,6 +170,11 @@ function farm_update_dependencies() {
   );
   $dependencies['farm_equipment'][7000] = $farm_7000;
   $dependencies['farm_livestock'][7000] = $farm_7000;
+
+  // farm_livestock_7001() depends on farm_update_7019() because it uses the new
+  // field_farm_parent field from the farm_asset_children module.
+  $dependencies['farm_livestock'][7001] = array('farm' => 7019);
+
   return $dependencies;
 }
 
@@ -462,6 +467,60 @@ function farm_update_7018(&$sandbox) {
   );
   module_disable($modules);
   drupal_uninstall_modules($modules);
+}
+
+/**
+ * Install Farm Asset Children module.
+ */
+function farm_update_7019(&$sandbox) {
+
+  // Enable the Farm Asset Children module.
+  _farm_update_enable_modules(array('farm_asset_children'));
+
+  // Reset the "default_hook" static cache for field_base Features components.
+  module_load_include('inc', 'features', 'features.export');
+  features_get_default_hooks('field_base', TRUE);
+
+  // Load the farm_asset_children field_base Features include file, otherwise
+  // feature_get_default() will not see it, and the revert will fail.
+  module_load_include('inc', 'farm_asset_children', 'farm_asset_children.features.field_base');
+
+  // Revert the field_base component of farm_asset_children.
+  features_revert(array('farm_asset_children' => array('field_base')));
+}
+
+/**
+ * Install Views Data Export.
+ */
+function farm_update_7020(&$sandbox) {
+  _farm_update_enable_modules(array('views_data_export'));
+}
+
+/**
+ * Install Multiupload Filefield and Imagefield Widget modules.
+ */
+function farm_update_7021(&$sandbox) {
+  _farm_update_enable_modules(array('multiupload_filefield_widget', 'multiupload_imagefield_widget'));
+}
+
+/**
+ * Install Field Group module.
+ */
+function farm_update_7022(&$sandbox) {
+  _farm_update_enable_modules(array('field_group'));
+}
+
+/**
+ * Change the Bootswatch theme to Simplex 3.3.7.
+ */
+function farm_update_7023(&$sandbox) {
+  $theme_settings = variable_get('theme_farm_theme_settings', array());
+  $theme_settings['bootstrap_cdn_provider'] = 'custom';
+  $theme_settings['bootstrap_cdn_custom_css'] = '//cdn.jsdelivr.net/bootswatch/3.3.7/simplex/bootstrap.css';
+  $theme_settings['bootstrap_cdn_custom_css_min'] = '//cdn.jsdelivr.net/bootswatch/3.3.7/simplex/bootstrap.min.css';
+  $theme_settings['bootstrap_cdn_custom_js'] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.js';
+  $theme_settings['bootstrap_cdn_custom_js_min'] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js';
+  variable_set('theme_farm_theme_settings', $theme_settings);
 }
 
 /**

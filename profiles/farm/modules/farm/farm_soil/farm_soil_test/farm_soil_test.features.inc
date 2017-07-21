@@ -5,6 +5,15 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function farm_soil_test_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
 function farm_soil_test_views_api($module = NULL, $api = NULL) {
@@ -20,7 +29,7 @@ function farm_soil_test_default_log_type() {
     "type" : "farm_soil_test",
     "label" : "Soil Test",
     "weight" : 0,
-    "name_pattern" : "Soil test [log:id]",
+    "name_pattern" : "Soil test: [log:field-farm-area]",
     "name_edit" : "1",
     "done" : "1",
     "rdf_mapping" : []

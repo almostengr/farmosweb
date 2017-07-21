@@ -20,25 +20,67 @@ function farm_theme_menu_link_alter(&$item) {
 }
 
 /**
+ * Implements hook_field_widget_form_alter().
+ */
+function farm_theme_field_widget_form_alter(&$element, &$form_state, $context) {
+
+  // The code below will be used to make certain fieldsets collapsible.
+  // Collapsing them will be done via Javascript, instead of PHP, however,
+  // because of an outstanding issue with rendering Openlayers maps in collapsed
+  // fieldsets. The $collapse_js boolean variable will keep track of whether or
+  // not the Javascript is necessary in the current page, and will add it at the
+  // bottom of this function. The Javascript works by looking for a CSS class
+  // called 'farm-theme-collapse' on the fieldsets, and collapses them.
+  /**
+   * @todo
+   * Revert to using normal PHP `['collapsed'] = TRUE;` when the following
+   * issues are fixed.
+   *
+   * @see https://www.drupal.org/node/2644580
+   * @see https://www.drupal.org/node/2579009
+   */
+  $collapse_js = FALSE;
+
+  // Put geofields into a collapsible fieldset.
+  if ($context['field']['type'] == 'geofield') {
+
+    // Exception: do not collapse geofields when adding/editing areas.
+    if (!empty($context['form']['#term']) && $context['form']['#term']['vocabulary_machine_name'] == 'farm_areas') {
+      return;
+    }
+
+    // Iterate through all the element children.
+    $children = element_children($element);
+    foreach ($children as $child) {
+
+      // Make the parent element into a collapsible fieldset.
+      $element[$child]['#type'] = 'fieldset';
+      $element[$child]['#collapsible'] = TRUE;
+      $element[$child]['#attributes']['class'][] = 'farm-theme-collapse';
+      $collapse_js = TRUE;
+    }
+  }
+
+  // Collapse field collection fieldsets by default.
+  elseif ($context['field']['type'] == 'field_collection') {
+    $element['#collapsible'] = TRUE;
+    $element['#attributes']['class'][] = 'farm-theme-collapse';
+    $collapse_js = TRUE;
+  }
+
+  // Add Javascript to collapse fieldsets.
+  if ($collapse_js) {
+    drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/collapse.js');
+  }
+}
+
+/**
  * Implements hook_form_alter().
  */
 function farm_theme_form_alter(&$form, &$form_state, $form_id) {
 
-  // Log form:
-  if ($form_id == 'log_form') {
-
-    // If the log has a field_farm_geofield, put it in a collapsible fieldset.
-    if (isset($form['field_farm_geofield'])) {
-
-      // Change it from a 'container' to a 'fieldset'. This allows the field
-      // description to be displayed.
-      $form['field_farm_geofield'][LANGUAGE_NONE][0]['#type'] = 'fieldset';
-      $form['field_farm_geofield'][LANGUAGE_NONE][0]['#collapsible'] = TRUE;
-    }
-  }
-
   // Views Exposed (filters and sort) form:
-  elseif ($form_id == 'views_exposed_form') {
+  if ($form_id == 'views_exposed_form') {
 
     /* Wrap the exposed form in a Bootstrap collapsible panel. */
 
@@ -103,7 +145,7 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
 
   // Add Bootstrap classes to the action buttons.
   $buttons = array(
-    'farm_log_asset_move' => 'primary',
+    'farm_log_movement_asset_move' => 'primary',
     'log_done' => 'success',
     'log_undone' => 'danger',
     'log_reschedule' => 'warning',
@@ -160,6 +202,24 @@ function farm_theme_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Implements hook_page_alter().
+ */
+function farm_theme_page_alter(&$page) {
+
+  // If an access denied page is displayed and the user is not logged in...
+  global $user;
+  $status = drupal_get_http_header('status');
+  if ($status == '403 Forbidden' && empty($user->uid)) {
+
+    // Display a link to the user login page.
+    $page['content']['system_main']['login'] = array(
+      '#type' => 'markup',
+      '#markup' => '<p>' . l('Login to farmOS', 'user') . '</p>',
+    );
+  }
+}
+
+/**
  * Implements hook_preprocess_page().
  */
 function farm_theme_preprocess_page(&$vars) {
@@ -187,13 +247,6 @@ function farm_theme_preprocess_page(&$vars) {
     '#markup' => t('Powered by') . ' ' . l(t('farmOS'), 'http://farmos.org'),
     '#suffix' => '</small></div>',
   );
-
-  // Find the current farmOS version and add it to the footer.
-  $path = drupal_get_path('module', 'farm') . '/farm.info';
-  $info = drupal_parse_info_file($path);
-  if (!empty($info['version'])) {
-    $vars['page']['footer']['farmos']['#markup'] .= ' ' . $info['version'];
-  }
 }
 
 /**

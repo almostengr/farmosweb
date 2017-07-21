@@ -8,6 +8,9 @@
  * Implements hook_ctools_plugin_api().
  */
 function farm_log_observation_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -29,7 +32,7 @@ function farm_log_observation_default_log_type() {
     "type" : "farm_observation",
     "label" : "Observation",
     "weight" : 0,
-    "name_pattern" : "[log:field-farm-observation-type]",
+    "name_pattern" : "Observation: [log:field-farm-observation-type] [log:field-farm-asset] [log:field-farm-area]",
     "name_edit" : "1",
     "done" : "1",
     "rdf_mapping" : []
