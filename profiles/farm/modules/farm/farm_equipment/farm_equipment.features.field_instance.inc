@@ -66,7 +66,7 @@ function farm_equipment_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => 'farm/asset/equipment',
-      'file_extensions' => 'csv doc docx odt odp ods pdf ppt pptx txt xls xlsx kml kmz zip tar gz',
+      'file_extensions' => '',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -107,13 +107,13 @@ function farm_equipment_field_default_field_instances() {
     ),
     'entity_type' => 'farm_asset',
     'field_name' => 'field_farm_images',
-    'label' => 'Photo(s)',
+    'label' => 'Photos',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
       'file_directory' => 'farm/asset/equipment',
-      'file_extensions' => 'png gif jpg jpeg',
+      'file_extensions' => '',
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -217,7 +217,7 @@ function farm_equipment_field_default_field_instances() {
     ),
     'entity_type' => 'farm_asset',
     'field_name' => 'field_farm_serial_number',
-    'label' => 'Serial Number',
+    'label' => 'Serial number',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -287,7 +287,7 @@ function farm_equipment_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 3,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'log',
@@ -297,7 +297,7 @@ function farm_equipment_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => 'farm/log/maintenance',
-      'file_extensions' => 'csv doc docx odt odp ods pdf ppt pptx txt xls xlsx kml kmz zip tar gz',
+      'file_extensions' => '',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -333,18 +333,18 @@ function farm_equipment_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 2,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_images',
-    'label' => 'Photo(s)',
+    'label' => 'Photos',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
       'file_directory' => 'farm/log/maintenance',
-      'file_extensions' => 'png gif jpg jpeg',
+      'file_extensions' => '',
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -360,6 +360,71 @@ function farm_equipment_field_default_field_instances() {
       ),
       'type' => 'image_miw',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_maintenance-field_farm_log_category'.
+  $field_instances['log-farm_maintenance-field_farm_log_category'] = array(
+    'bundle' => 'farm_maintenance',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_category',
+    'label' => 'Log category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_maintenance-field_farm_log_owner'.
+  $field_instances['log-farm_maintenance-field_farm_log_owner'] = array(
+    'bundle' => 'farm_maintenance',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Optionally assign this task to one or more people.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_owner',
+    'label' => 'Owner',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 8,
     ),
   );
 
@@ -392,7 +457,7 @@ function farm_equipment_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -435,13 +500,17 @@ function farm_equipment_field_default_field_instances() {
   t('Assets');
   t('Description');
   t('Files');
+  t('Log category');
   t('Manufacturer');
   t('Model');
   t('Movement');
   t('Notes');
-  t('Photo(s)');
-  t('Serial Number');
+  t('Optionally assign this task to one or more people.');
+  t('Owner');
+  t('Photos');
+  t('Serial number');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
+  t('Use this to organize your logs into categories for easier searching and filtering later.');
   t('What assets do this maintenance log pertain to?');
 
   return $field_instances;

@@ -70,21 +70,6 @@ function farm_asset_permission() {
 }
 
 /**
- * Implements hook_farm_access_perms().
- */
-function farm_asset_farm_access_perms($role) {
-  $perms = array();
-
-  // Grant access to view farm assets.
-  $perms[] = 'view farm assets';
-
-  // Grant access to RESTful Web Services resources.
-  $perms[] = 'access resource farm_asset';
-
-  return $perms;
-}
-
-/**
  * Implements hook_menu().
  */
 function farm_asset_menu() {
@@ -341,120 +326,38 @@ function farm_asset_entity_view($entity, $type, $view_mode, $langcode) {
     '#markup' => '<div><strong>Active:</strong> ' . $status . '</div>',
     '#weight' => -100,
   );
-
-  // Invoke hook_farm_asset_view_views() to get a list of Views.
-  $views = module_invoke_all('farm_asset_view_views', $entity);
-
-  // Process the list of Views into a standardized list,
-  // and prepare to order by weight and name.
-  $weight_index = array();
-  $name_index = array();
-  foreach ($views as $key => $data) {
-
-    // If the data is just a name, wrap it in an array.
-    if (!is_array($data)) {
-      $data = array(
-        'name' => $data,
-      );
-    }
-
-    // Merge with defaults.
-    $defaults = array(
-      'arg' => 1,
-      'weight' => 0,
-    );
-    $views[$key] = array_merge($defaults, $data);
-
-    // Add to the weight and name indexes for sorting.
-    $weight_index[$key] = $views[$key]['weight'];
-    $name_index[$key] = $views[$key]['name'];
-  }
-
-  // Sort the Views by weight ascending, name ascending.
-  array_multisort($weight_index, SORT_ASC, $name_index, SORT_ASC, $views);
-
-  // Add the Views to the entity's render array.
-  foreach ($views as $key => $data) {
-
-    // Load the View, and bail if it isn't found.
-    $view = views_get_view($data['name']);
-    if (empty($view)) {
-      continue;
-    }
-
-    // Determine the argument position (default to 1).
-    // This looks for the presence of $data['arg'] to learn which argument
-    // in the View we should send $entity->id into. This is useful if the View
-    // has multiple contextual filters, and the entity filter is not first.
-    // Any arguments that come before the term argument will receive 'all'
-    // as their input.
-    $args = array();
-    $arg_pos = isset($data['arg']) ? $data['arg'] : 1;
-    for ($i = 1; $i <= $arg_pos; $i++) {
-      if ($i == $arg_pos) {
-        $args[] = $entity->id;
-      }
-      else {
-        $args[] = 'all';
-      }
-    }
-
-    // If a specific display was specified, use it. Otherwise use 'default'.
-    if (!empty($data['display'])) {
-      $display = $data['display'];
-    }
-    else {
-      $display = 'default';
-    }
-    $view->set_display($display);
-
-    // Get the View's default title.
-    // We intentionally do this before we build the preview so that the title
-    // is not overridden by the arguments. This keeps the title simple on the
-    // actual asset page, but more descriptive in other contexts.
-    $title = $view->get_title();
-
-    // Build the View preview.
-    $preview = $view->preview($display, $args);
-
-    // Only display if the View has results.
-    if ($view->total_rows == 0) {
-      continue;
-    }
-
-    // Build the output.
-    $output = '<h3 id="' . $title . '">' . $title . '</h3>' . $preview;
-
-    // Add the output to the entity build array.
-    $entity->content['views'][$data['name']] = array(
-      '#markup' => $output,
-      '#weight' => 100 + $key,
-    );
-  }
 }
 
 /**
- * Implements hook_farm_admin_actions().
+ * Implements hook_entity_presave().
  */
-function farm_asset_farm_admin_actions() {
+function farm_asset_entity_presave($entity, $type) {
 
-  // Define farm area actions.
-  $actions = array(
-    'asset' => array(
-      'title' => t('Add an asset'),
-      'href' => 'farm/asset/add',
-      'paths' => array(
-        'farm',
-        'farm/assets',
-      ),
-    ),
-  );
-  return $actions;
+  // Only operate on farm_asset entities.
+  if ($type != 'farm_asset') {
+    return;
+  }
+
+  // Update "changed" value if there was a value mapped to that.
+  if (isset($entity->feeds_item->asset_changed)) {
+    $entity->changed = $entity->feeds_item->asset_changed;
+  }
 }
 
 /****************************************************************
  * Contrib hooks
  * **************************************************************/
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function farm_asset_ctools_plugin_api($owner, $api) {
+  $return = array();
+  if ($owner == 'feeds' && $api == 'plugins') {
+    $return['version'] = 1;
+  }
+  return $return;
+}
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -467,6 +370,25 @@ function farm_asset_ctools_plugin_directory($owner, $plugin_type) {
     }
   }
   return $directory;
+}
+
+/**
+ * Implements hook_feed_plugins().
+ */
+function farm_asset_feeds_plugins() {
+  $info = array();
+  $info['FarmAssetProcessor'] = array(
+    'name' => 'Farm asset processor',
+    'description' => 'Create and update farm assets.',
+    'help' => 'Create and update farm assets from parsed content.',
+    'handler' => array(
+      'parent' => 'FeedsProcessor',
+      'class' => 'FarmAssetProcessor',
+      'file' => 'FarmAssetProcessor.inc',
+      'path' => drupal_get_path('module', 'farm_asset') . '/plugins/feeds',
+    ),
+  );
+  return $info;
 }
 
 /**
@@ -753,44 +675,4 @@ function farm_asset_type_get_names() {
     $names[$type->type] = $type->label;
   }
   return $names;
-}
-
-/**
- * Helper function for retrieving a list of assets from the ?farm_asset URL
- * query parameter.
- *
- * @return array
- *   Returns the asset objects in an array.
- */
-function farm_asset_load_assets_from_url() {
-
-  // Initialize an empty array.
-  $assets = array();
-
-  // If the "farm_asset" GET parameter isn't set, bail.
-  $params = drupal_get_query_parameters();
-  if (empty($params['farm_asset'])) {
-    return $assets;
-  }
-
-  // If only a single asset id is passed, convert it to an array.
-  if (!is_array($params['farm_asset'])) {
-    $params['farm_asset'] = array($params['farm_asset']);
-  }
-
-  // Validate that all the asset IDs are valid by loading the assets themselves.
-  $assets = array();
-  foreach($params['farm_asset'] as $asset_id) {
-
-    // Attempt to load the asset.
-    $asset = farm_asset_load($asset_id);
-
-    // If it loaded, add it to the array.
-    if (!empty($asset)) {
-      $assets[] = $asset;
-    }
-  }
-
-  // Return the array of assets.
-  return $assets;
 }

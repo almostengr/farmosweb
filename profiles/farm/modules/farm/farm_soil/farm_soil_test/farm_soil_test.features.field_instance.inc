@@ -15,7 +15,7 @@ function farm_soil_test_field_default_field_instances() {
     'bundle' => 'farm_soil_test',
     'default_value' => array(),
     'deleted' => 0,
-    'description' => 'What areas were this soil sample taken from?',
+    'description' => 'What areas is this sample being taken from?',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -53,7 +53,7 @@ function farm_soil_test_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -63,7 +63,7 @@ function farm_soil_test_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => 'farm/log/soil_test',
-      'file_extensions' => 'csv doc docx odt odp ods pdf ppt pptx txt xls xlsx kml kmz zip tar gz',
+      'file_extensions' => '',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -99,18 +99,18 @@ function farm_soil_test_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 5,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_images',
-    'label' => 'Photo(s)',
+    'label' => 'Photos',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
       'file_directory' => 'farm/log/soil_test',
-      'file_extensions' => 'png gif jpg jpeg',
+      'file_extensions' => '',
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -126,6 +126,71 @@ function farm_soil_test_field_default_field_instances() {
       ),
       'type' => 'image_miw',
       'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_soil_test-field_farm_log_category'.
+  $field_instances['log-farm_soil_test-field_farm_log_category'] = array(
+    'bundle' => 'farm_soil_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_category',
+    'label' => 'Log category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 11,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_soil_test-field_farm_log_owner'.
+  $field_instances['log-farm_soil_test-field_farm_log_owner'] = array(
+    'bundle' => 'farm_soil_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Optionally assign this task to one or more people.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_owner',
+    'label' => 'Owner',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 9,
     ),
   );
 
@@ -298,12 +363,16 @@ function farm_soil_test_field_default_field_instances() {
   t('Files');
   t('Laboratory');
   t('List the names of soils that are included in this sample. For soil maps and soil names, visit http://websoilsurvey.nrcs.usda.gov/app');
+  t('Log category');
   t('Notes');
-  t('Photo(s)');
+  t('Optionally assign this task to one or more people.');
+  t('Owner');
+  t('Photos');
   t('Sample Points');
   t('Soil Names');
   t('Use the map to pinpoint the location(s) from which this sample is taken. If you are preparing a soil test, you may be sampling multiple points within a given area. All the points that comprise this sample should be included.');
-  t('What areas were this soil sample taken from?');
+  t('Use this to organize your logs into categories for easier searching and filtering later.');
+  t('What areas is this sample being taken from?');
   t('What laboratory performed the soil test?');
 
   return $field_instances;

@@ -66,8 +66,11 @@ function farm_install_configure_form($form, &$form_state) {
   );
   // Extra modules will not be selected by default.
   $extra_modules = array(
+    'farm_water_test' => st('Water test logs'),
+    'farm_soil_compost' => st('Compost'),
     'farm_sensor' => st('Sensor'),
     'farm_sensor_listener' => st('Sensor: Listener'),
+    'farm_log_sale' => st('Sale logs (beta)'),
   );
   $form['farm_modules'] = array(
     '#type' => 'checkboxes',
@@ -524,6 +527,64 @@ function farm_update_7023(&$sandbox) {
 }
 
 /**
+ * Populate all log owner fields with the log's author.
+ */
+function farm_update_7024(&$sandbox) {
+
+  // Revert the farm_fields feature to ensure that the new field is available.
+  features_revert(array('farm_fields' => array('field_base')));
+
+  // Copy user id from {log} table.
+  $select = "SELECT 'log' AS entity_type, type AS bundle, 0 AS deleted, id AS entity_id, id AS revision_id, 'und' AS language, 0 AS delta, uid AS field_farm_log_owner_target_id FROM {log}";
+  db_query('INSERT INTO {field_data_field_farm_log_owner} (' . $select . ')');
+  db_query('INSERT INTO {field_revision_field_farm_log_owner} (' . $select . ')');
+}
+
+/**
+ * Install the new Farm Dashboard, Help, Menu, People, and UI modules.
+ */
+function farm_update_7025(&$sandbox) {
+
+  // Enable new modules.
+  $modules = array(
+    'farm_dashboard',
+    'farm_help',
+    'farm_menu',
+    'farm_people',
+    'farm_ui'
+  );
+  _farm_update_enable_modules($modules);
+
+  // Delete the farm_admin module.
+  db_delete('system')
+    ->condition('name', 'farm_admin')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Install the new Farm Import module.
+ */
+function farm_update_7026(&$sandbox) {
+  _farm_update_enable_modules(array('farm_import'));
+}
+
+/**
+ * Enable new Farm Season module and remove Farm Taxonomy.
+ */
+function farm_update_7027(&$sandbox) {
+
+  // Enable Farm Season.
+  _farm_update_enable_modules(array('farm_season'));
+
+  // Delete the farm_taxonomy module.
+  db_delete('system')
+    ->condition('name', 'farm_taxonomy')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
  * Update helper function: enable modules.
  */
 function _farm_update_enable_modules($modules = array()) {
@@ -533,4 +594,3 @@ function _farm_update_enable_modules($modules = array()) {
     }
   }
 }
-

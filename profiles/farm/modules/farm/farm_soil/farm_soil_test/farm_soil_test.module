@@ -7,91 +7,72 @@
 include_once 'farm_soil_test.features.inc';
 
 /**
- * Implements hook_farm_access_perms().
+ * Implements hook_farm_ui_entities().
  */
-function farm_soil_test_farm_access_perms($role) {
-
-  // Assemble a list of entity types provided by this module.
-  $types = array(
-    'log' => array(
-      'farm_soil_test',
-    ),
-    'taxonomy' => array(
-      'farm_soil_names',
-    ),
-  );
-
-  // Grant different CRUD permissions based on the role.
-  $perms = array();
-  switch ($role) {
-
-    // Farm Manager and Worker
-    case 'Farm Manager':
-    case 'Farm Worker':
-      $perms = farm_access_entity_perms($types);
-      break;
-
-    // Farm Viewer
-    case 'Farm Viewer':
-      $perms = farm_access_entity_perms($types, array('view'));
-      break;
-  }
-
-  return $perms;
-}
-
-/**
- * Implements hook_farm_admin_actions().
- */
-function farm_soil_test_farm_admin_actions() {
-
-  // Define farm area actions.
-  $actions = array(
-    'soil_test' => array(
-      'title' => t('Add a soil test'),
-      'href' => 'log/add/farm_soil_test',
-      'views' => array(
-        'farm_log_soil_tests',
-      ),
-      'paths' => array(
-        'taxonomy/term/%',
-      ),
-    ),
-  );
-  return $actions;
-}
-
-/**
- * Implements hook_farm_taxonomy_term_view_views().
- */
-function farm_soil_test_farm_taxonomy_term_view_views($term) {
-
-  // If the term is not an area, bail.
-  if ($term->vocabulary_machine_name != 'farm_areas') {
-    return array();
-  }
-
-  // Return a list of Views to include on Areas.
+function farm_soil_test_farm_ui_entities() {
   return array(
-    'farm_log_soil_tests',
+    'log' => array(
+      'farm_soil_test' => array(
+        'label' => t('Soil test'),
+        'label_plural' => t('Soil tests'),
+        'view' => 'farm_log_soil_tests',
+        'farm_asset' => 'none',
+        'areas' => TRUE,
+      ),
+    ),
   );
 }
 
 /**
- * Implements hook_farm_area_links().
+ * Implements hook_farm_log_categories_populate().
  */
-function farm_soil_test_farm_area_links($id) {
-  $links = array();
+function farm_soil_test_farm_log_categories_populate($log) {
+  $categories = array();
+  if ($log->type == 'farm_soil_test') {
+    $categories[] = 'Soil';
+  }
+  return $categories;
+}
 
-  // Add link to soil tests.
-  $view = views_get_view('farm_log_soil_tests');
-  $view->preview('default', array($id));
-  if ($view->total_rows > 0) {
-    $links[] = array(
-      'title' => t('Soil tests') . ': ' . $view->total_rows,
-      'href' => 'farm/logs/soil-tests/' . $id,
+/**
+ * Implements hook_feeds_importer_default_alter().
+ */
+function farm_soil_test_feeds_importer_default_alter(&$importers) {
+
+  // Add extra field mappings to soil tests.
+  $name = 'log_farm_soil_test';
+  if (!empty($importers[$name])) {
+    $mappings = array(
+      array(
+        'source' => 'Laboratory',
+        'target' => 'field_farm_soil_lab',
+        'unique' => FALSE,
+        'language' => 'und',
+      ),
+      array(
+        'source' => 'Soil names',
+        'target' => 'field_farm_soil_names',
+        'term_search' => '0',
+        'autocreate' => 1,
+        'language' => 'und',
+      ),
     );
+    $importer_mappings =& $importers[$name]->config['processor']['config']['mappings'];
+    $importer_mappings = array_merge($importer_mappings, $mappings);
+  }
+}
+
+/**
+ * Implements hook_feeds_tamper_default_alter().
+ */
+function farm_soil_test_feeds_tamper_default_alter(&$feeds_tampers) {
+
+  // If farm_import is not installed, bail.
+  if (!module_exists('farm_import')) {
+    return;
   }
 
-  return $links;
+  // Explode soil names so it supports multiple values.
+  $feeds_tamper = farm_import_feeds_tamper_plugin('log', 'farm_soil_test', 'Soil names', 'explode');
+  $feeds_tampers[$feeds_tamper->id] = $feeds_tamper;
 }

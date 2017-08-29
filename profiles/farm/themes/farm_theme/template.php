@@ -108,14 +108,12 @@ function farm_theme_form_alter(&$form, &$form_state, $form_id) {
 
     // Form prefix HTML:
     $form['#prefix'] = '
-<div class="panel panel-default">
-  <div class="panel-heading" role="tab" id="' . $panel_head_id . '">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" href="#' . $panel_body_id . '" aria-expanded="' . $aria_expanded . '" aria-controls="' . $panel_body_id . '">
-        Filter/Sort
-      </a>
-    </h4>
-  </div>
+<fieldset class="panel panel-default collapsible">
+  <legend class="panel-heading" role="tab" id="' . $panel_head_id . '">
+    <a class="panel-title fieldset-legend collapsed" data-toggle="collapse" href="#' . $panel_body_id . '" aria-expanded="' . $aria_expanded . '" aria-controls="' . $panel_body_id . '">
+      Filter/Sort
+    </a>
+  </legend>
   <div id="' . $panel_body_id . '" class="panel-collapse collapse' . $collapse_class . '" role="tabpanel" aria-labelledby="' . $panel_head_id . '">
     <div class="panel-body">';
 
@@ -123,7 +121,7 @@ function farm_theme_form_alter(&$form, &$form_state, $form_id) {
     $form['#suffix'] = '
     </div>
   </div>
-</div>';
+</fieldset>';
   }
 }
 
@@ -142,21 +140,32 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
   if (!empty($form['select']['action::log_clone_action'])) {
     $form['select']['action::log_clone_action']['#weight'] = 100;
   }
+}
 
-  // Add Bootstrap classes to the action buttons.
-  $buttons = array(
-    'farm_log_movement_asset_move' => 'primary',
-    'log_done' => 'success',
-    'log_undone' => 'danger',
-    'log_reschedule' => 'warning',
-    'log_clone' => 'primary',
-  );
-  foreach ($buttons as $name => $style) {
-    $action_name = 'action::' . $name . '_action';
-    if (!empty($form['select'][$action_name])) {
-      $form['select'][$action_name]['#attributes']['class'][] = 'btn-' . $style;
-    }
-  }
+/**
+ * Implements hook_bootstrap_colorize_text_alter().
+ */
+function farm_theme_bootstrap_colorize_text_alter(&$texts) {
+
+  // Colorize VBO action buttons.
+  $texts['matches'][t('Move')] = 'default';
+  $texts['matches'][t('Done')] = 'success';
+  $texts['matches'][t('Not Done')] = 'danger';
+  $texts['matches'][t('Reschedule')] = 'warning';
+  $texts['matches'][t('Clone')] = 'default';
+}
+
+/**
+ * Implements hook_bootstrap_iconize_text_alter().
+ */
+function farm_theme_bootstrap_iconize_text_alter(&$texts) {
+
+  // Iconize VBO action buttons.
+  $texts['matches'][t('Move')] = 'move';
+  $texts['matches'][t('Done')] = 'check';
+  $texts['matches'][t('Not Done')] = 'unchecked';
+  $texts['matches'][t('Reschedule')] = 'calendar';
+  $texts['matches'][t('Clone')] = 'plus';
 }
 
 /**

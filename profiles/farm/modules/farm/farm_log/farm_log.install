@@ -6,6 +6,15 @@
  */
 
 /**
+ * Implements hook_modules_enabled().
+ */
+function farm_log_modules_enabled($modules) {
+
+  // Create log categories on behalf of all enabled modules.
+  farm_log_categories_create_all();
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function farm_log_update_dependencies() {
@@ -335,5 +344,167 @@ function farm_log_update_7006(&$sandbox) {
   );
   foreach ($modules as $module) {
     features_revert(array($module => array('field_instance')));
+  }
+}
+
+/**
+ * Migrate observation types to log categories.
+ */
+function farm_log_update_7007(&$sandbox) {
+
+  // Revert various Features components to ensure that the new log categories
+  // vocabulary is created, and the new field base and instances are added.
+  $components = array(
+    'farm_fields' => array('field_base'),
+    'farm_log_activity' => array('field_instance'),
+    'farm_log_harvest' => array('field_instance'),
+    'farm_log_input' => array('field_instance'),
+    'farm_log_observation' => array('field_instance'),
+  );
+  features_revert($components);
+
+  // Load the old "Farm Observation Types" vocabulary.
+  $observation_types_vocab = taxonomy_vocabulary_machine_name_load('farm_observation_types');
+
+  // Load the new "Farm Log Categories" vocabulary.
+  $log_categories_vocab = taxonomy_vocabulary_machine_name_load('farm_log_categories');
+
+  // If either of them didn't load, we need to bail.
+  if (empty($observation_types_vocab->vid) || empty($log_categories_vocab->vid)) {
+    $message = 'Terms could not be migrated from the Farm Observation Types
+    vocabulary to the Farm Log Categories vocabulary because one or both of
+    them could not be loaded. Check to make sure both vocabularies exist, and
+    try running the update again.';
+    throw new DrupalUpdateException($message);
+  }
+
+  // Move all terms from the old vocabulary to the new vocabulary.
+  db_update('taxonomy_term_data')
+    ->fields(array('vid' => $log_categories_vocab->vid))
+    ->condition('vid', $observation_types_vocab->vid)
+    ->execute();
+
+  // Move all field data from the old field to the new field.
+  db_query('INSERT INTO {field_data_field_farm_log_category} (SELECT entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_farm_observation_type_tid as field_farm_log_category_tid FROM {field_data_field_farm_observation_type})');
+  db_query('INSERT INTO {field_revision_field_farm_log_category} (SELECT entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_farm_observation_type_tid as field_farm_log_category_tid FROM {field_revision_field_farm_observation_type})');
+
+  // Delete the old vocabulary.
+  taxonomy_vocabulary_delete($observation_types_vocab->vid);
+
+  // Delete the old field instance.
+  $field = field_info_instance('log', 'field_farm_observation_type', 'farm_observation');
+  field_delete_instance($field);
+
+  // Create log categories on behalf of all enabled modules.
+  farm_log_categories_create_all();
+}
+
+/**
+ * Autopopulate categories on certain log types.
+ */
+function farm_log_update_7008(&$sandbox) {
+
+  // Process this in passes of 50 logs at a time.
+  $sandbox['#finished'] = 0;
+  $limit = 50;
+
+  // Keep track of progress.
+  if (!isset($sandbox['progress'])) {
+
+    // Start out at zero.
+    $sandbox['progress'] = 0;
+
+    // Count how many movement logs there are.
+    $sandbox['max'] = db_select('log')
+      ->fields(NULL, array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+
+  // Fetch the next set of logs.
+  $query = db_select('log')
+    ->fields(NULL, array('id', 'type'))
+    ->orderBy('id', 'ASC')
+    ->range($sandbox['progress'], $limit);
+  $results = $query->execute();
+
+  // Iterate over the results...
+  foreach ($results as $row) {
+
+    // Increment progress.
+    $sandbox['progress']++;
+
+    // Load categories provided by modules.
+    $categories = module_invoke_all('farm_log_categories_populate', $row);
+
+    // If there are no categories, skip this log.
+    if (empty($categories)) {
+      continue;
+    }
+
+    // Check to see if the log has existing categories so we can increment
+    // the field's delta value accordingly.
+    $query = db_select('field_data_field_farm_log_category', 'cat');
+    $query->fields('cat', array('delta', 'field_farm_log_category_tid'));
+    $query->condition('cat.entity_type', 'log');
+    $query->condition('cat.deleted', 0);
+    $query->condition('cat.entity_id', $row->id);
+    $existing = $query->execute();
+
+    // Iterate over the existing records to build a list of term IDs and get
+    // the highest delta.
+    $delta = NULL;
+    $tids = array();
+    foreach ($existing as $field) {
+      if ($field->delta > $delta) {
+        $delta = $field->delta;
+      }
+      $tids[] = $field->field_farm_log_category_tid;
+    }
+    if (is_null($delta)) {
+      $delta = 0;
+    }
+    else {
+      $delta++;
+    }
+
+    // Iterate over the categories.
+    foreach ($categories as $category) {
+
+      // Load the term.
+      $terms = taxonomy_get_term_by_name($category, 'farm_log_categories');
+      $term = reset($terms);
+
+      // If the term already exists on the log, skip it.
+      if (in_array($term->tid, $tids)) {
+        continue;
+      }
+
+      // Write it to the database.
+      $record = array(
+        'entity_type' => 'log',
+        'bundle' => $row->type,
+        'deleted' => 0,
+        'entity_id' => $row->id,
+        'revision_id' => $row->id,
+        'language' => 'und',
+        'delta' => $delta,
+        'field_farm_log_category_tid' => $term->tid,
+      );
+      drupal_write_record('field_data_field_farm_log_category', $record);
+      drupal_write_record('field_revision_field_farm_log_category', $record);
+
+      // Increment delta.
+      $delta++;
+    }
+  }
+
+  // Tell Drupal whether or not we're finished.
+  if ($sandbox['max'] > 0) {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
+  else {
+    $sandbox['#finished'] = 1;
   }
 }

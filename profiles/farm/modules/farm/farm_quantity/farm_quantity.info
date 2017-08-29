@@ -18,9 +18,9 @@ features[field_instance][] = field_collection_item-field_farm_quantity-field_far
 features[taxonomy][] = farm_quantity_units
 features[variable][] = pathauto_taxonomy_term_farm_quantity_units_pattern
 
-; Information added by Drupal.org packaging script on 2016-04-13
-version = "7.x-1.0-beta1"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_quantity"
-datestamp = "1460562840"
+project = "farm"
+datestamp = "1503427447"
 

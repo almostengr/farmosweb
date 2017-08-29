@@ -40,19 +40,16 @@ dependencies[] = restws
 
 ; Farm
 dependencies[] = farm_access
-dependencies[] = farm_admin
-dependencies[] = farm_area
-dependencies[] = farm_asset
-dependencies[] = farm_fields
-dependencies[] = farm_log
-dependencies[] = farm_map
-dependencies[] = farm_quantity
-dependencies[] = farm_taxonomy
+dependencies[] = farm_dashboard
+dependencies[] = farm_help
+dependencies[] = farm_import
+dependencies[] = farm_menu
+dependencies[] = farm_people
+dependencies[] = farm_ui
 
-
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.0-beta13"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
 project = "farm"
-datestamp = "1495314487"
+datestamp = "1503427447"
 

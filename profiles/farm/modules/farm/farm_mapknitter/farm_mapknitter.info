@@ -4,9 +4,9 @@ core = 7.x
 package = farmOS
 dependencies[] = farm_map
 
-; Information added by Drupal.org packaging script on 2016-04-12
-version = "7.x-1.2"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_mapknitter"
-datestamp = "1460497447"
+project = "farm"
+datestamp = "1503427447"
 

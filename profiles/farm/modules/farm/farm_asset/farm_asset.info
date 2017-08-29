@@ -6,12 +6,13 @@ dependencies[] = entity
 dependencies[] = views
 dependencies[] = views_bulk_operations
 files[] = farm_asset.class.inc
+files[] = plugins/feeds/FarmAssetProcessor.inc
 files[] = views/handlers/farm_asset_handler_relationship_entity_reverse.inc
 files[] = views/plugins/farm_asset_plugin_argument_validate_farm_asset.inc
 
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.0-beta10"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_asset"
-datestamp = "1495308798"
+project = "farm"
+datestamp = "1503427447"
 

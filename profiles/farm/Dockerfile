@@ -1,6 +1,11 @@
 # Inherit from the PHP 5.6 Apache image on Docker Hub.
 FROM php:5.6-apache
 
+# Set environment variables.
+ENV FARMOS_VERSION 7.x-1.0-beta15
+ENV FARMOS_DEV_BRANCH 7.x-1.x
+ENV FARMOS_DEV false
+
 # Enable Apache rewrite module.
 RUN a2enmod rewrite
 
@@ -58,11 +63,6 @@ RUN curl -fsSL 'http://download.osgeo.org/geos/geos-3.4.2.tar.bz2' -o geos.tar.b
 RUN curl -fSL "http://files.drush.org/drush.phar" -o /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush
 
-# Set environment variables.
-ENV FARMOS_VERSION 7.x-1.0-beta13
-ENV FARMOS_DEV_BRANCH 7.x-1.x
-ENV FARMOS_DEV false
-
 # Mount a volume at /var/www/html.
 VOLUME /var/www/html
 
@@ -70,4 +70,3 @@ VOLUME /var/www/html
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
-

@@ -34,9 +34,9 @@ features[field_instance][] = farm_asset-sensor-field_farm_images
 features[variable][] = pathauto_farm_asset_sensor_pattern
 features[views_view][] = farm_sensors
 
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.0-beta10"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_sensor"
-datestamp = "1495310289"
+project = "farm"
+datestamp = "1503427447"
 

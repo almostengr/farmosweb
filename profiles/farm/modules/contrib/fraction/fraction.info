@@ -11,9 +11,9 @@ files[] = views/handlers/fraction_handler_sort_decimal.inc
 files[] = views/handlers/fraction_handler_filter_decimal.inc
 files[] = fraction.test
 
-; Information added by Drupal.org packaging script on 2016-07-13
-version = "7.x-1.4"
+; Information added by Drupal.org packaging script on 2017-08-10
+version = "7.x-1.5"
 core = "7.x"
 project = "fraction"
-datestamp = "1468438156"
+datestamp = "1502376254"
 

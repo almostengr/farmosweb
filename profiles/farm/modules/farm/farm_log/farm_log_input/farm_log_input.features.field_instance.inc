@@ -22,7 +22,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'token' => array(
         'label' => 'above',
@@ -43,7 +43,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 3,
+      'weight' => 12,
     ),
   );
 
@@ -61,7 +61,7 @@ function farm_log_input_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'token' => array(
         'label' => 'above',
@@ -94,6 +94,55 @@ function farm_log_input_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_input-field_farm_date_purchase'.
+  $field_instances['log-farm_input-field_farm_date_purchase'] = array(
+    'bundle' => 'farm_input',
+    'deleted' => 0,
+    'description' => 'When was this input purchased (if applicable)?',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'short',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => 0,
+        ),
+        'type' => 'date_default',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_date_purchase',
+    'label' => 'Date purchased',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'no_fieldset' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_select',
+      'weight' => -3,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_input-field_farm_files'.
   $field_instances['log-farm_input-field_farm_files'] = array(
     'bundle' => 'farm_input',
@@ -106,7 +155,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 10,
+        'weight' => 13,
       ),
       'token' => array(
         'label' => 'above',
@@ -122,7 +171,7 @@ function farm_log_input_field_default_field_instances() {
     'settings' => array(
       'description_field' => 1,
       'file_directory' => 'farm/log/input',
-      'file_extensions' => 'csv doc docx odt odp ods pdf ppt pptx txt xls xlsx kml kmz zip tar gz',
+      'file_extensions' => '',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -152,7 +201,7 @@ function farm_log_input_field_default_field_instances() {
           'map_layer_preset' => 'farm_map_geofield_formatter:openlayers_geofield_layer_formatter',
         ),
         'type' => 'openlayers_geofield',
-        'weight' => 11,
+        'weight' => 14,
       ),
       'token' => array(
         'label' => 'above',
@@ -199,7 +248,7 @@ function farm_log_input_field_default_field_instances() {
         'use_geocoder' => 1,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -224,7 +273,7 @@ function farm_log_input_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 9,
+        'weight' => 12,
       ),
       'token' => array(
         'label' => 'above',
@@ -235,13 +284,13 @@ function farm_log_input_field_default_field_instances() {
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_images',
-    'label' => 'Photo(s)',
+    'label' => 'Photos',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
       'file_directory' => 'farm/log/input',
-      'file_extensions' => 'png gif jpg jpeg',
+      'file_extensions' => '',
       'max_filesize' => '',
       'max_resolution' => '',
       'min_resolution' => '',
@@ -272,7 +321,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 5,
       ),
       'token' => array(
         'label' => 'above',
@@ -283,7 +332,7 @@ function farm_log_input_field_default_field_instances() {
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_input_method',
-    'label' => 'Application Method',
+    'label' => 'Application method',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -296,7 +345,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => -6,
     ),
   );
 
@@ -312,7 +361,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'token' => array(
         'label' => 'above',
@@ -336,7 +385,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => -7,
     ),
   );
 
@@ -363,7 +412,7 @@ function farm_log_input_field_default_field_instances() {
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_input_source',
-    'label' => 'Source/Manufacturer',
+    'label' => 'Source/manufacturer',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -376,7 +425,106 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => -5,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_input-field_farm_log_category'.
+  $field_instances['log-farm_input-field_farm_log_category'] = array(
+    'bundle' => 'farm_input',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 10,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_category',
+    'label' => 'Log category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_input-field_farm_log_owner'.
+  $field_instances['log-farm_input-field_farm_log_owner'] = array(
+    'bundle' => 'farm_input',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Optionally assign this task to one or more people.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 11,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_owner',
+    'label' => 'Owner',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 14,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_input-field_farm_lot_number'.
+  $field_instances['log-farm_input-field_farm_lot_number'] = array(
+    'bundle' => 'farm_input',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If the manufacturer assigned this input a lot number, enter it here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_lot_number',
+    'label' => 'Input lot number',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => -4,
     ),
   );
 
@@ -416,7 +564,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 3,
+      'weight' => -8,
     ),
   );
 
@@ -434,7 +582,7 @@ function farm_log_input_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 13,
+        'weight' => 15,
       ),
     ),
     'entity_type' => 'log',
@@ -449,7 +597,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -465,7 +613,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'token' => array(
         'label' => 'above',
@@ -528,32 +676,40 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Application Method');
+  t('Application method');
   t('Areas');
   t('Assets');
+  t('Date purchased');
   t('Describe the quantity of this input, using a value and a unit of measurement. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
   t('Files');
   t('Geometry');
   t('How was this input applied?');
+  t('If the manufacturer assigned this input a lot number, enter it here.');
+  t('Input lot number');
+  t('Log category');
   t('Material');
   t('Movement');
   t('Notes');
-  t('Photo(s)');
+  t('Optionally assign this task to one or more people.');
+  t('Owner');
+  t('Photos');
   t('Purpose');
   t('Quantity');
-  t('Source/Manufacturer');
+  t('Source/manufacturer');
   t('This field is optional. It allows you to store geospatial data along with this input.');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
+  t('Use this to organize your logs into categories for easier searching and filtering later.');
   t('What areas is this input being applied to?');
   t('What assets do this input log pertain to?');
   t('What material is being applied? As you type, you will have the option of selecting from materials that you\'ve entered in the past.');
   t('What was the purpose of this input?');
+  t('When was this input purchased (if applicable)?');
   t('Where was this input obtained? Who manufactured it?');
 
   return $field_instances;

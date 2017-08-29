@@ -5,9 +5,9 @@ package = farmOS
 dependencies[] = farm_sensor
 dependencies[] = fraction
 
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.0-beta10"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_sensor"
-datestamp = "1495310289"
+project = "farm"
+datestamp = "1503427447"
 

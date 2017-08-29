@@ -6,9 +6,11 @@ dependencies[] = date_api
 dependencies[] = entity
 configure = admin/config/log
 files[] = log.class.inc
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.8"
+files[] = plugins/feeds/LogProcessor.inc
+
+; Information added by Drupal.org packaging script on 2017-08-10
+version = "7.x-1.9"
 core = "7.x"
 project = "log"
-datestamp = "1495307888"
+datestamp = "1502376846"
 

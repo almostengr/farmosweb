@@ -25,7 +25,7 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['title'] = 'History of Assets';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['access']['perm'] = 'view farm logs';
+  $handler->display->display_options['access']['perm'] = 'view all logs';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -94,6 +94,12 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['header']['area_text_custom']['content'] = '<small>This lists all assets that have ever been moved to this area. If an asset has been moved to this area more than once, it will show up more than once in this list.</small>';
+  /* Relationship: Log: Movement (field_farm_movement) */
+  $handler->display->display_options['relationships']['field_farm_movement_value']['id'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['table'] = 'field_data_field_farm_movement';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['field'] = 'field_farm_movement_value';
+  $handler->display->display_options['relationships']['field_farm_movement_value']['required'] = TRUE;
+  $handler->display->display_options['relationships']['field_farm_movement_value']['delta'] = '0';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_farm_asset_target_id']['id'] = 'field_farm_asset_target_id';
   $handler->display->display_options['relationships']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
@@ -133,10 +139,6 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
   $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'M j Y';
   $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'long';
-  /* Field: Field collection item: Movement from */
-  $handler->display->display_options['fields']['field_farm_move_from']['id'] = 'field_farm_move_from';
-  $handler->display->display_options['fields']['field_farm_move_from']['table'] = 'field_data_field_farm_move_from';
-  $handler->display->display_options['fields']['field_farm_move_from']['field'] = 'field_farm_move_from';
   /* Sort criterion: Log: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'log';
@@ -151,6 +153,7 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['field'] = 'field_farm_move_to_tid';
+  $handler->display->display_options['arguments']['field_farm_move_to_tid']['relationship'] = 'field_farm_movement_value';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['title_enable'] = TRUE;
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['title'] = 'Assets in %1';
@@ -163,14 +166,6 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['validate_options']['vocabularies'] = array(
     'farm_areas' => 'farm_areas',
   );
-  /* Filter criterion: Log: Log type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'log';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'farm_movement' => 'farm_movement',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
   /* Filter criterion: Log: Done */
   $handler->display->display_options['filters']['done']['id'] = 'done';
   $handler->display->display_options['filters']['done']['table'] = 'log';
@@ -236,6 +231,7 @@ function farm_log_movement_views_default_views() {
     t('next ›'),
     t('last »'),
     t('<small>This lists all assets that have ever been moved to this area. If an asset has been moved to this area more than once, it will show up more than once in this list.</small>'),
+    t('field collection item from field_farm_movement'),
     t('Asset'),
     t('Farm asset ID'),
     t('.'),
@@ -243,7 +239,6 @@ function farm_log_movement_views_default_views() {
     t('Type'),
     t('Active'),
     t('Arrived'),
-    t('From'),
     t('All'),
     t('Assets in %1'),
     t('Asset type'),
@@ -267,7 +262,7 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['title'] = 'Farm Asset GeoJSON';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['access']['perm'] = 'view any farm_movement log entities';
+  $handler->display->display_options['access']['perm'] = 'view all logs';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -419,10 +414,11 @@ function farm_log_movement_views_default_views() {
     'done' => 'done',
     'id' => 'id',
     'timestamp' => 'timestamp',
+    'field_farm_asset' => 'field_farm_asset',
     'field_farm_move_to' => 'field_farm_move_to',
     'name' => 'name',
-    'field_farm_asset' => 'field_farm_asset',
     'type' => 'type',
+    'field_farm_log_category' => 'field_farm_log_category',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -452,6 +448,11 @@ function farm_log_movement_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_asset' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_farm_move_to' => array(
       'align' => '',
       'separator' => '',
@@ -464,14 +465,14 @@ function farm_log_movement_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_farm_asset' => array(
+    'type' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'type' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
+    'field_farm_log_category' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -581,6 +582,13 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'log';
   $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Field: Log: Log category */
+  $handler->display->display_options['fields']['field_farm_log_category']['id'] = 'field_farm_log_category';
+  $handler->display->display_options['fields']['field_farm_log_category']['table'] = 'field_data_field_farm_log_category';
+  $handler->display->display_options['fields']['field_farm_log_category']['field'] = 'field_farm_log_category';
+  $handler->display->display_options['fields']['field_farm_log_category']['label'] = 'Categories';
+  $handler->display->display_options['fields']['field_farm_log_category']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_farm_log_category']['delta_offset'] = '0';
   /* Sort criterion: Log: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'log';
@@ -628,6 +636,20 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Log type';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  /* Filter criterion: Log: Log category (field_farm_log_category) */
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['id'] = 'field_farm_log_category_tid';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['table'] = 'field_data_field_farm_log_category';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['field'] = 'field_farm_log_category_tid';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['operator_id'] = 'field_farm_log_category_tid_op';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['label'] = 'Categories';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['operator'] = 'field_farm_log_category_tid_op';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['identifier'] = 'field_farm_log_category_tid';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['vocabulary'] = 'farm_log_categories';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['hierarchy'] = 1;
   /* Filter criterion: Date: Date (log) */
   $handler->display->display_options['filters']['date_filter']['id'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['table'] = 'log';
@@ -671,7 +693,7 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['filters']['done']['expose']['identifier'] = 'done';
 
   /* Display: Page */
-  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'farm/logs/movements';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Logs with movements';
@@ -696,12 +718,12 @@ function farm_log_movement_views_default_views() {
   $handler->display->display_options['style_options']['keep_html'] = 0;
   $handler->display->display_options['path'] = 'farm/logs/movements/csv';
   $handler->display->display_options['displays'] = array(
-    'page_1' => 'page_1',
+    'page' => 'page',
     'default' => 0,
   );
   $translatables['farm_log_movement'] = array(
     t('Master'),
-    t('Movements'),
+    t('Logs with movements'),
     t('more'),
     t('Apply'),
     t('Reset'),
@@ -715,6 +737,7 @@ function farm_log_movement_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('This lists all logs that define movements of assets. Multiple log types are included in this list, and are specified in the "Log type" column.'),
     t('No logs with movements found.'),
     t('field collection item from field_farm_movement'),
     t('Log'),
@@ -725,9 +748,10 @@ function farm_log_movement_views_default_views() {
     t('Log ID'),
     t('.'),
     t('Date'),
-    t('To'),
     t('Assets'),
+    t('Movement to'),
     t('Log type'),
+    t('Categories'),
     t('All'),
     t('%1\'s movements'),
     t('Area'),

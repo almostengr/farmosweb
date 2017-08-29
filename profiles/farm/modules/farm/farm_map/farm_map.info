@@ -36,9 +36,9 @@ features[openlayers_sources][] = farm_map_source_google_hybrid
 features[openlayers_sources][] = farm_map_source_google_satellite
 features[openlayers_sources][] = farm_map_source_google_terrain
 
-; Information added by Drupal.org packaging script on 2017-05-20
-version = "7.x-1.0-beta11"
+; Information added by Drupal.org packaging script on 2017-08-22
+version = "7.x-1.0-beta15"
 core = "7.x"
-project = "farm_map"
-datestamp = "1495309996"
+project = "farm"
+datestamp = "1503427447"
 

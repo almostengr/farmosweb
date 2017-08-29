@@ -8,53 +8,38 @@
 include_once 'farm_log_harvest.features.inc';
 
 /**
- * Implements hook_farm_access_perms().
+ * Implements hook_farm_ui_entities().
  */
-function farm_log_harvest_farm_access_perms($role) {
-
-  // Assemble a list of log types provided by this module.
-  $types = array(
+function farm_log_harvest_farm_ui_entities() {
+  return array(
     'log' => array(
-      'farm_harvest',
+      'farm_harvest' => array(
+        'label' => t('Harvest'),
+        'label_plural' => t('Harvests'),
+        'view' => 'farm_log_harvest',
+        'weight' => 80,
+      ),
     ),
   );
-
-  // Grant different CRUD permissions based on the role.
-  $perms = array();
-  switch ($role) {
-
-    // Farm Manager and Worker
-    case 'Farm Manager':
-    case 'Farm Worker':
-      $perms = farm_access_entity_perms($types);
-      break;
-
-    // Farm Viewer
-    case 'Farm Viewer':
-      $perms = farm_access_entity_perms($types, array('view'));
-      break;
-  }
-
-  return $perms;
 }
 
 /**
- * Implements hook_farm_admin_actions().
+ * Implements hook_feeds_importer_default_alter().
  */
-function farm_log_harvest_farm_admin_actions() {
+function farm_log_harvest_feeds_importer_default_alter(&$importers) {
 
-  // Define farm area actions.
-  $actions = array(
-    'harvest' => array(
-      'title' => t('Add a harvest'),
-      'href' => 'log/add/farm_harvest',
-      'assets' => array(
-        'all',
+  // Add extra field mappings to harvests.
+  $name = 'log_farm_harvest';
+  if (!empty($importers[$name])) {
+    $mappings = array(
+      array(
+        'source' => 'Lot number',
+        'target' => 'field_farm_lot_number',
+        'unique' => FALSE,
+        'language' => 'und',
       ),
-      'views' => array(
-        'farm_log_harvest',
-      ),
-    ),
-  );
-  return $actions;
+    );
+    $importer_mappings =& $importers[$name]->config['processor']['config']['mappings'];
+    $importer_mappings = array_merge($importer_mappings, $mappings);
+  }
 }

@@ -7,6 +7,19 @@
 include_once 'farm_area.features.inc';
 
 /**
+ * Implements hook_hook_info().
+ */
+function farm_area_hook_info() {
+  $hooks['farm_area_details'] = array(
+    'group' => 'farm_area',
+  );
+  $hooks['farm_area_type_info'] = array(
+    'group' => 'farm_area',
+  );
+  return $hooks;
+}
+
+/**
  * Implements hook_permission().
  */
 function farm_area_permission() {
@@ -22,29 +35,7 @@ function farm_area_permission() {
  * Implements hook_farm_access_perms().
  */
 function farm_area_farm_access_perms($role) {
-
-  // Assemble a list of entity types provided by this module.
-  $types = array(
-    'taxonomy' => array(
-      'farm_areas',
-    ),
-  );
-
-  // Grant different CRUD permissions based on the role.
   $perms = array();
-  switch ($role) {
-
-    // Farm Manager and Worker
-    case 'Farm Manager':
-    case 'Farm Worker':
-      $perms = farm_access_entity_perms($types);
-      break;
-
-    // Farm Viewer
-    case 'Farm Viewer':
-      $perms = farm_access_entity_perms($types, array('view'));
-      break;
-  }
 
   // Add the "view farm areas" permission to all roles.
   $perms[] = 'view farm areas';
@@ -66,34 +57,16 @@ function farm_area_menu() {
 }
 
 /**
- * Implements hook_farm_area_type_info().
+ * Implements hook_farm_ui_entities().
  */
-function farm_area_farm_area_type_info() {
+function farm_area_farm_ui_entities() {
   return array(
-    'building' => array(
-      'label' => t('Building'),
-      'style' => 'farm_map_style_red',
-      'weight' => 0,
-    ),
-    'field' => array(
-      'label' => t('Field'),
-      'style' => 'farm_map_style_yellow',
-      'weight' => 10,
-    ),
-    'landmark' => array(
-      'label' => t('Landmark'),
-      'style' => 'farm_map_style_orange',
-      'weight' => 50,
-    ),
-    'water' => array(
-      'label' => t('Water'),
-      'style' => 'farm_map_style_blue',
-      'weight' => 50,
-    ),
-    'property' => array(
-      'label' => t('Property'),
-      'style' => 'farm_map_style_purple',
-      'weight' => 100,
+    'taxonomy_term' => array(
+      'farm_areas' => array(
+        'label' => t('Area'),
+        'label_plural' => t('Areas'),
+        'view' => 'farm_areas',
+      ),
     ),
   );
 }
@@ -159,80 +132,6 @@ function farm_area_type_options() {
 }
 
 /**
- * Implements hook_farm_admin_actions().
- */
-function farm_area_farm_admin_actions() {
-
-  // Define farm admin actions.
-  $actions = array(
-    'area' => array(
-      'title' => t('Add an area'),
-      'href' => 'admin/structure/taxonomy/farm_areas/add',
-      'views' => array(
-        'farm_areas',
-      ),
-      'paths' => array(
-        'farm',
-      ),
-      'weight' => -10,
-    ),
-  );
-  return $actions;
-}
-
-/**
- * Implements hook_farm_taxonomy_breadcrumb().
- */
-function farm_area_farm_taxonomy_breadcrumb($term) {
-  $breadcrumb = array();
-
-  // If the term is in farm_areas, add a link to /farm/areas.
-  if ($term->vocabulary_machine_name == 'farm_areas') {
-    $breadcrumb[] = l(t('Areas'), 'farm/areas');
-  }
-
-  return $breadcrumb;
-}
-
-/**
- * Implements hook_farm_area_details().
- */
-function farm_area_farm_area_details($id) {
-
-  // Start a render array.
-  $output = array();
-
-  // Display the calculated area.
-  $calculated_area = farm_area_calculate_area($id);
-  if (!empty($calculated_area)) {
-    $output['calculated_area'] = array(
-      '#type' => 'markup',
-      '#markup' => '<p><small>Calculated area: ' . $calculated_area . '</small></p>',
-      '#weight' => -100,
-    );
-  }
-
-  // Get area links.
-  $area_links = farm_area_get_links($id);
-
-  // Create variables for an item list.
-  $variables = array(
-    'items' => $area_links,
-    'attributes' => array(),
-  );
-
-  // Add area links to the details.
-  $output['area_links'] = array(
-    '#type' => 'markup',
-    '#markup' => theme('item_list', $variables),
-    '#weight' => -50,
-  );
-
-  // Return the render array.
-  return $output;
-}
-
-/**
  * Generate area details.
  *
  * @param int $id
@@ -260,64 +159,6 @@ function farm_area_details_json($aid) {
 }
 
 /**
- * Generate area links, sorted by weight.
- *
- * @param int $id
- *   The area id.
- *
- * @return array
- *   Returns an array of links.
- */
-function farm_area_get_links($id) {
-
-  // Call out to modules that want to provide links.
-  $area_links = module_invoke_all('farm_area_links', check_plain($id));
-
-  // Build an index of links and their weights.
-  $weight_index = array();
-  foreach ($area_links as $key => $link) {
-
-    // Default the weight to zero if it hasn't been set.
-    if (!isset($link['weight'])) {
-      $link['weight'] = 0;
-    }
-
-    // Assign the weight to the index, based on it's key in the original array.
-    $weight_index[$key] = $link['weight'];
-  }
-
-  // Sort the index by weight.
-  asort($weight_index);
-
-  // Rebuild the array of links based on their weights.
-  $sorted_area_links = array();
-  foreach ($weight_index as $key => $weight) {
-    $sorted_area_links[] = $area_links[$key];
-  }
-
-  // Generate an array of Drupal links.
-  $links = array();
-  foreach ($sorted_area_links as $link) {
-
-    // If a title and href are available...
-    if (!empty($link['title']) && !empty($link['href'])) {
-
-      // Build link options.
-      $options = array();
-      if (!empty($link['options'])) {
-        $options = $link['options'];
-      }
-
-      // Build the link and add it to the array.
-      $links[] = l($link['title'], $link['href'], $options);
-    }
-  }
-
-  // Return links.
-  return $links;
-}
-
-/**
  * Implements hook_openlayers_object_preprocess_alter().
  */
 function farm_area_openlayers_object_preprocess_alter(&$build, $context) {
@@ -329,6 +170,19 @@ function farm_area_openlayers_object_preprocess_alter(&$build, $context) {
 
   // If this is the farm_areas map, add area details javascript.
   if ($context->getMachineName() == 'farm_areas') {
+
+    // Add a Javascript setting that defines the base path of the site.
+    // We do this instead of using Drupal.settings.basePath in Javascript
+    // because that variable does not take into account whether or not clean
+    // URLs are enabled.
+    $setting = array(
+      'farm_area' => array(
+        'base_path' => url('farm/area'),
+      ),
+    );
+    drupal_add_js($setting, 'setting');
+
+    // Add the Javascript for lazy loading area details.
     $path = drupal_get_path('module', 'farm_area');
     drupal_add_js($path . '/js/farm_area.openlayers.popup.js');
   }
