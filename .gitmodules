@@ -1,3 +1,4 @@
 [submodule "sites/all/modules/custom/farmosnws"]
 	path = sites/all/modules/custom/farmosnws
 	url = https://github.com/bitsecondal/farmosnws.git
+	branch = "release-2.0"
