@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Style\Invisible;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Style;
 
 /**

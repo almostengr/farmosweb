@@ -158,7 +158,7 @@ class Openlayers {
         'description' => 'Error',
         'factory_service' => '',
         'machine_name' => $export,
-        'errorMessage' => 'Unable to load CTools exportable @type @machine_name.',
+        'errorMessage' => 'Unable to load CTools exportable @type (<em>@machine_name</em>).',
       );
       $object = \Drupal::service('openlayers.Types')->createInstance('Error', $configuration);
     }
@@ -395,16 +395,28 @@ class Openlayers {
   }
 
   /**
-   * Returns the list of files libraries or js/css files needed according to
-   * the settings.
+   * Returns the list of attached libraries or js/css files.
    *
    * @return array
+   *   Array containing the attachment libraries to load.
    */
   public static function getAttached() {
     $attached = array();
 
+    if (!self::detectLibrary()) {
+      $configuration = array(
+        'errorMessage' => t('Unable to load the Openlayers JS library variant, please <a href="@openlayers_admin">update your settings</a> and select a valid variant of the library.', array('@openlayers_admin' => '/admin/structure/openlayers')),
+      );
+      \Drupal::service('openlayers.Types')->createInstance('Error', $configuration)->init();
+
+      return $attached;
+    }
+
     $attached['libraries_load'] = array(
-      'openlayers3' => array('openlayers3', Config::get('openlayers.variant', NULL)),
+      'openlayers3' => array(
+        'openlayers3',
+        Config::get('openlayers.variant', NULL),
+      ),
     );
 
     if (Config::get('openlayers.debug', FALSE)) {
@@ -412,6 +424,18 @@ class Openlayers {
     };
 
     return $attached;
+  }
+
+  /**
+   * Check if the Openlayers library and settings are properly found.
+   *
+   * @return bool|array
+   *   Return the library array is found, FALSE otherwise.
+   */
+  public static function detectLibrary() {
+    $library = libraries_detect('openlayers3');
+
+    return isset($library['variants'][\Drupal\openlayers\Config::get('openlayers.variant', NULL)]) ? $library : FALSE;
   }
 
 }

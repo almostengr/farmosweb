@@ -13,6 +13,7 @@ function farm_theme_menu_link_alter(&$item) {
   $paths = array(
     'farm/assets',
     'farm/logs',
+    'farm/plans',
   );
   if (in_array($item['link_path'], $paths)) {
     $item['expanded'] = TRUE;
@@ -20,57 +21,71 @@ function farm_theme_menu_link_alter(&$item) {
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_preprocess_menu_tree().
  */
-function farm_theme_field_widget_form_alter(&$element, &$form_state, $context) {
+function farm_theme_preprocess_menu_tree(&$variables) {
 
-  // The code below will be used to make certain fieldsets collapsible.
-  // Collapsing them will be done via Javascript, instead of PHP, however,
-  // because of an outstanding issue with rendering Openlayers maps in collapsed
-  // fieldsets. The $collapse_js boolean variable will keep track of whether or
-  // not the Javascript is necessary in the current page, and will add it at the
-  // bottom of this function. The Javascript works by looking for a CSS class
-  // called 'farm-theme-collapse' on the fieldsets, and collapses them.
   /**
-   * @todo
-   * Revert to using normal PHP `['collapsed'] = TRUE;` when the following
-   * issues are fixed.
-   *
-   * @see https://www.drupal.org/node/2644580
-   * @see https://www.drupal.org/node/2579009
+   * This code will generate a list of places in the farm dropdown menus where
+   * a Bootstrap divider item should be inserted. This is done based on the
+   * weights of the menu items. Dividers will be added after all items with a
+   * weight < 0, and before items with a weight >= 100.
    */
-  $collapse_js = FALSE;
 
-  // Put geofields into a collapsible fieldset.
-  if ($context['field']['type'] == 'geofield') {
+  // Only do this for the primary menu.
+  if ($variables['theme_hook_original'] != 'menu_tree__primary') {
+    return;
+  }
 
-    // Exception: do not collapse geofields when adding/editing areas.
-    if (!empty($context['form']['#term']) && $context['form']['#term']['vocabulary_machine_name'] == 'farm_areas') {
-      return;
+  // Start an empty array to store menu divider information.
+  $dividers = array();
+
+  // Iterate through the top level menu items.
+  $menu = $variables['#tree'];
+  foreach (element_children($menu) as $child) {
+
+    // Define the menu items we care about.
+    $menus = array(
+      'farm/assets' => 'assets',
+      'farm/logs' => 'logs',
+      'farm/plans' => 'plans',
+    );
+
+    // If we don't care about this menu item, skip it.
+    if (!array_key_exists($menu[$child]['#href'], $menus)) {
+      continue;
     }
 
-    // Iterate through all the element children.
-    $children = element_children($element);
-    foreach ($children as $child) {
+    // Get the menu class.
+    $menu_class = $menus[$menu[$child]['#href']];
 
-      // Make the parent element into a collapsible fieldset.
-      $element[$child]['#type'] = 'fieldset';
-      $element[$child]['#collapsible'] = TRUE;
-      $element[$child]['#attributes']['class'][] = 'farm-theme-collapse';
-      $collapse_js = TRUE;
+    // Iterate through child items.
+    $items = $menu[$child]['#below'];
+    $menu_counter = 0;
+    foreach (element_children($items) as $mlid) {
+
+      // If the original link has a weight < 0, remember it.
+      if ($items[$mlid]['#original_link']['weight'] < 0) {
+        $dividers[$menu_class][0] = $menu_counter;
+      }
+
+      // Or, if it has a weight >= 100, and we haven't already found one like
+      // that, remember it. (We only want to remember the first one, because in
+      // this case, we're putting the divider BEFORE it. Whereas with the first
+      // divider it is going AFTER the items with a weight < 0.)
+      elseif ($items[$mlid]['#original_link']['weight'] >= 100 && !isset($dividers[$menu_class][100])) {
+        $dividers[$menu_class][100] = $menu_counter;
+      }
+
+      // Keep count of which item we're on.
+      $menu_counter++;
     }
   }
 
-  // Collapse field collection fieldsets by default.
-  elseif ($context['field']['type'] == 'field_collection') {
-    $element['#collapsible'] = TRUE;
-    $element['#attributes']['class'][] = 'farm-theme-collapse';
-    $collapse_js = TRUE;
-  }
-
-  // Add Javascript to collapse fieldsets.
-  if ($collapse_js) {
-    drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/collapse.js');
+  // If divider information was generated, add Javascript.
+  if (!empty($dividers)) {
+    drupal_add_js(array('farm_theme' => array('menu_dividers' => $dividers)), 'setting');
+    drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/menu.js');
   }
 }
 
@@ -130,15 +145,45 @@ function farm_theme_form_alter(&$form, &$form_state, $form_id) {
  */
 function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
 
-  // Add some JavaScript to hide the VBO buttons until items are selected.
+  // Add some JavaScript that enhances VBO.
   drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/vbo.js');
 
   // Move VBO buttons to the bottom.
   $form['select']['#weight'] = 100;
 
-  // Move the "Clone" action to the end of the list.
-  if (!empty($form['select']['action::log_clone_action'])) {
-    $form['select']['action::log_clone_action']['#weight'] = 100;
+  // Move the "Assign", "Clone", "Group", and "Delete" actions to the end of
+  // the list.
+  $end_actions = array(
+    'action::farm_log_assign_action',
+    'action::log_clone_action',
+    'action::farm_group_asset_membership_action',
+    'action::views_bulk_operations_delete_item',
+  );
+  $i = 0;
+  foreach ($end_actions as $action) {
+    $form['select'][$action]['#weight'] = 100 + $i;
+    $i++;
+  }
+
+  // If we are viewing a VBO config or confirm form, add Javascript that will
+  // hide everything on the page except for the form.
+  $vbo_steps = array(
+    'views_bulk_operations_config_form',
+    'views_bulk_operations_confirm_form',
+  );
+  if (!empty($form_state['step']) && in_array($form_state['step'],  $vbo_steps)) {
+
+    // Set the title to '<none>' so that Views doesn't do drupal_set_title().
+    // See https://www.drupal.org/node/2905171.
+    $vbo->view->set_title('<none>');
+
+    // Add some information to Javascript settings.
+    $settings = array(
+      'vbo_hide' => TRUE,
+      'view_name' => $vbo->view->name,
+      'view_display' => $vbo->view->current_display,
+    );
+    drupal_add_js(array('farm_theme' => $settings), 'setting');
   }
 }
 
@@ -148,11 +193,14 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
 function farm_theme_bootstrap_colorize_text_alter(&$texts) {
 
   // Colorize VBO action buttons.
-  $texts['matches'][t('Move')] = 'default';
+  $texts['matches'][t('Move')] = 'success';
+  $texts['matches'][t('Group')] = 'warning';
   $texts['matches'][t('Done')] = 'success';
   $texts['matches'][t('Not Done')] = 'danger';
   $texts['matches'][t('Reschedule')] = 'warning';
+  $texts['matches'][t('Assign')] = 'info';
   $texts['matches'][t('Clone')] = 'default';
+  $texts['matches'][t('Delete')] = 'primary';
 }
 
 /**
@@ -161,11 +209,14 @@ function farm_theme_bootstrap_colorize_text_alter(&$texts) {
 function farm_theme_bootstrap_iconize_text_alter(&$texts) {
 
   // Iconize VBO action buttons.
-  $texts['matches'][t('Move')] = 'move';
+  $texts['matches'][t('Move')] = 'globe';
+  $texts['matches'][t('Group')] = 'bookmark';
   $texts['matches'][t('Done')] = 'check';
   $texts['matches'][t('Not Done')] = 'unchecked';
   $texts['matches'][t('Reschedule')] = 'calendar';
+  $texts['matches'][t('Assign')] = 'user';
   $texts['matches'][t('Clone')] = 'plus';
+  $texts['matches'][t('Delete')] = 'trash';
 }
 
 /**
@@ -178,25 +229,50 @@ function farm_theme_entity_view_alter(&$build, $type) {
     return;
   }
 
-  // Float the location information to the right.
-  if (!empty($build['location'])) {
+  // If certain elements exist, we will split the page into two columns and
+  // put them in the right column, and everything else in the left.
+  $right_elements = array(
+    'inventory',
+    'weight',
+    'group',
+    'location',
+  );
+  $right_elements_exist = FALSE;
+  foreach ($right_elements as $name) {
+    if (!empty($build[$name])) {
+      $right_elements_exist = TRUE;
+      break;
+    }
+  }
+  if ($right_elements_exist) {
 
-    // Wrap it in a floated div.
-    $build['location']['#prefix'] = '<div class="col-md-6">';
-    $build['location']['#suffix'] = '</div>';
-    $build['location']['#weight'] = -99;
+    // Create a new container div that spans half of the grid.
+    $build['right'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div class="col-md-6">',
+      '#suffix' => '</div>',
+      '#weight' => -99,
+    );
+
+    // Move the elements into the container.
+    foreach ($right_elements as $name) {
+      if (!empty($build[$name])) {
+        $build['right'][$name] = $build[$name];
+        unset($build[$name]);
+      }
+    }
 
     // Put everything else into another div and move it to the top so it
     // aligns left.
-    $build['fields'] = array(
+    $build['left'] = array(
       '#prefix' => '<div class="col-md-6">',
       '#suffix' => '</div>',
       '#weight' => -100,
     );
     $elements = element_children($build);
     foreach ($elements as $element) {
-      if (!in_array($element, array('location', 'fields', 'views'))) {
-        $build['fields'][$element] = $build[$element];
+      if (!in_array($element, array('left', 'right', 'views'))) {
+        $build['left'][$element] = $build[$element];
         unset($build[$element]);
       }
     }
@@ -220,10 +296,10 @@ function farm_theme_page_alter(&$page) {
   $status = drupal_get_http_header('status');
   if ($status == '403 Forbidden' && empty($user->uid)) {
 
-    // Display a link to the user login page.
+    // Display a link to the user login page, and redirect back to this page.
     $page['content']['system_main']['login'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>' . l('Login to farmOS', 'user') . '</p>',
+      '#markup' => '<p>' . l('Login to farmOS', 'user', array('query' => array('destination' => current_path()))) . '</p>',
     );
   }
 }
@@ -232,6 +308,14 @@ function farm_theme_page_alter(&$page) {
  * Implements hook_preprocess_page().
  */
 function farm_theme_preprocess_page(&$vars) {
+
+  // Add JS for adding Bootstrap glyphicons throughout the UI.
+  drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/glyphicons.js');
+
+  // Add Javascript to automatically collapse the help text.
+  if (!empty($vars['page']['help'])) {
+    drupal_add_js(drupal_get_path('theme', 'farm_theme') . '/js/help.js');
+  }
 
   // When the farm_areas map is displayed on a page...
   if (!empty($vars['page']['content']['farm_areas'])) {
@@ -267,5 +351,95 @@ function farm_theme_preprocess_field(&$vars) {
   // @see .field-name-field-farm-images .field-item in styles.css.
   if ($vars['element']['#field_name'] == 'field_farm_images') {
     $vars['classes_array'][] = 'clearfix';
+  }
+}
+
+/**
+ * Implements hook_preprocess_calendar_item().
+ */
+function farm_theme_preprocess_calendar_item(&$vars) {
+
+  // If the item has a Log entity associated with it, add the log type as a
+  // CSS class.
+  if (!empty($vars['item']->entity->type)) {
+    $class = drupal_html_class($vars['item']->entity->type);
+    if (empty($vars['item']->class)) {
+      $vars['item']->class = $class;
+    }
+    else {
+      $vars['item']->class .= ' ' . $class;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_calendar_month().
+ */
+function farm_theme_preprocess_calendar_month(&$vars) {
+  farm_theme_calendar_css('month');
+}
+
+/**
+ * Implements hook_preprocess_calendar_week().
+ */
+function farm_theme_preprocess_calendar_week_overlap(&$vars) {
+  farm_theme_calendar_css('week');
+}
+
+/**
+ * Implements hook_preprocess_calendar_day().
+ */
+function farm_theme_preprocess_calendar_day_overlap(&$vars) {
+  farm_theme_calendar_css('day');
+}
+
+/**
+ * Helper function for adding calendar CSS.
+ *
+ * @param string $period
+ *   The calendar period being displayed (year, month, week, or day).
+ */
+function farm_theme_calendar_css($period) {
+
+  // Add general CSS styles.
+  drupal_add_css(drupal_get_path('theme', 'farm_theme') . '/css/calendar.css');
+
+  // Define the log type colors.
+  $log_type_colors = array(
+    'farm_activity' => '#f7e6d2',
+    'farm_harvest' => '#daeace',
+    'farm_input' => '#ebdaec',
+    'farm_observation' => '#ccebf5',
+  );
+
+  // Use the color information to build CSS rules.
+  $css = '';
+  foreach ($log_type_colors as $log_type => $color) {
+
+    // Convert the log type to a valid CSS class.
+    $log_type_class = drupal_html_class($log_type);
+
+    // Build the item selector based on the period.
+    switch ($period) {
+      case 'month':
+        $calendar_item_selector = '.calendar-calendar .month-view .full td.single-day .' . $log_type_class . ' div.monthview, .calendar-calendar .week-view .full td.single-day .' . $log_type_class . ' div.weekview, .calendar-calendar .day-view .full td.single-day .' . $log_type_class . ' div.dayview';
+        break;
+      case 'week':
+      case 'day':
+        $calendar_item_selector = '.calendar-calendar .week-view .full div.single-day .' . $log_type_class . ' div.weekview, .calendar-calendar .day-view .full div.single-day .' . $log_type_class . ' div.dayview';
+        break;
+      default:
+        $calendar_item_selector = '';
+    }
+
+    // If a selector was found, add the CSS.
+    if (!empty($calendar_item_selector)) {
+      $css .= $calendar_item_selector . '{background: ' . $color . ';} ';
+    }
+  }
+
+  // If we have CSS to add, add it.
+  if (!empty($css)) {
+    drupal_add_css($css, array('type' => 'inline'));
   }
 }

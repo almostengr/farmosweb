@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Component\IconSprites;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Component;
 use Drupal\openlayers\Types\ObjectInterface;
@@ -27,4 +27,5 @@ class IconSprites extends Component {
 
     return $js;
   }
+
 }

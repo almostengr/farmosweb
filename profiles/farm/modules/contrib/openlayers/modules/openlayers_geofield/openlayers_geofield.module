@@ -209,7 +209,7 @@ function openlayers_geofield_field_formatter_view($entity_type, $entity, $field,
   list($map_name, $layer_name) = explode(':', $display['settings']['map_layer_preset'], 2);
 
   /** @var \Drupal\openlayers\Types\MapInterface $map */
-  if (($map = \Drupal\openlayers\Openlayers::load('Map', $map_name)) == TRUE) {
+  if (count($items) && (($map = \Drupal\openlayers\Openlayers::load('Map', $map_name)) == TRUE)) {
     /** @var \Drupal\openlayers\Types\LayerInterface $layer */
     if ($layer = $map->getCollection()->getObjectById('layer', $layer_name)) {
       if ($layer->getSource() instanceof \Drupal\openlayers\Plugin\Source\Vector\Vector) {
@@ -441,7 +441,7 @@ function openlayers_geofield_field_widget_form(&$form, &$form_state, $field, $in
     }
   }
 
-  $element['openlayers'] = array(
+  $element += array(
     '#type' => 'openlayers',
     '#map' => $map,
   );
@@ -583,13 +583,7 @@ function openlayers_geofield_geocode_ajax_callback($form, $form_state) {
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
-  $field_name = $element['#field_name'];
-  $langcode = $element['#language'];
-  $delta = $element['#delta'];
-  $parents = $element['#field_parents'];
 
-  $value = drupal_array_get_nested_value($form_state, array_merge(array('values'), $parents, array($field_name)));
-  $element['geom']['#value'] = $value[$langcode][$delta]['geom'];
   // Return the map, but remove the '_weight' element inserted
   // by the field API.
   unset($element['_weight']);

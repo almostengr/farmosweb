@@ -37,7 +37,7 @@ function farm_soil_test_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 2,
+      'weight' => 6,
     ),
   );
 
@@ -53,7 +53,7 @@ function farm_soil_test_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 7,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'log',
@@ -74,6 +74,71 @@ function farm_soil_test_field_default_field_instances() {
         'progress_indicator' => 'bar',
       ),
       'type' => 'file_mfw',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_soil_test-field_farm_geofield'.
+  $field_instances['log-farm_soil_test-field_farm_geofield'] = array(
+    'bundle' => 'farm_soil_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use the map to pinpoint the location(s) from which this sample is taken. If you are preparing a soil test, you may be sampling multiple points within a given area. All the points that comprise this sample should be included.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'openlayers_geofield',
+        'settings' => array(
+          'data' => 'full',
+          'map_layer_preset' => 'farm_map_geofield_formatter:openlayers_geofield_layer_formatter',
+        ),
+        'type' => 'openlayers_geofield',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_geofield',
+    'label' => 'Sample points',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'openlayers_geofield',
+      'settings' => array(
+        'allow_edit' => 1,
+        'data_storage' => 'collection',
+        'delta_handling' => 'default',
+        'feature_types' => array(
+          'path' => 0,
+          'point' => 'point',
+          'polygon' => 0,
+        ),
+        'geocoder_field' => 'field_farm_files',
+        'geocoder_handler' => 'kml',
+        'handler_settings' => array(
+          'google' => array(
+            'all_results' => 0,
+            'biasing' => array(
+              'bounds' => '',
+              'components' => '',
+              'region' => '',
+            ),
+            'geometry_type' => 'point',
+            'reject_results' => array(
+              'APPROXIMATE' => 0,
+              'GEOMETRIC_CENTER' => 0,
+              'RANGE_INTERPOLATED' => 0,
+              'ROOFTOP' => 0,
+            ),
+          ),
+        ),
+        'openlayers_map' => 'farm_map_geofield',
+        'showInputField' => 1,
+        'use_geocoder' => 1,
+      ),
+      'type' => 'openlayers_geofield',
       'weight' => 7,
     ),
   );
@@ -99,7 +164,7 @@ function farm_soil_test_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -137,11 +202,11 @@ function farm_soil_test_field_default_field_instances() {
     'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'log',
@@ -175,12 +240,12 @@ function farm_soil_test_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 5,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -224,7 +289,7 @@ function farm_soil_test_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 6,
+      'weight' => 2,
     ),
   );
 
@@ -258,7 +323,7 @@ function farm_soil_test_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 1,
     ),
   );
 
@@ -292,83 +357,22 @@ function farm_soil_test_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance:
-  // 'log-farm_soil_test-field_farm_soil_sample_points'.
-  $field_instances['log-farm_soil_test-field_farm_soil_sample_points'] = array(
-    'bundle' => 'farm_soil_test',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Use the map to pinpoint the location(s) from which this sample is taken. If you are preparing a soil test, you may be sampling multiple points within a given area. All the points that comprise this sample should be included.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'openlayers_geofield',
-        'settings' => array(
-          'data' => 'full',
-          'map_layer_preset' => 'farm_map_geofield_formatter:openlayers_geofield_layer_formatter',
-        ),
-        'type' => 'openlayers_geofield',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_soil_sample_points',
-    'label' => 'Sample Points',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'openlayers_geofield',
-      'settings' => array(
-        'allow_edit' => 1,
-        'data_storage' => 'collection',
-        'delta_handling' => 'default',
-        'feature_types' => array(
-          'path' => 0,
-          'point' => 'point',
-          'polygon' => 0,
-        ),
-        'geocoder_field' => 'field_farm_files',
-        'geocoder_handler' => 'kml',
-        'handler_settings' => array(
-          'google' => array(
-            'all_results' => 0,
-            'geometry_type' => 'point',
-            'reject_results' => array(
-              'APPROXIMATE' => 0,
-              'GEOMETRIC_CENTER' => 0,
-              'RANGE_INTERPOLATED' => 0,
-              'ROOFTOP' => 0,
-            ),
-          ),
-        ),
-        'openlayers_map' => 'farm_map_geofield',
-        'showInputField' => 1,
-        'use_geocoder' => 1,
-      ),
-      'type' => 'openlayers_geofield',
-      'weight' => 3,
+      'weight' => 8,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Areas');
+  t('Assigned to');
   t('Files');
   t('Laboratory');
   t('List the names of soils that are included in this sample. For soil maps and soil names, visit http://websoilsurvey.nrcs.usda.gov/app');
   t('Log category');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Photos');
-  t('Sample Points');
+  t('Sample points');
   t('Soil Names');
   t('Use the map to pinpoint the location(s) from which this sample is taken. If you are preparing a soil test, you may be sampling multiple points within a given area. All the points that comprise this sample should be included.');
   t('Use this to organize your logs into categories for easier searching and filtering later.');

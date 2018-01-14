@@ -13,11 +13,15 @@ function farm_ui_farm_ui_entity_view_groups() {
       'weight' => 98,
     ),
     'logs' => array(
-      'title' => t('Logs'),
+      'title' => t('Logs by type'),
       'weight' => 99,
     ),
-    'other' => array(
+    'logs_special' => array(
+      'title' => t('Logs with special purpose'),
       'weight' => 100,
+    ),
+    'other' => array(
+      'weight' => 101,
     ),
   );
   return $groups;
@@ -151,6 +155,14 @@ function farm_ui_farm_ui_actions() {
       ),
       'weight' => 1,
     ),
+    'plan' => array(
+      'title' => t('Add plan'),
+      'href' => 'farm/plan/add',
+      'paths' => array(
+        'farm/plans',
+      ),
+      'weight' => 1,
+    ),
     'user' => array(
       'title' => t('Add person'),
       'href' => 'admin/people/create',
@@ -172,6 +184,9 @@ function farm_ui_farm_ui_actions() {
         switch ($entity_type) {
           case 'farm_asset':
             $path = 'farm/asset/add/' . $bundle;
+            break;
+          case 'farm_plan':
+            $path = 'farm/plan/add/' . $bundle;
             break;
           case 'log':
             $path = 'log/add/' . $bundle;

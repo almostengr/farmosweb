@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Component\SpinJS;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Component;
 use Drupal\openlayers\Types\ObjectInterface;
@@ -23,8 +23,8 @@ class SpinJS extends Component {
   /**
    * {@inheritdoc}
    */
-  public function preBuild(array &$build, ObjectInterface $context = NULL) {
-    $build['spinjs']['#attached']['js'][] = array(
+  public function postBuild(array &$build, ObjectInterface $context = NULL) {
+    $build['#attached']['js'][] = array(
       'data' => array(
         'spinjs' => array(
           $context->getId() => $this->getOptions(),

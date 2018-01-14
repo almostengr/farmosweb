@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Interaction\Snap;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Interaction;
 

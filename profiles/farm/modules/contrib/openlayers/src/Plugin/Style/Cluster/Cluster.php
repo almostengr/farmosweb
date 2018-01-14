@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Style\Cluster;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Style;
 
 /**
@@ -16,6 +16,5 @@ use Drupal\openlayers\Types\Style;
  * )
  */
 class Cluster extends Style {
-  //TODO: Provide options to let user customize the cluster style.
-
+  // TODO: Provide options to let user customize the cluster style.
 }

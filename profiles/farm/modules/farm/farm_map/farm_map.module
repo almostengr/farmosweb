@@ -64,10 +64,42 @@ function farm_map_settings_form($form, &$form_state) {
     '#default_value' => variable_get('farm_map_show', TRUE),
   );
 
+  // Specify the default base layer.
+  $form['farm_map_default_base_layer'] = array(
+    '#type' => 'radios',
+    '#title' => t('Default base layer'),
+    '#description' => t('Select the default base layer for maps.'),
+    '#options' => array(
+      'farm_map_layer_google_hybrid' => t('Google Hybrid'),
+      'farm_map_layer_openstreetmap' => t('OpenStreetMap'),
+    ),
+    '#default_value' => variable_get('farm_map_default_base_layer', 'farm_map_layer_google_hybrid'),
+  );
+
+  // Google Maps API key.
+  $form['farm_map_google_api_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Google Maps API Key'),
+    '#description' => t('Google Maps layers require that you obtain an API key. Refer to the <a href="@doc">Google Maps API Key</a> documentation on farmOS.org for instructions.', array('@doc' => 'http://farmos.org/hosting/googlemaps')),
+    '#default_value' => variable_get('farm_map_google_api_key', ''),
+  );
+
+  // Add a custom submit function to clear the Drupal cache on submission.
+  $form['#submit'][] = 'farm_map_settings_form_submit';
+
   // Return it as a system settings form.
   return system_settings_form($form);
 }
 
+/**
+ * Submit function for the farm map settings form.
+ */
+function farm_map_settings_form_submit($form, $form_state) {
+
+  // Clear the Drupal cache so that changes to the default map base layer
+  // are picked up by Openlayers in farm_map_default_openlayers_layers_alter().
+  drupal_flush_all_caches();
+}
 
 /**
  * Implements hook_openlayers_object_preprocess_alter().
@@ -81,6 +113,22 @@ function farm_map_openlayers_object_preprocess_alter(&$build, $context) {
     if (substr($context->getMachineName(), 0, 5) == 'farm_') {
       drupal_add_css(drupal_get_path('module', 'farm_map') . '/css/farm_map.css');
     }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function farm_map_module_implements_alter(&$implementations, $hook) {
+
+  // Ensure that this module's implementation of
+  // hook_default_openlayers_maps_alter() always runs last, so that it can add
+  // the "base layers" group to the bottom of the layers list on all farm maps.
+  // @see farm_map_default_openlayers_maps_alter()
+  if ($hook == 'default_openlayers_maps_alter' && array_key_exists('farm_map', $implementations)) {
+    $group = $implementations['farm_map'];
+    unset($implementations['farm_map']);
+    $implementations['farm_map'] = $group;
   }
 }
 
@@ -102,16 +150,52 @@ function farm_map_geofield_populate(&$entity, $geoms = array()) {
   // Load the GeoPHP library.
   geophp_load();
 
-  // Implode the array of geometries into a single string.
-  $geom = implode(',', $geoms);
-
-  // If there is more than one geometry, wrap them all in a geometry collection.
+  // If there is more than one geometry, we will wrap it all in a
+  // GEOMETRYCOLLECTION() at the end.
+  $geometrycollection = FALSE;
   if (count($geoms) > 1) {
-    $geom = 'GEOMETRYCOLLECTION (' . $geom . ')';
+    $geometrycollection = TRUE;
   }
 
-  // Convert to a GeoPHP geometry object and reduce the geometry.
-  $geometry = geoPHP::load($geom, 'wkt');
+  // Build an array of WKT strings.
+  $wkt_strings = array();
+  foreach ($geoms as &$geom) {
+
+    // Convert to a GeoPHP geometry object.
+    $geometry = geoPHP::load($geom, 'wkt');
+
+    // If this is a geometry collection, then extract its components and add
+    // them individually to the array.
+    if ($geometry->geometryType() == 'GeometryCollection') {
+
+      // Iterate through the geometry components and add each to the array.
+      $components = $geometry->getComponents();
+      foreach ($components as $component) {
+        $wkt_strings[] = $component->asText();
+      }
+
+      // Set $geometrycollection to TRUE in case there was only one geometry in
+      // the $geoms parameter of this function, so that we know to wrap the WKT
+      // in a GEOMETRYCOLLECTION() at the end.
+      $geometrycollection = TRUE;
+    }
+
+    // Otherwise, add it to the array.
+    else {
+      $wkt_strings[] = $geometry->asText();
+    }
+  }
+
+  // Combine all the WKT strings together into one.
+  $wkt = implode(',', $wkt_strings);
+
+  // If there is more than one geometry, wrap them all in a geometry collection.
+  if ($geometrycollection) {
+    $wkt = 'GEOMETRYCOLLECTION (' . $wkt . ')';
+  }
+
+  // Convert to a final GeoPHP geometry object and reduce the geometry.
+  $geometry = geoPHP::load($wkt, 'wkt');
   $geometry = geoPHP::geometryReduce($geometry);
 
   // Save the combined geometry to the movement log.

@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Source\GeoJSON;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Config;
 use Drupal\openlayers\Types\Source;
 
@@ -24,6 +24,7 @@ class GeoJSON extends Source {
     $form['options']['url'] = array(
       '#title' => t('URL'),
       '#type' => 'textfield',
+      '#maxlength' => '256',
       '#default_value' => $this->getOption('url'),
     );
     $form['options']['useBBOX'] = array(

@@ -1,0 +1,26 @@
+name = Farm Asset Views
+description = Default Views of farm assets.
+core = 7.x
+package = farmOS
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = entity_token
+dependencies[] = entityreference
+dependencies[] = entityreference_view_widget
+dependencies[] = farm_asset
+dependencies[] = farm_group
+dependencies[] = farm_movement
+dependencies[] = features
+dependencies[] = views
+dependencies[] = views_bulk_operations
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = farm_asset
+features[views_view][] = farm_asset_entityreference_view
+
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
+core = "7.x"
+project = "farm"
+datestamp = "1514737389"
+

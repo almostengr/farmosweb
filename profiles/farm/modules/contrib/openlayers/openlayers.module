@@ -318,7 +318,6 @@ function openlayers_libraries_info() {
     ),
   );
 
-
   if ($version = \Drupal\openlayers\Openlayers::getLocalLibraryVersion()) {
     unset($libraries['openlayers3']['library path']);
     $libraries['openlayers3']['variants']['local:' . $version] = array(

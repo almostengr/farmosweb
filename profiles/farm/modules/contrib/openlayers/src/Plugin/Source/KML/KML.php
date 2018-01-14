@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Source\KML;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Source;
 
 /**
@@ -25,6 +25,12 @@ class KML extends Source {
       '#title' => t('URL'),
       '#type' => 'textfield',
       '#default_value' => $this->getOption('url'),
+    );
+    $form['options']['extract_styles'] = array(
+      '#title' => t('Extract styles'),
+      '#description' => t('Should styles be extracted from the KML?'),
+      '#type' => 'checkbox',
+      '#default_value' => $this->getOption('extract_styles', FALSE),
     );
   }
 

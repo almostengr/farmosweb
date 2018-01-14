@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Component\InlineJS;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Component;
 
 /**
@@ -26,7 +26,7 @@ class InlineJS extends Component {
     if (module_exists('ace_editor')) {
       $attached = array(
         'library' => array(
-          array('ace_editor', 'ace-editor'),
+          array('ace_editor', 'ace'),
         ),
         'js' => array(
           drupal_get_path('module', 'openlayers') . '/js/openlayers.editor.js',

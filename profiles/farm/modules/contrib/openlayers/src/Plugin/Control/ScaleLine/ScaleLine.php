@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Control\ScaleLine;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Control;
 
 /**

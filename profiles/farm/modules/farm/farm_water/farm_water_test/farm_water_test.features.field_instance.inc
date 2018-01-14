@@ -52,7 +52,7 @@ function farm_water_test_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -77,192 +77,8 @@ function farm_water_test_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'log-farm_water_test-field_farm_images'.
-  $field_instances['log-farm_water_test-field_farm_images'] = array(
-    'bundle' => 'farm_water_test',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'colorbox',
-        'settings' => array(
-          'colorbox_caption' => 'auto',
-          'colorbox_caption_custom' => '',
-          'colorbox_gallery' => 'post',
-          'colorbox_gallery_custom' => '',
-          'colorbox_image_style' => '',
-          'colorbox_multivalue_index' => NULL,
-          'colorbox_node_style' => 'thumbnail',
-          'colorbox_node_style_first' => 'large',
-        ),
-        'type' => 'colorbox',
-        'weight' => 5,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_images',
-    'label' => 'Photos',
-    'required' => 0,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 0,
-      'file_directory' => 'farm/log/water_test',
-      'file_extensions' => '',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'multiupload_imagefield_widget',
-      'settings' => array(
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'bar',
-      ),
-      'type' => 'image_miw',
-      'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'log-farm_water_test-field_farm_log_category'.
-  $field_instances['log-farm_water_test-field_farm_log_category'] = array(
-    'bundle' => 'farm_water_test',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 7,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_log_category',
-    'label' => 'Log category',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 10,
-    ),
-  );
-
-  // Exported field_instance: 'log-farm_water_test-field_farm_log_owner'.
-  $field_instances['log-farm_water_test-field_farm_log_owner'] = array(
-    'bundle' => 'farm_water_test',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Optionally assign this task to one or more people.',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'entityreference',
-        'settings' => array(
-          'bypass_access' => FALSE,
-          'link' => FALSE,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 4,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => -1,
-    ),
-  );
-
-  // Exported field_instance: 'log-farm_water_test-field_farm_notes'.
-  $field_instances['log-farm_water_test-field_farm_notes'] = array(
-    'bundle' => 'farm_water_test',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 3,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_notes',
-    'label' => 'Notes',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'log-farm_water_test-field_farm_water_lab'.
-  $field_instances['log-farm_water_test-field_farm_water_lab'] = array(
-    'bundle' => 'farm_water_test',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'What laboratory performed the water test?',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-    ),
-    'entity_type' => 'log',
-    'field_name' => 'field_farm_water_lab',
-    'label' => 'Laboratory',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance:
-  // 'log-farm_water_test-field_farm_water_sample_points'.
-  $field_instances['log-farm_water_test-field_farm_water_sample_points'] = array(
+  // Exported field_instance: 'log-farm_water_test-field_farm_geofield'.
+  $field_instances['log-farm_water_test-field_farm_geofield'] = array(
     'bundle' => 'farm_water_test',
     'default_value' => NULL,
     'deleted' => 0,
@@ -280,7 +96,7 @@ function farm_water_test_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'log',
-    'field_name' => 'field_farm_water_sample_points',
+    'field_name' => 'field_farm_geofield',
     'label' => 'Sample points',
     'required' => 0,
     'settings' => array(
@@ -326,15 +142,198 @@ function farm_water_test_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_water_test-field_farm_images'.
+  $field_instances['log-farm_water_test-field_farm_images'] = array(
+    'bundle' => 'farm_water_test',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'colorbox',
+        'settings' => array(
+          'colorbox_caption' => 'auto',
+          'colorbox_caption_custom' => '',
+          'colorbox_gallery' => 'post',
+          'colorbox_gallery_custom' => '',
+          'colorbox_image_style' => '',
+          'colorbox_multivalue_index' => NULL,
+          'colorbox_node_style' => 'thumbnail',
+          'colorbox_node_style_first' => 'large',
+        ),
+        'type' => 'colorbox',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_images',
+    'label' => 'Photos',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => 'farm/log/water_test',
+      'file_extensions' => '',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'multiupload_imagefield_widget',
+      'settings' => array(
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'bar',
+      ),
+      'type' => 'image_miw',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_water_test-field_farm_log_category'.
+  $field_instances['log-farm_water_test-field_farm_log_category'] = array(
+    'bundle' => 'farm_water_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_category',
+    'label' => 'Log category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_water_test-field_farm_log_owner'.
+  $field_instances['log-farm_water_test-field_farm_log_owner'] = array(
+    'bundle' => 'farm_water_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Optionally assign this task to one or more people.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_log_owner',
+    'label' => 'Assigned to',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => -1,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_water_test-field_farm_notes'.
+  $field_instances['log-farm_water_test-field_farm_notes'] = array(
+    'bundle' => 'farm_water_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_notes',
+    'label' => 'Notes',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 17,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_water_test-field_farm_water_lab'.
+  $field_instances['log-farm_water_test-field_farm_water_lab'] = array(
+    'bundle' => 'farm_water_test',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'What laboratory performed the water test?',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_water_lab',
+    'label' => 'Laboratory',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 16,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Areas');
+  t('Assigned to');
   t('Files');
   t('Laboratory');
   t('Log category');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Photos');
   t('Sample points');
   t('Use the map to pinpoint the location(s) from which this sample is taken.');

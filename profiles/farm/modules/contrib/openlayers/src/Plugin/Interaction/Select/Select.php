@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Interaction\Select;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Interaction;
 

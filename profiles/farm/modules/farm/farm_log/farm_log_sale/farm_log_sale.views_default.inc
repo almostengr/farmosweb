@@ -52,6 +52,7 @@ function farm_log_sale_views_default_views() {
     'field_farm_total_price' => 'field_farm_total_price',
     'field_farm_notes' => 'field_farm_notes',
     'field_farm_log_category' => 'field_farm_log_category',
+    'field_farm_log_owner' => 'field_farm_log_owner',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -154,6 +155,11 @@ function farm_log_sale_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_log_owner' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
   $handler->display->display_options['style_options']['empty_table'] = TRUE;
   /* No results behavior: Global: Unfiltered text */
@@ -162,11 +168,6 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['empty']['area_text_custom']['content'] = 'No sales found.';
-  /* Relationship: Field: Quantity (field_farm_quantity) */
-  $handler->display->display_options['relationships']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
-  $handler->display->display_options['relationships']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity';
-  $handler->display->display_options['relationships']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
-  $handler->display->display_options['relationships']['field_farm_quantity_value']['delta'] = '0';
   /* Field: Bulk operations: Log */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_log';
@@ -177,6 +178,14 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::farm_log_assign_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
     'action::log_clone_action' => array(
       'selected' => 1,
       'postpone_processing' => 0,
@@ -184,6 +193,17 @@ function farm_log_sale_views_default_views() {
       'skip_permission_check' => 0,
       'override_label' => 0,
       'label' => '',
+    ),
+    'action::views_bulk_operations_delete_item' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'skip_permission_check' => 0,
+      'override_label' => 1,
+      'label' => 'Delete',
+      'settings' => array(
+        'log' => 0,
+      ),
     ),
     'action::log_done_action' => array(
       'selected' => 1,
@@ -221,6 +241,7 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'log';
   $handler->display->display_options['fields']['id']['field'] = 'id';
+  $handler->display->display_options['fields']['id']['separator'] = '';
   /* Field: Log: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'log';
@@ -235,6 +256,7 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'log';
   $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = 'Log name';
   $handler->display->display_options['fields']['name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['name']['alter']['path'] = 'log/[id]';
   /* Field: Log: Assets */
@@ -258,22 +280,20 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['field_farm_lot_number']['id'] = 'field_farm_lot_number';
   $handler->display->display_options['fields']['field_farm_lot_number']['table'] = 'field_data_field_farm_lot_number';
   $handler->display->display_options['fields']['field_farm_lot_number']['field'] = 'field_farm_lot_number';
-  /* Field: Field collection item: Value */
+  /* Field: Field: Value */
   $handler->display->display_options['fields']['field_farm_quantity_value']['id'] = 'field_farm_quantity_value';
   $handler->display->display_options['fields']['field_farm_quantity_value']['table'] = 'field_data_field_farm_quantity_value';
   $handler->display->display_options['fields']['field_farm_quantity_value']['field'] = 'field_farm_quantity_value';
-  $handler->display->display_options['fields']['field_farm_quantity_value']['relationship'] = 'field_farm_quantity_value';
   $handler->display->display_options['fields']['field_farm_quantity_value']['label'] = 'Quantity';
   $handler->display->display_options['fields']['field_farm_quantity_value']['type'] = 'fraction_decimal';
   $handler->display->display_options['fields']['field_farm_quantity_value']['settings'] = array(
     'precision' => '0',
     'auto_precision' => 1,
   );
-  /* Field: Field collection item: Units */
+  /* Field: Field: Units */
   $handler->display->display_options['fields']['field_farm_quantity_units']['id'] = 'field_farm_quantity_units';
   $handler->display->display_options['fields']['field_farm_quantity_units']['table'] = 'field_data_field_farm_quantity_units';
   $handler->display->display_options['fields']['field_farm_quantity_units']['field'] = 'field_farm_quantity_units';
-  $handler->display->display_options['fields']['field_farm_quantity_units']['relationship'] = 'field_farm_quantity_value';
   /* Field: Log: Unit price */
   $handler->display->display_options['fields']['field_farm_unit_price']['id'] = 'field_farm_unit_price';
   $handler->display->display_options['fields']['field_farm_unit_price']['table'] = 'field_data_field_farm_unit_price';
@@ -307,6 +327,15 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['field_farm_log_category']['label'] = 'Categories';
   $handler->display->display_options['fields']['field_farm_log_category']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_farm_log_category']['delta_offset'] = '0';
+  /* Field: Log: Assigned to */
+  $handler->display->display_options['fields']['field_farm_log_owner']['id'] = 'field_farm_log_owner';
+  $handler->display->display_options['fields']['field_farm_log_owner']['table'] = 'field_data_field_farm_log_owner';
+  $handler->display->display_options['fields']['field_farm_log_owner']['field'] = 'field_farm_log_owner';
+  $handler->display->display_options['fields']['field_farm_log_owner']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['field_farm_log_owner']['delta_offset'] = '0';
   /* Sort criterion: Log: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'log';
@@ -314,11 +343,12 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
   $handler->display->display_options['sorts']['timestamp']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['timestamp']['expose']['label'] = 'Date';
-  /* Sort criterion: Log: Log ID */
-  $handler->display->display_options['sorts']['id']['id'] = 'id';
-  $handler->display->display_options['sorts']['id']['table'] = 'log';
-  $handler->display->display_options['sorts']['id']['field'] = 'id';
-  $handler->display->display_options['sorts']['id']['order'] = 'DESC';
+  /* Sort criterion: Log: Name */
+  $handler->display->display_options['sorts']['name']['id'] = 'name';
+  $handler->display->display_options['sorts']['name']['table'] = 'log';
+  $handler->display->display_options['sorts']['name']['field'] = 'name';
+  $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['name']['expose']['label'] = 'Log name';
   /* Contextual filter: Log: Assets (field_farm_asset) */
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['id'] = 'field_farm_asset_target_id';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
@@ -338,10 +368,23 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'farm_sale' => 'farm_sale',
   );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Log: Name */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'log';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['group'] = 1;
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Log name';
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
   /* Filter criterion: Log: Log category (field_farm_log_category) */
   $handler->display->display_options['filters']['field_farm_log_category_tid']['id'] = 'field_farm_log_category_tid';
   $handler->display->display_options['filters']['field_farm_log_category_tid']['table'] = 'field_data_field_farm_log_category';
   $handler->display->display_options['filters']['field_farm_log_category_tid']['field'] = 'field_farm_log_category_tid';
+  $handler->display->display_options['filters']['field_farm_log_category_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_farm_log_category_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['operator_id'] = 'field_farm_log_category_tid_op';
   $handler->display->display_options['filters']['field_farm_log_category_tid']['expose']['label'] = 'Categories';
@@ -356,6 +399,7 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['filters']['date_filter']['table'] = 'log';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['operator'] = '>=';
+  $handler->display->display_options['filters']['date_filter']['group'] = 1;
   $handler->display->display_options['filters']['date_filter']['exposed'] = TRUE;
   $handler->display->display_options['filters']['date_filter']['expose']['operator_id'] = 'date_filter_op';
   $handler->display->display_options['filters']['date_filter']['expose']['label'] = 'Start date';
@@ -370,6 +414,7 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['filters']['date_filter_1']['table'] = 'log';
   $handler->display->display_options['filters']['date_filter_1']['field'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter_1']['operator'] = '<=';
+  $handler->display->display_options['filters']['date_filter_1']['group'] = 1;
   $handler->display->display_options['filters']['date_filter_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['date_filter_1']['expose']['operator_id'] = 'date_filter_1_op';
   $handler->display->display_options['filters']['date_filter_1']['expose']['label'] = 'End date';
@@ -384,6 +429,7 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['filters']['done']['table'] = 'log';
   $handler->display->display_options['filters']['done']['field'] = 'done';
   $handler->display->display_options['filters']['done']['value'] = 'All';
+  $handler->display->display_options['filters']['done']['group'] = 1;
   $handler->display->display_options['filters']['done']['exposed'] = TRUE;
   $handler->display->display_options['filters']['done']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['done']['expose']['label'] = 'Done';
@@ -435,17 +481,16 @@ function farm_log_sale_views_default_views() {
     t('next ›'),
     t('last »'),
     t('No sales found.'),
-    t('field collection item from field_farm_quantity'),
     t('Log'),
     t('- Choose an operation -'),
+    t('Delete'),
     t('Done'),
     t('Not Done'),
     t('✔'),
     t('Log ID'),
     t('.'),
-    t(','),
     t('Date'),
-    t('Name'),
+    t('Log name'),
     t('Assets'),
     t('Customer'),
     t('Invoice number'),
@@ -456,6 +501,7 @@ function farm_log_sale_views_default_views() {
     t('Total price'),
     t('Notes'),
     t('Categories'),
+    t('Assigned to'),
     t('All'),
     t('%1\'s sales'),
     t('Start date'),

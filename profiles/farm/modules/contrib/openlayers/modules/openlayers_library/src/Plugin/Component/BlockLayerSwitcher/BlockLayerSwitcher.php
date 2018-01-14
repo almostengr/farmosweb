@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Component\BlockLayerSwitcher;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Component;
 use Drupal\openlayers\Types\MapInterface;
 use Drupal\openlayers\Types\ObjectInterface;

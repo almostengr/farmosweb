@@ -40,7 +40,7 @@ function farm_crop_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 2,
+      'weight' => 1,
     ),
   );
 
@@ -74,7 +74,7 @@ function farm_crop_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -234,7 +234,7 @@ function farm_crop_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -275,7 +275,7 @@ function farm_crop_field_default_field_instances() {
         'view_mode' => 'full',
       ),
       'type' => 'entityreference_view_widget',
-      'weight' => 2,
+      'weight' => 5,
     ),
   );
 
@@ -290,7 +290,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 6,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'log',
@@ -335,7 +335,7 @@ function farm_crop_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 5,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -365,6 +365,39 @@ function farm_crop_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_seeding-field_farm_inventory'.
+  $field_instances['log-farm_seeding-field_farm_inventory'] = array(
+    'bundle' => 'farm_seeding',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to set or adjust asset inventory levels along with this log.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_inventory',
+    'label' => 'Inventory adjustments',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 16,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_seeding-field_farm_log_category'.
   $field_instances['log-farm_seeding-field_farm_log_category'] = array(
     'bundle' => 'farm_seeding',
@@ -377,7 +410,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'log',
@@ -411,12 +444,12 @@ function farm_crop_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 4,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -426,7 +459,7 @@ function farm_crop_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 4,
     ),
   );
 
@@ -444,7 +477,7 @@ function farm_crop_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 7,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'log',
@@ -459,7 +492,7 @@ function farm_crop_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 2,
+      'weight' => 14,
     ),
   );
 
@@ -475,7 +508,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'log',
@@ -493,7 +526,7 @@ function farm_crop_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 7,
     ),
   );
 
@@ -502,7 +535,7 @@ function farm_crop_field_default_field_instances() {
     'bundle' => 'farm_seeding',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Describe the quantity of this seeding, using a value and a unit of measurement. For example, if you seeded 10 flats of lettuce, enter "10" in the Value field, and "flats" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
+    'description' => 'Describe the quantity of this seeding, using a value, unit, and measure. For example, if you seeded 10 flats of lettuce, enter "10" in the Value field, "flats" in the Units field, and "Count" in the Measure field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -511,7 +544,7 @@ function farm_crop_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 1,
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'log',
@@ -526,7 +559,7 @@ function farm_crop_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 1,
+      'weight' => 3,
     ),
   );
 
@@ -542,7 +575,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'log',
@@ -560,7 +593,7 @@ function farm_crop_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => 6,
     ),
   );
 
@@ -601,7 +634,7 @@ function farm_crop_field_default_field_instances() {
         'view_mode' => 'full',
       ),
       'type' => 'entityreference_view_widget',
-      'weight' => 2,
+      'weight' => -4,
     ),
   );
 
@@ -616,7 +649,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 5,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -661,7 +694,7 @@ function farm_crop_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 4,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
@@ -691,6 +724,39 @@ function farm_crop_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_transplanting-field_farm_inventory'.
+  $field_instances['log-farm_transplanting-field_farm_inventory'] = array(
+    'bundle' => 'farm_transplanting',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to set or adjust asset inventory levels along with this log.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_inventory',
+    'label' => 'Inventory adjustments',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 12,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_transplanting-field_farm_log_category'.
   $field_instances['log-farm_transplanting-field_farm_log_category'] = array(
     'bundle' => 'farm_transplanting',
@@ -703,7 +769,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 7,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'log',
@@ -737,12 +803,12 @@ function farm_crop_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 3,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -770,7 +836,7 @@ function farm_crop_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 6,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'log',
@@ -801,7 +867,7 @@ function farm_crop_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'log',
@@ -819,7 +885,7 @@ function farm_crop_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 4,
+      'weight' => -3,
     ),
   );
 
@@ -828,7 +894,7 @@ function farm_crop_field_default_field_instances() {
     'bundle' => 'farm_transplanting',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Describe the quantity of this transplanting, using a value and a unit of measurement. For example, if you transplanted 400 tomato plants into 4 inch pots, enter "400" in the Value field, and "4-inch pots" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
+    'description' => 'Describe the quantity of this transplanting, using a value, unit, and measure. For example, if you transplanted 400 tomato plants into 4 inch pots, enter "400" in the Value field, "4-inch pots" in the Units field, and "Count" in the Measure field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -837,7 +903,7 @@ function farm_crop_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 1,
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'log',
@@ -852,7 +918,7 @@ function farm_crop_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 1,
+      'weight' => 4,
     ),
   );
 
@@ -1062,21 +1128,22 @@ function farm_crop_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Assign this planting to a season. You can manage these options in the ' . l('Seasons', 'admin/structure/taxonomy/farm_season') . ' vocabulary.');
+  t('Assigned to');
   t('Companions');
   t('Crop family');
   t('Crop/variety');
   t('Days to maturity');
   t('Days to transplant');
-  t('Describe the quantity of this seeding, using a value and a unit of measurement. For example, if you seeded 10 flats of lettuce, enter "10" in the Value field, and "flats" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
-  t('Describe the quantity of this transplanting, using a value and a unit of measurement. For example, if you transplanted 400 tomato plants into 4 inch pots, enter "400" in the Value field, and "4-inch pots" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
+  t('Describe the quantity of this seeding, using a value, unit, and measure. For example, if you seeded 10 flats of lettuce, enter "10" in the Value field, "flats" in the Units field, and "Count" in the Measure field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
+  t('Describe the quantity of this transplanting, using a value, unit, and measure. For example, if you transplanted 400 tomato plants into 4 inch pots, enter "400" in the Value field, "4-inch pots" in the Units field, and "Count" in the Measure field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
   t('Description');
   t('Enter the crop/variety that this is a planting of. As you type, you will have the option of selecting from crops/varieties that you\'ve entered in the past.');
   t('Files');
+  t('Inventory adjustments');
   t('Log category');
   t('Movement');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Parent(s)');
   t('Photos');
   t('Planting');
@@ -1086,6 +1153,7 @@ function farm_crop_field_default_field_instances() {
   t('Specify the parent(s) of this planting.');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
   t('Use this to organize your logs into categories for easier searching and filtering later.');
+  t('Use this to set or adjust asset inventory levels along with this log.');
   t('What planting does this seeding log pertain to?');
   t('What planting does this transplanting log pertain to?');
   t('Where were the seeds obtained?');

@@ -40,6 +40,10 @@ settings[bootstrap_fluid_container] = 1
 ; Disable smart form descriptions. See https://www.drupal.org/node/2879967
 settings[bootstrap_forms_smart_descriptions] = 0
 
+; Navbar
+; --------------
+settings[bootstrap_navbar_position] = 'fixed-top'
+
 ; Advanced
 ; --------------
 settings[bootstrap_cdn_provider] = 'custom'
@@ -48,9 +52,9 @@ settings[bootstrap_cdn_custom_css_min] = '//cdn.jsdelivr.net/bootswatch/3.3.7/si
 settings[bootstrap_cdn_custom_js] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.js'
 settings[bootstrap_cdn_custom_js_min] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js'
 
-; Information added by Drupal.org packaging script on 2017-08-22
-version = "7.x-1.0-beta15"
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
 core = "7.x"
 project = "farm"
-datestamp = "1503427447"
+datestamp = "1514737389"
 

@@ -5,10 +5,8 @@
  */
 
 namespace Drupal\openlayers\Plugin\Component\Popup;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Component;
-use Drupal\openlayers\Types\ObjectInterface;
 
 /**
  * Class Popup.
@@ -23,11 +21,11 @@ class Popup extends Component {
    * {@inheritdoc}
    */
   public function optionsForm(array &$form, array &$form_state) {
-    $form['options']['layers'] = array(
+    $form['options']['frontend_layers'] = array(
       '#type' => 'select',
       '#title' => t('Layers'),
       '#empty_option' => t('- Select a Layer -'),
-      '#default_value' => isset($form_state['item']->options['layers']) ? $form_state['item']->options['layers'] : '',
+      '#default_value' => $this->getOption('frontend_layers', ''),
       '#description' => t('Select the layers.'),
       '#options' => Openlayers::loadAllAsOptions('Layer'),
       '#required' => TRUE,
@@ -36,12 +34,12 @@ class Popup extends Component {
     $form['options']['closer'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display close button ?'),
-      '#default_value' => isset($form_state['item']->options['closer']) ? $form_state['item']->options['closer'] : FALSE,
+      '#default_value' => $this->getOption('closer', FALSE),
     );
     $form['options']['positioning'] = array(
       '#type' => 'select',
       '#title' => t('Positioning'),
-      '#default_value' => isset($form_state['item']->options['positioning']) ? $form_state['item']->options['positioning'] : 'top-left',
+      '#default_value' => $this->getOption('positioning', 'top-left'),
       '#description' => t('Defines how the overlay is actually positioned. Default is top-left.'),
       '#options' => Openlayers::positioningOptions(),
       '#required' => TRUE,
@@ -71,28 +69,6 @@ class Popup extends Component {
    */
   public function optionsFormSubmit(array $form, array &$form_state) {
     $form_state['values']['options']['autoPan'] = (bool) $form_state['values']['options']['autoPan'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preBuild(array &$build, ObjectInterface $context = NULL) {
-    parent::preBuild($build, $context);
-
-    $layers = $this->getOption('layers', array());
-    $map_layers = $context->getObjects('layer');
-    // Only handle layers available in the map and configured in the control.
-    // Ensures maximum performance on client side while having maximum
-    // configuration flexibility.
-    $frontend_layers = array();
-    foreach ($map_layers as $map_layer) {
-      if (isset($layers[$map_layer->getMachineName()])) {
-        $frontend_layers[$map_layer->getMachineName()] = $map_layer->getMachineName();
-      }
-    }
-    // Don't name these "layers" otherwise Object::getJS() will delete the
-    // option from the JS array.
-    $this->setOption('frontend_layers', $frontend_layers);
   }
 
 }

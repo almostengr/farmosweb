@@ -204,15 +204,13 @@ function openlayers_source_form_options_submit($form, &$form_state) {
     $form_state['item']->options = array_merge((array) $form_state['item']->options, (array) $form_state['values']['options']);
   }
 
-  if (!empty($form_state['item']->attachToLayer) && ($layer = \Drupal\openlayers\Openlayers::load('layer', $form_state['item']->attachToLayer)) == TRUE) {
-    // We should add the object to the Collection so JS and CSS files are
-    // imported.
-    $layer->setOption('source', $form_state['item']->machine_name);
-    \Drupal\openlayers\Openlayers::save($layer);
-    unset($form_state['item']->attachToLayer);
-  }
-
   if (($source = \Drupal\openlayers\Openlayers::load('Source', $form_state['item'])) == TRUE) {
+    if (!empty($form_state['item']->attachToLayer) && ($layer = \Drupal\openlayers\Openlayers::load('layer', $form_state['item']->attachToLayer)) == TRUE) {
+      $layer->setOption('source', $source->getMachineName());
+      \Drupal\openlayers\Openlayers::save($layer);
+      unset($form_state['item']->attachToLayer);
+    }
+
     $source->optionsFormSubmit($form, $form_state);
   }
 }

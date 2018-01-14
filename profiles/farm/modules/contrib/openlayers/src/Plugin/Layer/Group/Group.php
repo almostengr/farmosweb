@@ -5,10 +5,9 @@
  */
 
 namespace Drupal\openlayers\Plugin\Layer\Group;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Layer;
-use Drupal\openlayers\Types\LayerInterface;
 use Drupal\openlayers\Types\ObjectInterface;
 
 /**
@@ -187,7 +186,7 @@ class Group extends Layer {
 
     foreach ($this->getOption('grouplayers', array()) as $weight => $object) {
       if ($merge_object = Openlayers::load('layer', $object)) {
-        $merge_object->setWeight($weight);
+        $merge_object->setWeight($this->getWeight() - 1);
         $import[] = $merge_object;
       }
     }

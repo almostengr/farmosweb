@@ -29,16 +29,18 @@ features[openlayers_layers][] = farm_map_geofield_widget_layer_group
 features[openlayers_layers][] = farm_map_layer_google_hybrid
 features[openlayers_layers][] = farm_map_layer_google_satellite
 features[openlayers_layers][] = farm_map_layer_google_terrain
+features[openlayers_layers][] = farm_map_layer_openstreetmap
 features[openlayers_layers][] = farm_map_layer_group
 features[openlayers_maps][] = farm_map_geofield
 features[openlayers_maps][] = farm_map_geofield_formatter
 features[openlayers_sources][] = farm_map_source_google_hybrid
 features[openlayers_sources][] = farm_map_source_google_satellite
 features[openlayers_sources][] = farm_map_source_google_terrain
+features[openlayers_sources][] = farm_map_source_openstreetmap
 
-; Information added by Drupal.org packaging script on 2017-08-22
-version = "7.x-1.0-beta15"
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
 core = "7.x"
 project = "farm"
-datestamp = "1503427447"
+datestamp = "1514737389"
 

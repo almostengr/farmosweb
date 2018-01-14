@@ -7,7 +7,6 @@
 namespace Drupal\openlayers\Types;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
 use Drupal\openlayers\Types\Object;
 use Drupal\service_container\Messenger\MessengerInterface;
 
@@ -28,6 +27,8 @@ use Drupal\service_container\Messenger\MessengerInterface;
 class Error extends Object implements ControlInterface, ComponentInterface, LayerInterface, SourceInterface, StyleInterface {
 
   /**
+   * Contains the error message string.
+   *
    * @var string
    */
   public $errorMessage;
@@ -74,8 +75,8 @@ class Error extends Object implements ControlInterface, ComponentInterface, Laye
    * {@inheritdoc}
    */
   public function getMessage() {
-    $machine_name = isset($this->machine_name) ? $this->machine_name : 'undefined';
-    $service = isset($this->factory_service) ? $this->factory_service : 'undefined';
+    $machine_name = $this->getMachineName();
+    $service = $this->getFactoryService() ? $this->getFactoryService() : t('undefined');
     $type = isset($this->configuration['type']) ? $this->configuration['type'] : 'undefined';
 
     return t($this->errorMessage, array(
@@ -83,13 +84,6 @@ class Error extends Object implements ControlInterface, ComponentInterface, Laye
       '@service' => $service,
       '@type' => $type,
     ));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getType() {
-    return 'Error';
   }
 
   /**

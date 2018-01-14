@@ -244,9 +244,9 @@ function farm_asset_entity_property_info_alter(&$info) {
     'schema field' => 'type',
   );
   $properties['uid'] = array(
-    'label' => t('Owner'),
+    'label' => t('Author'),
     'type' => 'user',
-    'description' => t('The owner of the asset.'),
+    'description' => t('The author of the asset.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer farm_asset module',
     'required' => TRUE,
@@ -366,7 +366,7 @@ function farm_asset_ctools_plugin_directory($owner, $plugin_type) {
   $directory = '';
   if ($owner == 'page_manager' || $owner == 'ctools' || $owner == 'panels') {
     if ($plugin_type == 'tasks') {
-      $directory = 'plugins/tasks';
+      $directory = 'includes/ctools';
     }
   }
   return $directory;
@@ -385,7 +385,7 @@ function farm_asset_feeds_plugins() {
       'parent' => 'FeedsProcessor',
       'class' => 'FarmAssetProcessor',
       'file' => 'FarmAssetProcessor.inc',
-      'path' => drupal_get_path('module', 'farm_asset') . '/plugins/feeds',
+      'path' => drupal_get_path('module', 'farm_asset') . '/includes/feeds/plugins',
     ),
   );
   return $info;
@@ -395,9 +395,8 @@ function farm_asset_feeds_plugins() {
  * Implements hook_views_api().
  */
 function farm_asset_views_api($module = NULL, $api = NULL) {
-  return array('api' => '3.0');
+  return array("api" => "3.0");
 }
-
 
 /***************************************************************
  * Access functions

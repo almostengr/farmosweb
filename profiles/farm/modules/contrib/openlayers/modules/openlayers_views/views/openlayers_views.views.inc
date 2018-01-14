@@ -44,7 +44,6 @@ function openlayers_views_views_plugins() {
         'uses fields' => TRUE,
         'uses row plugin' => TRUE,
         'uses options' => TRUE,
-        // 'uses grouping' => TRUE,
         'even empty' => TRUE,
         'type' => 'normal',
       ),

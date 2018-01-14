@@ -6,7 +6,7 @@
 
 namespace Drupal\openlayers\Plugin\Component\Autopopup;
 
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Component;
 

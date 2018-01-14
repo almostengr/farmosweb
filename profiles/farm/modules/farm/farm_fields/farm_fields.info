@@ -32,9 +32,9 @@ features[filter][] = farm_format
 features[taxonomy][] = farm_log_categories
 features[variable][] = pathauto_taxonomy_term_farm_log_categories_pattern
 
-; Information added by Drupal.org packaging script on 2017-08-22
-version = "7.x-1.0-beta15"
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
 core = "7.x"
 project = "farm"
-datestamp = "1503427447"
+datestamp = "1514737389"
 

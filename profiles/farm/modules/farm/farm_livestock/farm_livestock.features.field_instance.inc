@@ -43,41 +43,7 @@ function farm_livestock_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 7,
-    ),
-  );
-
-  // Exported field_instance: 'farm_asset-animal-field_farm_animal_group'.
-  $field_instances['farm_asset-animal-field_farm_animal_group'] = array(
-    'bundle' => 'animal',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Assign this animal to a particular group, herd, flock, etc. You can manage the list of available groups in the ' . l('Animal Groups', 'farm/assets/animals/groups') . ' vocabulary.',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'farm_asset',
-    'field_name' => 'field_farm_animal_group',
-    'label' => 'Group',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
+      'weight' => 12,
     ),
   );
 
@@ -111,7 +77,7 @@ function farm_livestock_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 13,
     ),
   );
 
@@ -133,7 +99,7 @@ function farm_livestock_field_default_field_instances() {
     'entity_type' => 'farm_asset',
     'field_name' => 'field_farm_animal_sex',
     'label' => 'Sex',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -142,7 +108,7 @@ function farm_livestock_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 11,
     ),
   );
 
@@ -175,7 +141,7 @@ function farm_livestock_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 8,
+      'weight' => 13,
     ),
   );
 
@@ -184,7 +150,7 @@ function farm_livestock_field_default_field_instances() {
     'bundle' => 'animal',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'What is the species/breed of this animal? You can manage the list of available species/breeds in the ' . l('Animal Species/Breeds', 'farm/assets/animals/types') . ' vocabulary.',
+    'description' => 'Enter this animal asset\'s species/breed. You can manage the list of available species/breeds in the ' . l('Animal Species/Breeds', 'farm/assets/animals/types') . ' vocabulary.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -209,7 +175,7 @@ function farm_livestock_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
+      'weight' => 1,
     ),
   );
 
@@ -240,7 +206,7 @@ function farm_livestock_field_default_field_instances() {
     'label' => 'Date of birth',
     'required' => 0,
     'settings' => array(
-      'default_value' => 'now',
+      'default_value' => 'blank',
       'default_value2' => 'same',
       'default_value_code' => '',
       'default_value_code2' => '',
@@ -253,13 +219,13 @@ function farm_livestock_field_default_field_instances() {
         'increment' => 15,
         'input_format' => 'M j Y - g:i:sa',
         'input_format_custom' => '',
-        'label_position' => 'above',
+        'label_position' => 'within',
         'no_fieldset' => 1,
         'text_parts' => array(),
-        'year_range' => '-3:+3',
+        'year_range' => '-10:+3',
       ),
       'type' => 'date_select',
-      'weight' => 3,
+      'weight' => 10,
     ),
   );
 
@@ -293,7 +259,7 @@ function farm_livestock_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 11,
+      'weight' => 2,
     ),
   );
 
@@ -566,7 +532,7 @@ function farm_livestock_field_default_field_instances() {
         'view_mode' => 'full',
       ),
       'type' => 'entityreference_view_widget',
-      'weight' => 3,
+      'weight' => 1,
     ),
   );
 
@@ -582,7 +548,7 @@ function farm_livestock_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 4,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
@@ -628,7 +594,7 @@ function farm_livestock_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 3,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'log',
@@ -658,6 +624,39 @@ function farm_livestock_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_medical-field_farm_inventory'.
+  $field_instances['log-farm_medical-field_farm_inventory'] = array(
+    'bundle' => 'farm_medical',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to set or adjust asset inventory levels along with this log.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_inventory',
+    'label' => 'Inventory adjustments',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 12,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_medical-field_farm_log_category'.
   $field_instances['log-farm_medical-field_farm_log_category'] = array(
     'bundle' => 'farm_medical',
@@ -670,7 +669,7 @@ function farm_livestock_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -704,12 +703,12 @@ function farm_livestock_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -737,7 +736,7 @@ function farm_livestock_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 5,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'log',
@@ -752,7 +751,7 @@ function farm_livestock_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -768,7 +767,7 @@ function farm_livestock_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'log',
@@ -786,23 +785,24 @@ function farm_livestock_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Animals');
-  t('Assign this animal to a particular group, herd, flock, etc. You can manage the list of available groups in the ' . l('Animal Groups', 'farm/assets/animals/groups') . ' vocabulary.');
+  t('Assigned to');
   t('Body Location');
   t('Castrated');
   t('Date of birth');
   t('Description');
+  t('Enter this animal asset\'s species/breed. You can manage the list of available species/breeds in the <a href="/farm/assets/animals/types">Animal Species/Breeds</a> vocabulary.');
   t('Files');
-  t('Group');
   t('Has this animal been castrated?');
   t('ID');
   t('ID Tag(s)');
+  t('Inventory adjustments');
   t('List any identification tags that this animal has. These can be ear tags, tattoos, leg bands, etc. Use the fields below to describe the type, location, and ID of each.');
   t('List any nickname(s) of this animal.');
   t('Log category');
@@ -810,7 +810,6 @@ function farm_livestock_field_default_field_instances() {
   t('Nickname(s)');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Parent(s)');
   t('Photos');
   t('Sex');
@@ -819,8 +818,8 @@ function farm_livestock_field_default_field_instances() {
   t('Tag Type');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
   t('Use this to organize your logs into categories for easier searching and filtering later.');
+  t('Use this to set or adjust asset inventory levels along with this log.');
   t('What animals do this medical log pertain to?');
-  t('What is the species/breed of this animal? You can manage the list of available species/breeds in the ' . l('Animal Species/Breeds', 'farm/assets/animals/types') . ' vocabulary.');
 
   return $field_instances;
 }

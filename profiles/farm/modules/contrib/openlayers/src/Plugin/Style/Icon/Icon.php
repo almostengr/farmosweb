@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Style\Icon;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Style;
 
 /**
@@ -27,18 +27,18 @@ class Icon extends Style {
     );
     $form['options']['scale'] = array(
       '#type' => 'textfield',
-      '#title' => 'Path',
+      '#title' => 'Scale',
       '#default_value' => $this->getOption('scale', ''),
     );
-    $form['options']['anchor']['x'] = array(
+    $form['options']['anchor'][0] = array(
       '#type' => 'textfield',
       '#title' => 'Anchor X',
-      '#default_value' => $this->getOption(array('anchor', 'x'), 0.5),
+      '#default_value' => $this->getOption(array('anchor', 0), 0.5),
     );
-    $form['options']['anchor']['y'] = array(
+    $form['options']['anchor'][1] = array(
       '#type' => 'textfield',
       '#title' => 'Anchor Y',
-      '#default_value' => $this->getOption(array('anchor', 'y'), 0.5),
+      '#default_value' => $this->getOption(array('anchor', 1), 0.5),
     );
   }
 

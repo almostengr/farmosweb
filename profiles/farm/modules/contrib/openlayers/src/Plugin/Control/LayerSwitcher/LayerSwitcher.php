@@ -7,7 +7,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Control\LayerSwitcher;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Control;
 use Drupal\openlayers\Types\ObjectInterface;

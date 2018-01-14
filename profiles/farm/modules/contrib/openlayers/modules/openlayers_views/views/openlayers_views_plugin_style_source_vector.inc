@@ -177,7 +177,7 @@ class openlayers_views_plugin_style_source_vector extends views_plugin_style {
 
     $desc_options = array_merge(array(
       '' => '',
-      '#row' => '<' . t('entire row') . '>',
+      '#row' => t('<entire row>'),
     ), $fields);
 
     // Description field.
@@ -233,12 +233,14 @@ class openlayers_views_plugin_style_source_vector extends views_plugin_style {
     );
   }
 
-
   /**
+   * Extract features.
    *
    * @param array $sets
+   *   The array of sets.
    *
-   * openlayers_views_style_data specific
+   * @return array
+   *   The array of features.
    */
   public function map_features($sets = array()) {
     $features = $excluded_fields = array();
@@ -301,7 +303,9 @@ class openlayers_views_plugin_style_source_vector extends views_plugin_style {
           switch ($this->options['data_source']['value']) {
             case 'wkt':
               $handler = $handlers[$this->options['data_source']['wkt']];
-              $wkt = $handler->allow_advanced_render() ? $handler->advanced_render($record) : $handler->render($record);
+              if (is_object($handler)) {
+                $wkt = $handler->allow_advanced_render() ? $handler->advanced_render($record) : $handler->render($record);
+              }
               break;
 
             case 'other_latlon':

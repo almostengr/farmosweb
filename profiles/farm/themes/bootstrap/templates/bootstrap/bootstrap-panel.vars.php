@@ -37,22 +37,22 @@ function bootstrap_preprocess_bootstrap_panel(&$variables) {
   $variables['collapsed'] = FALSE;
   if (isset($element['#collapsed'])) {
     $variables['collapsed'] = $element['#collapsed'];
-  }
-  // Force grouped fieldsets to not be collapsible (for vertical tabs).
-  if (!empty($element['#group'])) {
-    $variables['collapsible'] = FALSE;
-    $variables['collapsed'] = FALSE;
-  }
-  // Collapsible elements need an ID, so generate one if necessary.
-  if (!isset($attributes['id']) && $variables['collapsible']) {
-    $attributes['id'] = drupal_html_id('bootstrap-panel');
+    // Remove collapsed class since we only want it to apply to the fieldset
+    // body element.
+    if ($index = array_search('collapsed', $attributes['class'])) {
+      unset($attributes['class'][$index]);
+      $attributes['class'] = array_values($attributes['class']);
+    }
   }
 
-  // Set the target if the element has an id.
-  $variables['target'] = NULL;
-  if (isset($attributes['id'])) {
-    $variables['target'] = '#' . $attributes['id'] . ' > .collapse';
+  // Generate an ID for the fieldset wrapper and body elements.
+  if (!isset($attributes['id'])) {
+    $attributes['id'] = drupal_html_id('bootstrap-panel');
   }
+  $variables['body_id'] = drupal_html_id($attributes['id'] . '--body');
+
+  // Set the target to the fieldset body element.
+  $variables['target'] = '#' . $variables['body_id'];
 
   // Build the panel content.
   $variables['content'] = $element['#children'];

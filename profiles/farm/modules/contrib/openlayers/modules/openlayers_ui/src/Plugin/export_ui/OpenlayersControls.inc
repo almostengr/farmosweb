@@ -168,7 +168,9 @@ function openlayers_control_form_options_submit($form, &$form_state) {
 
   if (($control = \Drupal\openlayers\Openlayers::load('Control', $form_state['item'])) == TRUE) {
     if (!empty($form_state['item']->attachToMap) && ($map = \Drupal\openlayers\Openlayers::load('map', $form_state['item']->attachToMap)) == TRUE) {
-      $map->getCollection()->append($control);
+      $controls = $map->getOption('controls', array());
+      $controls[] = $control->getMachineName();
+      $map->setOption('controls', $controls);
       \Drupal\openlayers\Openlayers::save($map);
       unset($form_state['item']->attachToMap);
     }

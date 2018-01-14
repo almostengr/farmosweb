@@ -226,7 +226,9 @@ function openlayers_layer_form_options_submit($form, &$form_state) {
 
   if (($layer = \Drupal\openlayers\Openlayers::load('Layer', $form_state['item'])) == TRUE) {
     if (!empty($form_state['item']->attachToMap) && ($map = \Drupal\openlayers\Openlayers::load('map', $form_state['item']->attachToMap)) == TRUE) {
-      $map->getCollection()->append($layer);
+      $layers = $map->getOption('layers', array());
+      $layers[] = $layer->getMachineName();
+      $map->setOption('layers', $layers);
       \Drupal\openlayers\Openlayers::save($map);
       unset($form_state['item']->attachToMap);
     }

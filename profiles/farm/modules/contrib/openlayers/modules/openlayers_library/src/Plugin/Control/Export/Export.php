@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Control\Export;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Control;
 
 /**
@@ -27,4 +27,5 @@ class Export extends Control {
       '#default_value' => $this->getOption('exportTipLabel', 'Export as image'),
     );
   }
+
 }

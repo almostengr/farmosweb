@@ -436,25 +436,26 @@ function openlayers_schema() {
 }
 
 /**
- * Implements hook__requirements().
+ * Implements hook_requirements().
  */
 function openlayers_requirements($phase) {
   $requirements = array();
   $t = get_t();
 
   if ($phase != 'install') {
-    if (($library = libraries_detect('openlayers3')) && !empty($library['installed'])) {
+    if ($library = \Drupal\openlayers\Openlayers::detectLibrary()) {
       $requirements['openlayers3'] = array(
         'title' => $t('Openlayers'),
         'severity' => REQUIREMENT_OK,
-        'value' => $t('Openlayers %version installed at %path', array('%path' => $library['library path'], '%version' => $library['version'])),
+        'value' => $t('Openlayers library variant (%variant) installed at %path', array('%path' => $library['library path'], '%variant' => $library['version'])),
       );
     }
     else {
+      $variant = \Drupal\openlayers\Config::get('openlayers.variant');
       $requirements['openlayers3'] = array(
         'title' => $t('Openlayers'),
         'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Openlayers library was not found. To install it, <a href="@url">download it manually</a> or use <em>drush dl-openlayers</em>. The library directory must be named <em>openlayers3</em> to be recognized by this module.', array('@url' => $library['download url'])),
+        'value' => $t('The configured Openlayers library variant (%variant) was not found. To install it, <a href="@url">download it manually</a> or use <em>drush dl-openlayers</em>. The library directory must be named <em>openlayers3</em> to be recognized by this module. Don\'t forget to <a href="@openlayers_admin">update your settings</a> and select a valid library variant.', array('%variant' => $variant, '@url' => $library['download url'], '@openlayers_admin' => '/admin/structure/openlayers')),
       );
     }
   }

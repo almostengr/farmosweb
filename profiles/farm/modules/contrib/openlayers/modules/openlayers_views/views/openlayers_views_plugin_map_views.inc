@@ -66,4 +66,5 @@ class openlayers_views_plugin_map_views extends openlayers_views_plugin_style_so
 
     return $output;
   }
+
 }

@@ -8,9 +8,7 @@ configure = admin/structure/openlayers
 
 registry_autoload[] = PSR-4
 
-; Information added by Drupal.org packaging script on 2016-01-03
-version = "7.x-3.1"
-core = "7.x"
+; Information added by drush on 2017-06-12
+version = "7.x-3.1+83-dev"
 project = "openlayers"
-datestamp = "1451782149"
-
+datestamp = "1497281489"

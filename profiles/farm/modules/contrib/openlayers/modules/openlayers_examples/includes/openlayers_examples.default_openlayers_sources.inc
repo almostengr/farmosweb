@@ -18,7 +18,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->description = 'Source MapBox example 1';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
-    'url' => 'http://api.tiles.mapbox.com/v3/examples.map-i86nkdio.jsonp',
+    'url' => '//api.tiles.mapbox.com/v3/examples.c7d2024a.jsonp',
   );
   $export['openlayers_examples_source_mapbox_example1'] = $ol_source;
 
@@ -27,24 +27,12 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_example2';
   $ol_source->name = 'Openlayers examples: MapBox example 2';
-  $ol_source->description = 'Source MapBox example 2';
-  $ol_source->factory_service = 'openlayers.Source:TileJSON';
-  $ol_source->options = array(
-    'url' => '//api.tiles.mapbox.com/v3/examples.c7d2024a.jsonp',
-  );
-  $export['openlayers_examples_source_mapbox_example2'] = $ol_source;
-
-  $ol_source = new stdClass();
-  $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
-  $ol_source->api_version = 1;
-  $ol_source->machine_name = 'openlayers_examples_source_mapbox_example3';
-  $ol_source->name = 'Openlayers examples: MapBox example 3';
-  $ol_source->description = 'Source MapBox example 3, used by ft.com.';
+  $ol_source->description = 'Source MapBox example 2, used by ft.com.';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
     'url' => '//api.tiles.mapbox.com/v3/financialtimes.map-w7l4lfi8.jsonp',
   );
-  $export['openlayers_examples_source_mapbox_example3'] = $ol_source;
+  $export['openlayers_examples_source_mapbox_example2'] = $ol_source;
 
   $ol_source = new stdClass();
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
@@ -125,6 +113,42 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_geojson_london_tube_lines';
+  $ol_source->name = 'Openlayers examples: London tube lines';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:GeoJSON';
+  $ol_source->options = array(
+    'url' => 'https://raw.githubusercontent.com/oobrien/vis/master/tube/data/tfl_lines.json',
+  );
+  $export['openlayers_examples_source_geojson_london_tube_lines'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
+  $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_geojson_london_tube_stations';
+  $ol_source->name = 'Openlayers examples: London tube stations';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:GeoJSON';
+  $ol_source->options = array(
+    'url' => 'https://raw.githubusercontent.com/oobrien/vis/master/tube/data/tfl_stations.json',
+  );
+  $export['openlayers_examples_source_geojson_london_tube_stations'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
+  $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_geojson_london_thames';
+  $ol_source->name = 'Openlayers examples: London river Thames';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:GeoJSON';
+  $ol_source->options = array(
+    'url' => 'https://raw.githubusercontent.com/oobrien/vis/master/tube/data/river_thames_simp.json',
+  );
+  $export['openlayers_examples_source_geojson_london_thames'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
+  $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_kml_earthquakes';
   $ol_source->name = 'Openlayers examples: 2012 Earthquakes';
   $ol_source->description = '';
@@ -193,7 +217,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->options = array(
     'crossOrigin' => 'null',
     'url' => '//{a-c}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openstreetmap_bw'] = $ol_source;
 
@@ -205,7 +229,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openstreetmap_de'] = $ol_source;
 
@@ -217,7 +241,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>',
   );
   $export['openlayers_examples_source_openstreetmap_hot'] = $ol_source;
 
@@ -229,7 +253,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_opencyclemap_thunderforest'] = $ol_source;
 
@@ -241,7 +265,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_opencyclemap_transport'] = $ol_source;
 
@@ -253,7 +277,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_opencyclemap_landscape'] = $ol_source;
 
@@ -265,7 +289,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
     'url' => '//{a-c}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png',
-    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_opencyclemap_outdoors'] = $ol_source;
 
@@ -278,7 +302,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->options = array(
     'crossOrigin' => 'null',
     'url' => '//korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}',
-    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openmapsurfer_roads'] = $ol_source;
 
@@ -291,7 +315,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->options = array(
     'crossOrigin' => 'null',
     'url' => '//korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}',
-    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openmapsurfer_roadsg'] = $ol_source;
 
@@ -304,7 +328,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->options = array(
     'crossOrigin' => 'null',
     'url' => '//korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}',
-    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openmapsurfer_adminb'] = $ol_source;
 
@@ -410,7 +434,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
   );
   $export['openlayers_examples_source_esri_worldtopomap'] = $ol_source;
 
@@ -423,7 +447,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
   );
   $export['openlayers_examples_source_esri_worldstreetmap'] = $ol_source;
 
@@ -436,7 +460,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
   );
   $export['openlayers_examples_source_esri_delorme'] = $ol_source;
 
@@ -449,7 +473,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
   );
   $export['openlayers_examples_source_esri_worldimagery'] = $ol_source;
 
@@ -462,7 +486,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS',
   );
   $export['openlayers_examples_source_esri_worldterrainbase'] = $ol_source;
 
@@ -475,7 +499,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri'
+    'attributions' => 'Tiles &copy; Esri &mdash; Source: Esri',
   );
   $export['openlayers_examples_source_esri_worldshadedrelief'] = $ol_source;
 
@@ -488,7 +512,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri'
+    'attributions' => 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
   );
   $export['openlayers_examples_source_esri_oceanbasemap'] = $ol_source;
 
@@ -501,7 +525,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
-    'attributions' => 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
+    'attributions' => 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
   );
   $export['openlayers_examples_source_esri_natgeoworldmap'] = $ol_source;
 

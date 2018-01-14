@@ -28,7 +28,7 @@ class OpenlayersProjections extends \OpenlayersObjects {
    * This doesn't have to be true if you override both.
    */
   public function list_build_row($item, &$form_state, $operations) {
-    // Set up sorting,
+    // Set up sorting.
     $name = $item->{$this->plugin['export']['key']};
     $schema = ctools_export_get_schema($this->plugin['schema']);
 

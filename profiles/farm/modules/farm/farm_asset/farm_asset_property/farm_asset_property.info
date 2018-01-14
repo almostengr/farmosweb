@@ -1,0 +1,11 @@
+name = Farm Asset Property
+description = Provides the ability to assign arbitrary (key-value pairs) properties to assets.
+core = 7.x
+package = farmOS
+
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
+core = "7.x"
+project = "farm"
+datestamp = "1514737389"
+

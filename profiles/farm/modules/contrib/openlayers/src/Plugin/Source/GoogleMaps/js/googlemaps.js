@@ -34,7 +34,10 @@ Drupal.openlayers.pluginManager.register({
     });
 
     data.map.getView().setCenter(data.map.getView().getCenter());
+    data.map.getView().dispatchEvent('change:center');
+
     data.map.getView().setZoom(data.map.getView().getZoom());
+    data.map.getView().dispatchEvent('change:resolution');
 
     data.map.on('change:size', function() {
       google.maps.event.trigger(gmap, 'resize');
@@ -73,7 +76,7 @@ Drupal.openlayers.pluginManager.register({
       Drupal.openlayers.pluginManager.getPlugin('openlayers.Source:GoogleMaps').scriptLoading = true;
 
       var params = {
-        v: 3.22,
+        v: 3.29,
         callback: 'Drupal.openlayers.openlayers_source_internal_googlemaps_initialize'
       };
 
@@ -128,3 +131,45 @@ Drupal.openlayers.openlayers_source_internal_googlemaps_initialize = function() 
     }
   });
 };
+
+/**
+ * Ensure that maps loaded into invisible elements are refreshed properly.
+ */
+(function ($) {
+  Drupal.behaviors.openlayers_source_googlemaps_refresh = {
+    attach: function (context, settings) {
+
+      // Refresh maps inside fieldsets when they are opened.
+      $('fieldset:has(.openlayers-container)', context).bind('collapsed', function (e) {
+        var fieldset = this;
+        if (!e.value) {
+          Drupal.behaviors.openlayers_source_googlemaps_refresh.map_refresh(fieldset);
+        }
+      });
+
+      // Refresh maps inside Easy Responsive Tab when they are activated.
+      var wrapper_class = '.field-group-easy-responsive-tabs-nav-wrapper';
+      jQuery(wrapper_class + ' [role=tab]', context).on('tabactivate', function(e, tab) {
+        var map_container = $(tab).closest(wrapper_class).find('.resp-tab-content-active .openlayers-container');
+        if (map_container.length !== 0) {
+          Drupal.behaviors.openlayers_source_googlemaps_refresh.map_refresh(map_container);
+        }
+      });
+    },
+
+    // Define a function for refreshing maps. Dispatch a window resize event
+    // to cause Google Maps to refresh, then update Openlayers map size after
+    // a brief pause.
+    map_refresh: function(context) {
+      window.dispatchEvent(new Event('resize'));
+      window.setTimeout(function() {
+        $('.openlayers-map', context).each(function (index, elem) {
+          var map = Drupal.openlayers.getMapById($(elem).attr('id'));
+          if (map && map.map !== undefined) {
+            map.map.updateSize();
+          }
+        });
+      }, 250);
+    }
+  };
+}(jQuery));

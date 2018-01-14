@@ -52,12 +52,32 @@ function list_feeds_processor_targets($entity_type, $bundle_name) {
 function list_feeds_set_boolean_target(FeedsSource $source, $entity, $target, array $values, array $mapping) {
   $language = $mapping['language'];
 
+  $allowed_values = FALSE;
+  $info = field_info_field($target);
+  if (!empty($info['settings'])) {
+    if (!empty($info['settings']['allowed_values']) || !empty($info['settings']['allowed_values_function'])) {
+      $allowed_values = list_allowed_values($info);
+    }
+  }
+
   $field = isset($entity->$target) ? $entity->$target : array($language => array());
 
   foreach ($values as $value) {
 
     if (is_object($value) && ($value instanceof FeedsElement)) {
       $value = $value->getValue();
+    }
+
+    // Special checks for list fields with allowed values.
+    if ($allowed_values) {
+      if (!in_array($value, array_keys($allowed_values))) {
+        // If the value is not a key of the allowed values, check to see if it
+        // might be a value instead.
+        if (in_array($value, array_values($allowed_values))) {
+          // If so, update the value to that corresponding key.
+          $value = array_search($value, $allowed_values);
+        }
+      }
     }
 
     if (is_string($value) && strlen($value) == 0) {

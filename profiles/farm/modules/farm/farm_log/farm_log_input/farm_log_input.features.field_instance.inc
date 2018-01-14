@@ -22,7 +22,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'token' => array(
         'label' => 'above',
@@ -61,7 +61,7 @@ function farm_log_input_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'token' => array(
         'label' => 'above',
@@ -112,7 +112,7 @@ function farm_log_input_field_default_field_instances() {
           'show_remaining_days' => 0,
         ),
         'type' => 'date_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'log',
@@ -120,7 +120,7 @@ function farm_log_input_field_default_field_instances() {
     'label' => 'Date purchased',
     'required' => 0,
     'settings' => array(
-      'default_value' => 'now',
+      'default_value' => 'blank',
       'default_value2' => 'same',
       'default_value_code' => '',
       'default_value_code2' => '',
@@ -139,7 +139,7 @@ function farm_log_input_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_select',
-      'weight' => -3,
+      'weight' => 6,
     ),
   );
 
@@ -155,7 +155,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 13,
+        'weight' => 15,
       ),
       'token' => array(
         'label' => 'above',
@@ -201,7 +201,7 @@ function farm_log_input_field_default_field_instances() {
           'map_layer_preset' => 'farm_map_geofield_formatter:openlayers_geofield_layer_formatter',
         ),
         'type' => 'openlayers_geofield',
-        'weight' => 14,
+        'weight' => 16,
       ),
       'token' => array(
         'label' => 'above',
@@ -248,7 +248,7 @@ function farm_log_input_field_default_field_instances() {
         'use_geocoder' => 1,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -273,7 +273,7 @@ function farm_log_input_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 12,
+        'weight' => 14,
       ),
       'token' => array(
         'label' => 'above',
@@ -321,7 +321,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'token' => array(
         'label' => 'above',
@@ -345,7 +345,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -6,
+      'weight' => 3,
     ),
   );
 
@@ -361,7 +361,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'token' => array(
         'label' => 'above',
@@ -385,7 +385,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -7,
+      'weight' => 2,
     ),
   );
 
@@ -401,7 +401,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'token' => array(
         'label' => 'above',
@@ -425,7 +425,40 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -5,
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'log-farm_input-field_farm_inventory'.
+  $field_instances['log-farm_input-field_farm_inventory'] = array(
+    'bundle' => 'farm_input',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to set or adjust asset inventory levels along with this log.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 10,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_inventory',
+    'label' => 'Inventory adjustments',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 16,
     ),
   );
 
@@ -441,7 +474,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 10,
+        'weight' => 12,
       ),
     ),
     'entity_type' => 'log',
@@ -456,7 +489,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 4,
     ),
   );
 
@@ -475,12 +508,12 @@ function farm_log_input_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 11,
+        'weight' => 13,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -506,7 +539,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'log',
@@ -524,7 +557,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -4,
+      'weight' => 5,
     ),
   );
 
@@ -564,7 +597,7 @@ function farm_log_input_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => -8,
+      'weight' => 1,
     ),
   );
 
@@ -582,7 +615,7 @@ function farm_log_input_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 15,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'log',
@@ -597,7 +630,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -613,7 +646,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 11,
       ),
       'token' => array(
         'label' => 'above',
@@ -637,7 +670,7 @@ function farm_log_input_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 4,
+      'weight' => 7,
     ),
   );
 
@@ -646,7 +679,7 @@ function farm_log_input_field_default_field_instances() {
     'bundle' => 'farm_input',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Describe the quantity of this input, using a value and a unit of measurement. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
+    'description' => 'Describe the quantity of this input, using a value, unit, and measure. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -676,7 +709,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 3,
+      'weight' => 1,
     ),
   );
 
@@ -685,19 +718,20 @@ function farm_log_input_field_default_field_instances() {
   t('Application method');
   t('Areas');
   t('Assets');
+  t('Assigned to');
   t('Date purchased');
-  t('Describe the quantity of this input, using a value and a unit of measurement. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
+  t('Describe the quantity of this input, using a value, unit, and measure. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
   t('Files');
   t('Geometry');
   t('How was this input applied?');
   t('If the manufacturer assigned this input a lot number, enter it here.');
   t('Input lot number');
+  t('Inventory adjustments');
   t('Log category');
   t('Material');
   t('Movement');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Photos');
   t('Purpose');
   t('Quantity');
@@ -705,6 +739,7 @@ function farm_log_input_field_default_field_instances() {
   t('This field is optional. It allows you to store geospatial data along with this input.');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
   t('Use this to organize your logs into categories for easier searching and filtering later.');
+  t('Use this to set or adjust asset inventory levels along with this log.');
   t('What areas is this input being applied to?');
   t('What assets do this input log pertain to?');
   t('What material is being applied? As you type, you will have the option of selecting from materials that you\'ve entered in the past.');

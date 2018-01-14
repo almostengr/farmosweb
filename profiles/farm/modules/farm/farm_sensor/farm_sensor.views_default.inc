@@ -41,6 +41,7 @@ function farm_sensor_views_default_views() {
     'id' => 'id',
     'name' => 'name',
     'field_farm_description' => 'field_farm_description',
+    'field_farm_group' => 'field_farm_group',
     'field_farm_move_to' => 'field_farm_move_to',
     'active' => 'active',
   );
@@ -72,6 +73,11 @@ function farm_sensor_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_group' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_farm_move_to' => array(
       'align' => '',
       'separator' => '',
@@ -96,6 +102,15 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['relationships']['latest_movement']['id'] = 'latest_movement';
   $handler->display->display_options['relationships']['latest_movement']['table'] = 'farm_asset';
   $handler->display->display_options['relationships']['latest_movement']['field'] = 'latest_movement';
+  /* Relationship: Farm asset: Group membership */
+  $handler->display->display_options['relationships']['membership']['id'] = 'membership';
+  $handler->display->display_options['relationships']['membership']['table'] = 'farm_asset';
+  $handler->display->display_options['relationships']['membership']['field'] = 'membership';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_farm_group_target_id']['id'] = 'field_farm_group_target_id';
+  $handler->display->display_options['relationships']['field_farm_group_target_id']['table'] = 'field_data_field_farm_group';
+  $handler->display->display_options['relationships']['field_farm_group_target_id']['field'] = 'field_farm_group_target_id';
+  $handler->display->display_options['relationships']['field_farm_group_target_id']['relationship'] = 'membership';
   /* Field: Bulk operations: Farm asset */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_farm_asset';
@@ -106,9 +121,28 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::farm_log_movement_asset_move_action' => array(
+    'action::views_bulk_operations_delete_item' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'skip_permission_check' => 0,
+      'override_label' => 1,
+      'label' => 'Delete',
+      'settings' => array(
+        'log' => 0,
+      ),
+    ),
+    'action::farm_group_asset_membership_action' => array(
       'selected' => 1,
       'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::farm_movement_asset_move_action' => array(
+      'selected' => 1,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
       'override_label' => 0,
       'label' => '',
     ),
@@ -133,6 +167,16 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['fields']['field_farm_description']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_farm_description']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['field_farm_description']['alter']['trim'] = TRUE;
+  /* Field: Field collection item: Group */
+  $handler->display->display_options['fields']['field_farm_group']['id'] = 'field_farm_group';
+  $handler->display->display_options['fields']['field_farm_group']['table'] = 'field_data_field_farm_group';
+  $handler->display->display_options['fields']['field_farm_group']['field'] = 'field_farm_group';
+  $handler->display->display_options['fields']['field_farm_group']['relationship'] = 'membership';
+  $handler->display->display_options['fields']['field_farm_group']['settings'] = array(
+    'bypass_access' => 0,
+    'link' => 1,
+  );
+  $handler->display->display_options['fields']['field_farm_group']['delta_offset'] = '0';
   /* Field: Field collection item: Movement to */
   $handler->display->display_options['fields']['field_farm_move_to']['id'] = 'field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['table'] = 'field_data_field_farm_move_to';
@@ -185,6 +229,18 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  /* Filter criterion: Farm asset: Name */
+  $handler->display->display_options['filters']['name_1']['id'] = 'name_1';
+  $handler->display->display_options['filters']['name_1']['table'] = 'farm_asset';
+  $handler->display->display_options['filters']['name_1']['field'] = 'name';
+  $handler->display->display_options['filters']['name_1']['relationship'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['name_1']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name_1']['group'] = 1;
+  $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
+  $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Group';
+  $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
+  $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
   /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
@@ -223,7 +279,7 @@ function farm_sensor_views_default_views() {
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $handler->display->display_options['tab_options']['type'] = 'normal';
   $handler->display->display_options['tab_options']['title'] = 'Sensors';
-  $handler->display->display_options['tab_options']['weight'] = '100';
+  $handler->display->display_options['tab_options']['weight'] = '90';
   $handler->display->display_options['tab_options']['name'] = 'farm';
 
   /* Display: Data export */
@@ -263,12 +319,16 @@ function farm_sensor_views_default_views() {
     t('last »'),
     t('No sensors found.'),
     t('Latest movement'),
+    t('Group membership'),
+    t('Farm asset entity referenced from field_farm_group'),
     t('Farm asset'),
     t('- Choose an operation -'),
+    t('Delete'),
     t('Asset ID'),
     t('.'),
     t('Name'),
     t('Description'),
+    t('Group'),
     t('Location'),
     t('Active'),
     t('All'),

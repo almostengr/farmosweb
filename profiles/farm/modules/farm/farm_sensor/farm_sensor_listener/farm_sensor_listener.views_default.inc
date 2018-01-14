@@ -1,14 +1,14 @@
 <?php
-
 /**
  * @file
- * Farm Sensor Listener default Views.
+ * farm_sensor_listener.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
 function farm_sensor_listener_views_default_views() {
+  $export = array();
 
   $view = new view();
   $view->name = 'farm_sensor_data';
@@ -23,7 +23,6 @@ function farm_sensor_listener_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Sensor Data';
-  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view any sensor farm assets';
@@ -148,8 +147,7 @@ function farm_sensor_listener_views_default_views() {
     t('Value'),
     t('All'),
   );
+  $export['farm_sensor_data'] = $view;
 
-  $views['farm_sensor_data'] = $view;
-
-  return $views;
+  return $export;
 }

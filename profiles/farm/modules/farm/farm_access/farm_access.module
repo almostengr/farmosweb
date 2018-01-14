@@ -21,12 +21,24 @@ function farm_access_hook_info() {
 }
 
 /**
+ * Load a list of farm roles.
+ *
+ * @return array
+ *   Returns an array of farm role names.
+ */
+function farm_access_roles() {
+
+  // Invoke hook_farm_access_roles() to get a list of roles.
+  return module_invoke_all('farm_access_roles');
+}
+
+/**
  * Create farm roles.
  */
 function farm_access_roles_create() {
 
-  // Invoke hook_farm_access_roles() to get a list of roles.
-  $roles = module_invoke_all('farm_access_roles');
+  // Get a list of farm roles.
+  $roles = farm_access_roles();
 
   // Iterate through the roles.
   foreach ($roles as $name) {
@@ -48,8 +60,8 @@ function farm_access_roles_create() {
  */
 function farm_access_sync_perms() {
 
-  // Load a list of all farm roles.
-  $roles = module_invoke_all('farm_access_roles');
+  // Get a list of farm roles.
+  $roles = farm_access_roles();
 
   // Iterate through the available roles.
   foreach ($roles as $role) {
@@ -255,6 +267,33 @@ function farm_access_entity_perms(array $types, $ops = array()) {
           if (in_array('delete', $ops)) {
             $perms[] = 'delete any ' . $bundle . ' farm assets';
             $perms[] = 'delete own ' . $bundle . ' farm assets';
+          }
+          break;
+
+        // Farm Plan.
+        case 'farm_plan':
+
+          // Create.
+          if (in_array('create', $ops)) {
+            $perms[] = 'create ' . $bundle . ' farm plans';
+          }
+
+          // View.
+          if (in_array('view', $ops)) {
+            $perms[] = 'view any ' . $bundle . ' farm plans';
+            $perms[] = 'view own ' . $bundle . ' farm plans';
+          }
+
+          // Edit.
+          if (in_array('edit', $ops)) {
+            $perms[] = 'edit any ' . $bundle . ' farm plans';
+            $perms[] = 'edit own ' . $bundle . ' farm plans';
+          }
+
+          // Delete.
+          if (in_array('delete', $ops)) {
+            $perms[] = 'delete any ' . $bundle . ' farm plans';
+            $perms[] = 'delete own ' . $bundle . ' farm plans';
           }
           break;
 

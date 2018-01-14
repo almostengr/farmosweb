@@ -69,4 +69,5 @@ class openlayers_views_plugin_display_openlayers extends views_plugin_display {
     unset($options['exposed_block']);
     unset($options['analyze-theme']);
   }
+
 }

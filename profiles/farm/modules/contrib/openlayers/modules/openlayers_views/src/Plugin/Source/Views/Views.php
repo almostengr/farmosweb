@@ -5,6 +5,7 @@
  */
 
 namespace Drupal\openlayers_views\Plugin\Source\Views;
+use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Source;
 
 /**
@@ -22,20 +23,20 @@ class Views extends Source {
     $options = array();
     foreach (views_get_all_views() as $view) {
       foreach ($view->display as $display) {
-        if ($display['id'] != 'default') {
-          $view->set_display($display['id']);
+        if ($display->id != 'default') {
+          $view->set_display($display->id);
           $viewname = sprintf('%s (%s)', $view->human_name, $view->name);
           if ($view->display_handler->get_option('style_plugin') == 'openlayers_source_vector') {
-            $options[$viewname][$view->name . ':' . $display['id']] = sprintf('%s:%s', $view->human_name, $display['id']);
+            $options[$viewname][$view->name . ':' . $display->id] = sprintf('%s:%s', $view->human_name, $display->id);
           }
           if ($view->display_handler->get_option('style_plugin') == 'openlayers_map_views') {
-            $options[$viewname][$view->name . ':' . $display['id']] = sprintf('%s:%s', $view->human_name, $display['id']);
+            $options[$viewname][$view->name . ':' . $display->id] = sprintf('%s:%s', $view->human_name, $display->id);
           }
         }
       }
     }
 
-    $form['view'] = array(
+    $form['options']['view'] = array(
       '#type' => 'select',
       '#title' => 'View and display',
       '#options' => $options,
@@ -51,6 +52,11 @@ class Views extends Source {
    */
   public function init() {
     $features = array();
+
+    $source = Openlayers::loadExportable('source', $this->getMachineName());
+    if (is_object($source)) {
+      $this->setOptions($source->options);
+    }
 
     if ($view = $this->getOption('view', FALSE)) {
       list($views_id, $display_id) = explode(':', $view, 2);

@@ -1,0 +1,12 @@
+name = Farm Constraint
+description = Provides a framework for managing foreign key constraints between farmOS entities.
+core = 7.x
+package = farmOS
+dependencies[] = field
+
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
+core = "7.x"
+project = "farm"
+datestamp = "1514737389"
+

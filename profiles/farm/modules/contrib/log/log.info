@@ -6,11 +6,13 @@ dependencies[] = date_api
 dependencies[] = entity
 configure = admin/config/log
 files[] = log.class.inc
-files[] = plugins/feeds/LogProcessor.inc
+files[] = includes/feeds/plugins/LogProcessor.inc
+files[] = includes/views/handlers/log_handler_field_timestamp.inc
+files[] = includes/views/handlers/log_handler_sort_timestamp.inc
 
-; Information added by Drupal.org packaging script on 2017-08-10
-version = "7.x-1.9"
+; Information added by Drupal.org packaging script on 2017-12-28
+version = "7.x-1.10"
 core = "7.x"
 project = "log"
-datestamp = "1502376846"
+datestamp = "1514477587"
 

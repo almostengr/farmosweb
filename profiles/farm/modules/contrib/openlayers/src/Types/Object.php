@@ -267,6 +267,20 @@ abstract class Object extends PluginBase implements ObjectInterface {
    */
   public function removeObject($object_machine_name) {
     $this->getCollection()->remove($object_machine_name);
+
+    foreach (Openlayers::getPluginTypes() as $type) {
+      $type .= 's';
+      $objects = $this->getOption($type, array());
+      $objects = array_combine(array_values($objects), array_values($objects));
+      unset($objects[$object_machine_name]);
+      if (!empty($objects)) {
+        $this->setOption($type, array_values($objects));
+      }
+      else {
+        $this->clearOption($type);
+      }
+    }
+
     return $this;
   }
 

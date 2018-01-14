@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Component\Julia;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Component;
 use Drupal\openlayers\Types\ObjectInterface;
@@ -32,10 +32,10 @@ class Julia extends Component {
         'fractaltype' => array(
           '#type' => 'select',
           '#title' => 'Type of fractal',
-          '#description' => t(''),
+          '#description' => '',
           '#options' => array(
             'julia' => 'Julia',
-            'mandelbrot' => 'Mandelbrot'
+            'mandelbrot' => 'Mandelbrot',
           ),
           '#value' => 'mandelbrot',
           '#default_value' => 'mandelbrot',
@@ -80,7 +80,7 @@ class Julia extends Component {
             '#description' => t('Draw the inside of the fractal or the outside ?'),
             '#options' => array(
               'in' => 'Draw inside',
-              'out' => 'Draw outside'
+              'out' => 'Draw outside',
             ),
             '#value' => 'out',
             '#default_value' => 'out',
@@ -120,4 +120,5 @@ class Julia extends Component {
       ),
     );
   }
+
 }

@@ -32,7 +32,6 @@ function farm_map_default_openlayers_maps() {
     ),
     'layers' => array(
       0 => 'farm_map_geofield_widget_layer_group',
-      1 => 'farm_map_layer_group',
     ),
     'controls' => array(
       0 => 'openlayers_control_zoom',
@@ -82,7 +81,6 @@ function farm_map_default_openlayers_maps() {
     ),
     'layers' => array(
       0 => 'farm_map_geofield_formatter_layer_group',
-      1 => 'farm_map_layer_group',
     ),
     'controls' => array(
       0 => 'openlayers_control_zoom',
@@ -109,4 +107,31 @@ function farm_map_default_openlayers_maps() {
   $export['farm_map_geofield_formatter'] = $ol_map;
 
   return $export;
+}
+
+/**
+ * Implements hook_default_openlayers_maps_alter().
+ */
+function farm_map_default_openlayers_maps_alter(&$maps) {
+
+  // This module implements hook_module_implements_alter() to ensure that this
+  // function always runs last, so we can ensure that any modifications made
+  // below will take priority over any other implementations of this hook.
+  // @see farm_map_module_implements_alter()
+
+  // Iterate through all maps.
+  foreach ($maps as &$map) {
+
+    // Only alter maps that have a farm_* namespace.
+    if (substr($map->machine_name, 0, 5) == 'farm_') {
+
+      // Add "base layers" group layer to the end all maps.
+      $map->options['layers'][] = 'farm_map_layer_group';
+
+      // Reverse the order of layers.
+      // This is necessary because of the following Openlayers module commit:
+      // http://cgit.drupalcode.org/openlayers/commit/?id=321aee3
+      $map->options['layers'] = array_reverse($map->options['layers']);
+    }
+  }
 }

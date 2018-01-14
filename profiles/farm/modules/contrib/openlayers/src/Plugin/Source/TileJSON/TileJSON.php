@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Source\TileJSON;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Source;
 
 /**

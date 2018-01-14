@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Control\JSGeocoder;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Control;
 
 /**
@@ -54,4 +54,5 @@ class JSGeocoder extends Control {
       '#description' => 'Zoom to set the map to when Google return a successful result. 0 to disable.',
     );
   }
+
 }

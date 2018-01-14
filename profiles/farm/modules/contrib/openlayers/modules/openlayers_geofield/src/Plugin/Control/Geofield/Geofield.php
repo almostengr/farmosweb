@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_geofield\Plugin\Control\Geofield;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Control;
 
 /**

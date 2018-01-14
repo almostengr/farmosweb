@@ -40,7 +40,7 @@ function farm_equipment_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 4,
     ),
   );
 
@@ -162,7 +162,7 @@ function farm_equipment_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 1,
     ),
   );
 
@@ -196,7 +196,7 @@ function farm_equipment_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 2,
     ),
   );
 
@@ -230,7 +230,7 @@ function farm_equipment_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 3,
     ),
   );
 
@@ -287,7 +287,7 @@ function farm_equipment_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 4,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'log',
@@ -333,7 +333,7 @@ function farm_equipment_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 3,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'log',
@@ -363,6 +363,39 @@ function farm_equipment_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_maintenance-field_farm_inventory'.
+  $field_instances['log-farm_maintenance-field_farm_inventory'] = array(
+    'bundle' => 'farm_maintenance',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Use this to set or adjust asset inventory levels along with this log.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'field_collection',
+        'settings' => array(
+          'view_mode' => 'full',
+        ),
+        'type' => 'field_collection_fields',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_inventory',
+    'label' => 'Inventory adjustments',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'field_collection',
+      'settings' => array(),
+      'type' => 'field_collection_embed',
+      'weight' => 12,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_maintenance-field_farm_log_category'.
   $field_instances['log-farm_maintenance-field_farm_log_category'] = array(
     'bundle' => 'farm_maintenance',
@@ -371,11 +404,11 @@ function farm_equipment_field_default_field_instances() {
     'description' => 'Use this to organize your logs into categories for easier searching and filtering later.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'log',
@@ -409,12 +442,12 @@ function farm_equipment_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'log',
     'field_name' => 'field_farm_log_owner',
-    'label' => 'Owner',
+    'label' => 'Assigned to',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -442,7 +475,7 @@ function farm_equipment_field_default_field_instances() {
           'view_mode' => 'full',
         ),
         'type' => 'field_collection_fields',
-        'weight' => 5,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'log',
@@ -457,7 +490,7 @@ function farm_equipment_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -473,7 +506,7 @@ function farm_equipment_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'log',
@@ -491,26 +524,28 @@ function farm_equipment_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 1,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Assets');
+  t('Assigned to');
   t('Description');
   t('Files');
+  t('Inventory adjustments');
   t('Log category');
   t('Manufacturer');
   t('Model');
   t('Movement');
   t('Notes');
   t('Optionally assign this task to one or more people.');
-  t('Owner');
   t('Photos');
   t('Serial number');
   t('Use these fields to record a movement with this log entry. This will be used to define the location of any referenced assets. The current location of any asset is determined by the most recently completed movement log. Only the "to" field is required.');
   t('Use this to organize your logs into categories for easier searching and filtering later.');
+  t('Use this to set or adjust asset inventory levels along with this log.');
   t('What assets do this maintenance log pertain to?');
 
   return $field_instances;

@@ -31,9 +31,7 @@ class openlayers extends boxes_box {
       '#description' => t('Map to display.'),
       '#options' => \Drupal\openlayers\Openlayers::loadAllAsOptions('Map'),
       "#empty_option" => t('- Select a Map -'),
-      // Todo: fix this.
-      '#default_value' => $this->options['map'] ?
-        $this->options['map'] : variable_get('openlayers_default_map', 'default'),
+      '#default_value' => $this->options['map'] ? $this->options['map'] : '',
     );
     return $form;
   }

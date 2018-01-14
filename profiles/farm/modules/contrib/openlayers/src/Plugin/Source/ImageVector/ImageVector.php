@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Source\ImageVector;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Source;
 

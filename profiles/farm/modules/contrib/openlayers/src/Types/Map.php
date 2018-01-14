@@ -59,9 +59,7 @@ abstract class Map extends Object implements MapInterface {
    *   The Map object.
    */
   public function removeLayer($layer_id) {
-    $layers = $this->getOption('layers', array());
-    unset($layers[$layer_id]);
-    return $this->setOption('layers', $layers)->removeObject($layer_id);
+    return $this->removeObject($layer_id);
   }
 
   /**
@@ -71,10 +69,7 @@ abstract class Map extends Object implements MapInterface {
    *   The Map object.
    */
   public function removeComponent($component_id) {
-    $components = $this->getOption('components', array());
-    unset($components[$component_id]);
-    return $this->setOption('components', $components)
-      ->removeObject($component_id);
+    return $this->removeObject($component_id);
   }
 
   /**
@@ -84,9 +79,7 @@ abstract class Map extends Object implements MapInterface {
    *   The Map object.
    */
   public function removeControl($control_id) {
-    $controls = $this->getOption('controls', array());
-    unset($controls[$control_id]);
-    return $this->setOption('controls', $controls)->removeObject($control_id);
+    return $this->removeObject($control_id);
   }
 
   /**
@@ -96,10 +89,7 @@ abstract class Map extends Object implements MapInterface {
    *   The Map object.
    */
   public function removeInteraction($interaction_id) {
-    $interactions = $this->getOption('interactions', array());
-    unset($interactions[$interaction_id]);
-    return $this->setOption('interactions', $interactions)
-      ->removeObject($interaction_id);
+    return $this->removeObject($interaction_id);
   }
 
   /**
@@ -160,11 +150,6 @@ abstract class Map extends Object implements MapInterface {
     // Transform the options into objects.
     $map->getCollection()->import($map->optionsToObjects());
 
-    // If this is an asynchronous map flag it as such.
-    if ($asynchronous = $this->isAsynchronous()) {
-      $this->setOption('async', $asynchronous);
-    }
-
     // Run prebuild hook to all objects who implements it.
     $map->preBuild($build, $map);
 
@@ -184,6 +169,29 @@ abstract class Map extends Object implements MapInterface {
           'options',
           'container_type',
         ), 'fieldset'),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+        '#attached' => array(
+          'library' => array(
+            array('system', 'drupal.collapse'),
+          ),
+        ),
+/*
+        '#attributes' => array(
+          'class' => array(
+            $this->getOption(array(
+              'capabilities',
+              'options',
+              'collapsible',
+            ), TRUE) ? 'collapsible' : '',
+            $this->getOption(array(
+              'capabilities',
+              'options',
+              'collapsed',
+            ), TRUE) ? 'collapsed' : '',
+          ),
+        ),
+*/
         '#title' => $this->getOption(array(
           'capabilities',
           'options',
@@ -194,33 +202,11 @@ abstract class Map extends Object implements MapInterface {
           'options',
           'description',
         ), NULL),
-        '#collapsible' => $this->getOption(array(
-          'capabilities',
-          'options',
-          'collapsible',
-        ), TRUE),
-        '#collapsed' => $this->getOption(array(
-          'capabilities',
-          'options',
-          'collapsed',
-        ), TRUE),
-        'description' => array(
-          '#type' => 'container',
-          '#attributes' => array(
-            'class' => array(
-              'description',
-            ),
-          ),
-          array(
-            '#markup' => theme(
-              'item_list',
-              array(
-                'items' => $items,
-                'title' => '',
-                'type' => 'ul',
-              )
-            ),
-          ),
+        array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+          '#title' => '',
+          '#type' => 'ul',
         ),
       );
     }
@@ -269,10 +255,8 @@ abstract class Map extends Object implements MapInterface {
    * {@inheritdoc}
    */
   public function setSize(array $size = array()) {
-    list($width, $height) = $size;
-    $this->setOption('width', $width);
-    $this->setOption('height', $height);
-    return $this;
+    list($width, $height) = array_values($size);
+    return $this->setOption('width', $width)->setOption('height', $height);
   }
 
   /**

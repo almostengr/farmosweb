@@ -10,13 +10,18 @@ projects[bootstrap_tour][version] = "2.5"
 ; Patch to fix secondary tours not running after you end the first one.
 projects[bootstrap_tour][patch][] = "http://www.drupal.org/files/issues/add_unique_tour_name_to_avoid_local_storage_collisions-2533524-9.patch"
 
+projects[calendar][subdir] = "contrib"
+projects[calendar][version] = "3.5"
+; Patch to fix Issue #2160183: Undefined index: groupby_times
+projects[calendar][patch][] = "http://www.drupal.org/files/issues/calendar-2160183-18.patch"
+
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = "2.13"
 
 projects[ctools][subdir] = "contrib"
 projects[ctools][version] = "1.12"
 ; Patch to fix Issue #2643108: Entity reference popup not centered in Linux
-projects[ctools][patch][] = "http://www.drupal.org/files/issues/ctools-fix_modal_position_after_ajax-1803104-13.patch"
+projects[ctools][patch][] = "http://www.drupal.org/files/issues/ctools-fix_modal_position_after_ajax-1803104-25.patch"
 
 projects[date][subdir] = "contrib"
 projects[date][version] = "2.10"
@@ -39,12 +44,12 @@ projects[features][subdir] = "contrib"
 projects[features][version] = "2.10"
 
 projects[feeds][subdir] = "contrib"
-projects[feeds][version] = "2.0-beta3"
-; Issue #2379631: field_attach_validate() must be called before programmatic entity saves
-projects[feeds][patch][] = "http://www.drupal.org/files/issues/feeds-field-attach-validate-2379631-31.patch"
+projects[feeds][version] = "2.0-beta4"
+; Issue #1428096: Import using label of list field succeeds, but item not selected in list field
+projects[feeds][patch][] = "http://www.drupal.org/files/issues/feeds-map-to-allowed-value-1428096-8.patch"
 
 projects[feeds_tamper][subdir] = "contrib"
-projects[feeds_tamper][version] = "1.1"
+projects[feeds_tamper][version] = "1.2"
 
 projects[field_collection][subdir] = "contrib"
 projects[field_collection][version] = "1.0-beta12"
@@ -52,10 +57,17 @@ projects[field_collection][version] = "1.0-beta12"
 projects[field_collection][patch][] = "http://www.drupal.org/files/issues/add_feeds_integration-1063434-286.patch"
 
 projects[field_group][subdir] = "contrib"
-projects[field_group][version] = "1.5"
+projects[field_group][version] = "1.6"
+
+projects[field_group_easy_responsive_tabs][subdir] = "contrib"
+projects[field_group_easy_responsive_tabs][version] = "1.2"
 
 projects[fraction][subdir] = "contrib"
 projects[fraction][version] = "1.5"
+; Issue #2918218: Empty decimal widgets always show zero
+projects[fraction][patch][] = "http://www.drupal.org/files/issues/fraction_empty_zero-2918218-2.patch"
+; Issue #2921422: Use scale of 0 in all numerator/denominator BCMath calculations
+projects[fraction][patch][] = "http://www.drupal.org/files/issues/fraction_bcmath_scale-2921422-2.patch"
 
 projects[geocoder][subdir] = "contrib"
 projects[geocoder][version] = "1.3"
@@ -86,7 +98,7 @@ projects[libraries_cdn][subdir] = "contrib"
 projects[libraries_cdn][version] = "1.7"
 
 projects[log][subdir] = "contrib"
-projects[log][version] = "1.9"
+projects[log][version] = "1.10"
 
 projects[multiupload_filefield_widget][subdir] = "contrib"
 projects[multiupload_filefield_widget][version] = "1.13"
@@ -98,23 +110,24 @@ projects[navbar][subdir] = "contrib"
 projects[navbar][version] = "1.7"
 
 projects[openlayers][subdir] = "contrib"
-projects[openlayers][version] = "3.1"
+projects[openlayers][download][type] = "git"
+projects[openlayers][download][url] = "https://git.drupal.org/project/openlayers.git"
+projects[openlayers][download][branch] = "7.x-3.x"
+projects[openlayers][download][revision] = "ead77cbbda2abe92d0d663ff403d3a755dce9f21"
 ; Remove base layer assignment code.
-projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_base_layer_mechanism-2543130-4.patch"
+projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_base_layer_mechanism-2543130-10.patch"
 ; Move Elements dependency to Openlayers Examples.
 projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_examples_elements_dependency-2620098-2.patch"
 ; Switch to ROADMAP when zoomed further than Google's max zoom level.
 projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_gmap_zoom_switch_type-2680273-1.patch"
 ; Add a jQuery trigger event when popups are displayed.
 projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_popup_trigger-2687781-1.patch"
-; Fix map behavior detach.
-projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_detach-2688029-5.patch"
-; Move geocoder AJAX callback from Geofield module.
-projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_widget_geocode_callback-2762367-1.patch"
-; Fix Geocode from field.
-projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_geocode_button_fix-2755899-9.patch"
-; Hide empty Openlayers Geofield labels.
-projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_geofield_empty_label-2880034-1.patch"
+; Fix Google Maps API warning: RetiredVersion
+projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_google_retired_version-2888085-4.patch"
+; Issue #2644580: Maps with Google layers break when loaded in invisible element
+projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_googlemaps_refresh-2644580-19.patch"
+; Issue #2911611: Update ZoomToSource Component: use new view.animate() method.
+projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_ol4_zoomtosource-2911611-4.patch"
 
 projects[openlayers_geolocate_button][subdir] = "contrib"
 projects[openlayers_geolocate_button][version] = "3.2"
@@ -146,10 +159,12 @@ projects[token][subdir] = "contrib"
 projects[token][version] = "1.7"
 
 projects[views][subdir] = "contrib"
-projects[views][version] = "3.17"
+projects[views][version] = "3.18"
 
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = "3.4"
+; Issue #2473889: rules component with list as parameter creates a notice
+projects[views_bulk_operations][patch][] = "http://www.drupal.org/files/issues/vbo_missing_account_decl-2473889-7.patch"
 
 projects[views_data_export][subdir] = "contrib"
 projects[views_data_export][version] = "3.2"
@@ -174,9 +189,11 @@ projects[module_filter][version] = "2.1"
 ; Themes
 ; -----------------------------------------------------------------------------
 
-projects[bootstrap][version] = "3.14"
+projects[bootstrap][version] = "3.15"
 ; Issue #2634358: Multiple collapsible fieldsets have broken triggers in BS3.3.4
 projects[bootstrap][patch][] = "http://www.drupal.org/files/issues/bootstrap_multifieldset-2634358-10.patch"
+; Issue #2910624: Collapsible fieldsets inside vertical tabs are disabled
+projects[bootstrap][patch][] = "http://www.drupal.org/files/issues/bootstrap_vertical_tabs_collapsible_after_2634358-2910624-4.patch"
 
 ; -----------------------------------------------------------------------------
 ; Libraries
@@ -184,6 +201,9 @@ projects[bootstrap][patch][] = "http://www.drupal.org/files/issues/bootstrap_mul
 
 libraries[backbone][download][type] = "get"
 libraries[backbone][download][url] = "http://github.com/jashkenas/backbone/archive/1.1.2.zip"
+
+libraries[easy-responsive-tabs][download][type] = "get"
+libraries[easy-responsive-tabs][download][url] = "https://github.com/samsono/Easy-Responsive-Tabs-to-Accordion/archive/1.2.2.zip"
 
 libraries[modernizr][download][type] = "get"
 libraries[modernizr][download][url] = "http://github.com/Modernizr/Modernizr/archive/v2.8.3.zip"

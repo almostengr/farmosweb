@@ -12,7 +12,7 @@
   <?php if ($title): ?>
     <?php if ($collapsible): ?>
     <legend class="panel-heading">
-      <a href="#" class="panel-title fieldset-legend" data-toggle="collapse" data-target="<?php print $target; ?>"><?php print $title; ?></a>
+      <a href="#" class="panel-title fieldset-legend<?php print ($collapsed ? ' collapsed' : ''); ?>" data-toggle="collapse" data-target="<?php print $target; ?>"><?php print $title; ?></a>
     </legend>
     <?php else: ?>
     <legend class="panel-heading">
@@ -21,7 +21,7 @@
     <?php endif; ?>
   <?php endif; ?>
   <?php if ($collapsible): ?>
-  <div class="panel-collapse collapse fade<?php print (!$collapsed ? ' in' : ''); ?>">
+  <div class="panel-collapse collapse fade<?php print ($collapsed ? ' collapsed' : ' in'); ?>" id="<?php print $body_id; ?>">
   <?php endif; ?>
   <div class="panel-body">
     <?php if ($description): ?><div class="help-block"><?php print $description; ?></div><?php endif; ?>

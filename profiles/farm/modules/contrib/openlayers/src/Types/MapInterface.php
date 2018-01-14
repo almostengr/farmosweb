@@ -136,6 +136,9 @@ interface MapInterface extends ObjectInterface {
   /**
    * Set the size of the map.
    *
+   * @param array $size
+   *   An array with two elements, a width and a height.
+   *
    * @return MapInterface
    *   The map.
    */

@@ -6,7 +6,6 @@
 
 namespace Drupal\openlayers_field\Plugin\Source\Field;
 
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
 use Drupal\openlayers\Plugin\Source\Vector\Vector;
 use Drupal\openlayers\Types\Source;
 
@@ -42,6 +41,7 @@ class Field extends Vector {
       '#required' => TRUE,
       '#default_value' => $this->getOption('geocoder_handler', 'google'),
     );
+    drupal_add_tabledrag('entry-order-geocoder-handlers', 'order', 'sibling', 'entry-order-weight');
 
     $form['options']['geocoder_cache'] = array(
       '#type' => 'select',
@@ -81,11 +81,11 @@ class Field extends Vector {
           '#type' => 'textfield',
           '#default_value' => isset($fields[$index]['address']) ? $fields[$index]['address'] : '',
         ),
-        'wkt' => array(
-          '#type' => 'textfield',
-          '#title' => 'WKT',
+        'geojson' => array(
+          '#type' => 'textarea',
+          '#title' => 'GeoJson',
           '#disabled' => TRUE,
-          '#default_value' => isset($fields[$index]['wkt']) ? $fields[$index]['wkt'] : '',
+          '#default_value' => isset($fields[$index]['geojson']) ? $fields[$index]['geojson'] : '',
         ),
       );
     }
@@ -109,7 +109,7 @@ class Field extends Vector {
           $field['wkt'] = $geocoder->out('wkt');
         }
         else {
-          unset($field['wkt']);
+          unset($field['geojson']);
         }
       }
       else {
@@ -148,41 +148,38 @@ class Field extends Vector {
    */
   protected function getGeojsonFeatures() {
     $features = array();
-    foreach ($this->getOption('fields', array()) as $field) {
-      $feature = array(
-        'type' => 'Feature',
-      );
-      if (isset($field['title']) && !empty($field['title'])) {
-        $feature['properties']['name'] = $field['title'];
-      }
-      if (isset($field['description']) && !empty($field['description'])) {
-        $feature['properties']['description'] = $field['description'];
-      }
 
-      $json = FALSE;
-      if (isset($field['wkt']) && !empty($field['wkt'])) {
-        geophp_load();
-        $geophp = \geoPHP::load($field['wkt'], 'wkt');
-        if (is_object($geophp)) {
-          $json = $geophp->out('json');
-        }
-      }
-      else {
-        if (isset($field['address']) && !empty($field['address'])) {
-          $geocoder = geocoder($this->getOption('geocoder_handler', 'google'), $field['address'], array(), $this->getOption('geocoder_cache', 2));
-          if (is_object($geocoder)) {
-            $json = $geocoder->out('json');
+    foreach ($this->getOption('fields', array()) as $field) {
+      $feature = FALSE;
+
+      if (isset($field['geojson']) && !empty($field['geojson'])) {
+        $feature = json_decode($field['geojson'], TRUE);
+
+        $json = FALSE;
+        if (isset($field['wkt']) && !empty($field['wkt'])) {
+          geophp_load();
+          $geophp = \geoPHP::load($field['wkt'], 'wkt');
+          if (is_object($geophp)) {
+            $json = $geophp->out('json');
           }
         }
+        else {
+          if (isset($field['address']) && !empty($field['address'])) {
+            $geocoder = geocoder($this->getOption('geocoder_handler', 'google'), $field['address'], array(), $this->getOption('geocoder_cache', 2));
+            if (is_object($geocoder)) {
+              $json = $geocoder->out('json');
+            }
+          }
+        }
+
+        if ($feature) {
+          $features[] = $feature;
+        }
       }
 
-      if ($json) {
-        $feature['geometry'] = json_decode($json, TRUE);
-        $features[] = $feature;
-      }
+      return $features;
     }
 
-    return $features;
   }
 
 }

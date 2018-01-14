@@ -60,4 +60,5 @@ class OpenlayersMap extends QuickContent {
   public function getAjaxKeys() {
     return array('Openlayers-map');
   }
+
 }

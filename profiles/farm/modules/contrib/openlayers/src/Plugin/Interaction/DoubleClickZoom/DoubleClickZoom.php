@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers\Plugin\Interaction\DoubleClickZoom;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Types\Interaction;
 
 /**

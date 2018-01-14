@@ -5,7 +5,7 @@
  */
 
 namespace Drupal\openlayers_library\Plugin\Style\Random;
-use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
+
 use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Style;
 
@@ -52,4 +52,5 @@ class Random extends Style {
 
     return $import;
   }
+
 }

@@ -63,7 +63,13 @@ You may also use drush to do so:
 drush libraries-list
 ```
 
-Do not forget to configure jquery_update and use at least jQuery 1.10.
+Openlayers requires jQuery 1.10 or higher to function. The easiest way to
+ensure that the correct version is used is through the jQuery Update module.
+Do not forget to configure jQuery Update via
+admin/config/development/jquery_update, and select jQuery 1.10 or higher.
+Note that jQuery Update offers separate settings for the regular and
+administration themes, so set both if you are using the Openlayers UI or need
+openlayers in the administrative interface.
 
 # Getting help
 Has this module is a complete rewrite, it still needs documentation and we, maintainers, still need to work on that.
@@ -97,10 +103,12 @@ To render a map on your site, you have many options:
 * Using the API, see [this example](https://gist.github.com/drupol/fee9d808b711f658d79b)
 * In a block, enable submodule **Openlayers Block**, then tick the checkbox in the map settings, you'll have a new block in **admin/structure/block**,</li>
 * In a field, enable submodule **Openlayers Field** and you'll have a new field type 'Openlayers map' available,</li>
+* On any site, enable submodule **Openlayers Services**, then tick the checkbox in the map settings, you'll get an embed url that you can use on any site to display the map only.
 * In a [Panels](https://www.drupal.org/project/panels), enable submodule **Openlayers Content Types**,</li>
 * In a [Box](https://www.drupal.org/project/boxes), enable submodule **Openlayers Boxes**,</li>
 * In a [Quicktabs](https://www.drupal.org/project/quicktabs), enable submodule **Openlayers Quicktabs**,</li>
 * In a [Views](https://www.drupal.org/project/views), enable submodule **Openlayers Views**.</li>
+* In any content using the appropriate input format and the contrib module [Openlayers filters](https://www.drupal.org/project/openlayers_filters).</li>
 
 With Openlayers 3, it's up to you to decide how you want to integrate the map in your content.
 

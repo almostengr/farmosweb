@@ -19,6 +19,7 @@ dependencies[] = contextual
 dependencies[] = field
 dependencies[] = field_sql_storage
 dependencies[] = filter
+dependencies[] = help
 dependencies[] = menu
 dependencies[] = node
 dependencies[] = path
@@ -40,16 +41,23 @@ dependencies[] = restws
 
 ; Farm
 dependencies[] = farm_access
+dependencies[] = farm_calendar
+dependencies[] = farm_constraint
 dependencies[] = farm_dashboard
 dependencies[] = farm_help
 dependencies[] = farm_import
+dependencies[] = farm_log
+dependencies[] = farm_log_activity
+dependencies[] = farm_log_harvest
+dependencies[] = farm_log_input
+dependencies[] = farm_log_observation
 dependencies[] = farm_menu
 dependencies[] = farm_people
 dependencies[] = farm_ui
 
-; Information added by Drupal.org packaging script on 2017-08-22
-version = "7.x-1.0-beta15"
+; Information added by Drupal.org packaging script on 2017-12-31
+version = "7.x-1.0-beta16"
 core = "7.x"
 project = "farm"
-datestamp = "1503427447"
+datestamp = "1514737389"
 

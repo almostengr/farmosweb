@@ -18,7 +18,7 @@ abstract class OpenlayersObjects extends ctools_export_ui {
    * If the keys all match up to the schema, this method will not need to be
    * overridden.
    */
-  function edit_form_submit(&$form, &$form_state) {
+  public function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
 
     if (isset($form_state['values']['attachToMap'])) {
