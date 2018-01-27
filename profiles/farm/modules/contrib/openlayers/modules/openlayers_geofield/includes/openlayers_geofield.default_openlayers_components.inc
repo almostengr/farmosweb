@@ -40,8 +40,12 @@ function openlayers_geofield_default_openlayers_components() {
     'source' => array(
       'openlayers_geofield_source_vector' => 'openlayers_geofield_source_vector',
     ),
-    'duration' => '500',
+    'animations' => array(
+      'pan' => 500,
+      'zoom' => 500,
+    ),
     'zoom' => 'auto',
+    'enableAnimations' => 1,
     'process_once' => 1,
     'max_zoom' => 5,
   );

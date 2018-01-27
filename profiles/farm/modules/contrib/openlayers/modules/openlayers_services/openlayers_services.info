@@ -8,7 +8,9 @@ dependencies[] = services
 dependencies[] = services:rest_server
 dependencies[] = services_rrf
 
-; Information added by drush on 2017-06-12
-version = "7.x-3.1+83-dev"
+; Information added by Drupal.org packaging script on 2017-12-30
+version = "7.x-3.1+90-dev"
+core = "7.x"
 project = "openlayers"
-datestamp = "1497281489"
+datestamp = "1514646796"
+

@@ -30,4 +30,16 @@ class OL3LayerSwitcher extends Control {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function preBuild(array &$build, ObjectInterface $context = NULL) {
+    array_map(function($layer) {
+      /** @var LayerInterface $layer */
+      if (!in_array($layer->getFactoryService(), array('openlayers.Layer:Vector', 'openlayers.Layer:Heatmap'))) {
+        $layer->setOption('type', 'base');
+      }
+    }, $context->getObjects('layer'));
+  }
+
 }

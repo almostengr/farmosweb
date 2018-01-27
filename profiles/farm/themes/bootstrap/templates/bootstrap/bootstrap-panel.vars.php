@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Stub file for "bootstrap_panel" theme hook [pre]process functions.
@@ -9,11 +10,14 @@
  *
  * See template for list of available variables.
  *
+ * @param array $variables
+ *   An associative array of variables, passed by reference.
+ *
  * @see bootstrap-panel.tpl.php
  *
  * @ingroup theme_preprocess
  */
-function bootstrap_preprocess_bootstrap_panel(&$variables) {
+function bootstrap_preprocess_bootstrap_panel(array &$variables) {
   $element = &$variables['element'];
 
   // Set the element's attributes.
@@ -37,22 +41,39 @@ function bootstrap_preprocess_bootstrap_panel(&$variables) {
   $variables['collapsed'] = FALSE;
   if (isset($element['#collapsed'])) {
     $variables['collapsed'] = $element['#collapsed'];
-    // Remove collapsed class since we only want it to apply to the fieldset
-    // body element.
-    if ($index = array_search('collapsed', $attributes['class'])) {
-      unset($attributes['class'][$index]);
-      $attributes['class'] = array_values($attributes['class']);
-    }
+    // Remove collapsed class as it should only be applied to the body.
+    _bootstrap_remove_class('collapsed', $element);
   }
 
-  // Generate an ID for the fieldset wrapper and body elements.
+  // Generate a unique identifier for the fieldset wrapper.
   if (!isset($attributes['id'])) {
     $attributes['id'] = drupal_html_id('bootstrap-panel');
   }
-  $variables['body_id'] = drupal_html_id($attributes['id'] . '--body');
 
-  // Set the target to the fieldset body element.
-  $variables['target'] = '#' . $variables['body_id'];
+  // Get body attributes.
+  $body_attributes = &_bootstrap_get_attributes($element, 'body_attributes');
+
+  _bootstrap_add_class('panel-body', $element, 'body_attributes');
+
+  // Add default .panel-body class.
+  $body_classes = array('panel-body');
+
+  // Add more classes to the body if collapsible.
+  if ($variables['collapsible']) {
+    $body_classes[] = 'panel-collapse';
+    $body_classes[] = 'collapse';
+    $body_classes[] = 'fade';
+    $body_classes[] = $variables['collapsed'] ? 'collapsed' : 'in';
+  }
+  _bootstrap_add_class($body_classes, $element, 'body_attributes');
+
+  // Generate a unique identifier for the body.
+  if (!isset($body_attributes['id'])) {
+    $body_attributes['id'] = drupal_html_id($attributes['id'] . '--body');
+  }
+
+  // Set the target to the body element.
+  $variables['target'] = '#' . $body_attributes['id'];
 
   // Build the panel content.
   $variables['content'] = $element['#children'];
@@ -73,6 +94,7 @@ function bootstrap_preprocess_bootstrap_panel(&$variables) {
 
   // Add the attributes.
   $variables['attributes'] = $attributes;
+  $variables['body_attributes'] = $body_attributes;
 }
 
 /**
@@ -80,12 +102,16 @@ function bootstrap_preprocess_bootstrap_panel(&$variables) {
  *
  * See template for list of available variables.
  *
+ * @param array $variables
+ *   An associative array of variables, passed by reference.
+ *
  * @see bootstrap-panel.tpl.php
  *
  * @ingroup theme_process
  */
-function bootstrap_process_bootstrap_panel(&$variables) {
+function bootstrap_process_bootstrap_panel(array &$variables) {
   $variables['attributes'] = drupal_attributes($variables['attributes']);
+  $variables['body_attributes'] = drupal_attributes($variables['body_attributes']);
   if (!empty($variables['title'])) {
     $variables['title'] = filter_xss_admin(render($variables['title']));
   }
