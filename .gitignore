@@ -6,3 +6,6 @@ sites/*/files
 sites/*/private
 
 sites/all/modules/devel
+
+install.php
+
