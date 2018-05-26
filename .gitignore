@@ -8,4 +8,6 @@ sites/*/private
 sites/all/modules/devel
 
 install.php
+INSTALL*txt
+UPGRADE*txt
 
