@@ -10,4 +10,5 @@ sites/all/modules/devel
 install.php
 INSTALL*txt
 UPGRADE*txt
+README.txt
 
