@@ -21,7 +21,7 @@ function farm_soil_test_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -50,7 +50,7 @@ function farm_soil_test_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -111,10 +111,11 @@ function farm_soil_test_field_group_info() {
     'children' => array(
       0 => 'field_farm_notes',
       1 => 'field_farm_soil_lab',
-      2 => 'name',
-      3 => 'timestamp',
-      4 => 'group_farm_category',
-      5 => 'group_farm_assignment',
+      2 => 'field_farm_flags',
+      3 => 'name',
+      4 => 'timestamp',
+      5 => 'group_farm_category',
+      6 => 'group_farm_assignment',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -131,14 +132,14 @@ function farm_soil_test_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_soil|log|farm_soil_test|form';
-  $field_group->group_name = 'group_farm_soil';
+  $field_group->identifier = 'group_farm_location|log|farm_soil_test|form';
+  $field_group->group_name = 'group_farm_location';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_soil_test';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
-    'label' => 'Soil information',
+    'label' => 'Location',
     'weight' => '2',
     'children' => array(
       0 => 'field_farm_area',
@@ -149,12 +150,12 @@ function farm_soil_test_field_group_info() {
     'format_settings' => array(
       'formatter' => '',
       'instance_settings' => array(
-        'classes' => '',
+        'classes' => 'group-farm-location field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
       ),
     ),
   );
-  $field_groups['group_farm_soil|log|farm_soil_test|form'] = $field_group;
+  $field_groups['group_farm_location|log|farm_soil_test|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -171,7 +172,7 @@ function farm_soil_test_field_group_info() {
     'children' => array(
       0 => 'group_farm_files',
       1 => 'group_farm_general',
-      2 => 'group_farm_soil',
+      2 => 'group_farm_location',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
     'format_settings' => array(
@@ -199,7 +200,7 @@ function farm_soil_test_field_group_info() {
   t('Category');
   t('Files');
   t('General');
-  t('Soil information');
+  t('Location');
   t('Tabs');
 
   return $field_groups;

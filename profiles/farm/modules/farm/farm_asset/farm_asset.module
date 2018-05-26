@@ -144,6 +144,16 @@ function farm_asset_menu() {
     'file' => 'farm_asset.admin.inc',
   );
 
+  // Asset autocomplete path.
+  $items['farm_asset/autocomplete/%/%'] = array(
+    'title' => 'Autocomplete for farm assets',
+    'page callback' => 'farm_asset_autocomplete',
+    'page arguments' => array(2, 3),
+    'access callback' => 'farm_asset_autocomplete_access',
+    'access arguments' => array(2),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -238,7 +248,7 @@ function farm_asset_entity_property_info_alter(&$info) {
     'type' => 'token',
     'description' => t('The farm asset type.'),
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer farm_asset module',
+    'access callback' => 'farm_asset_properties_access',
     'options list' => 'farm_asset_type_get_names',
     'required' => TRUE,
     'schema field' => 'type',
@@ -248,7 +258,7 @@ function farm_asset_entity_property_info_alter(&$info) {
     'type' => 'user',
     'description' => t('The author of the asset.'),
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer farm_asset module',
+    'access callback' => 'farm_asset_properties_access',
     'required' => TRUE,
     'schema field' => 'uid',
   );
@@ -257,7 +267,7 @@ function farm_asset_entity_property_info_alter(&$info) {
     'type' => 'date',
     'description' => t('The timestamp when the asset was created.'),
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer farm_asset module',
+    'access callback' => 'farm_asset_properties_access',
     'required' => TRUE,
     'schema field' => 'created',
   );
@@ -266,17 +276,17 @@ function farm_asset_entity_property_info_alter(&$info) {
     'type' => 'date',
     'description' => t('The timestamp when the asset was last modified.'),
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer farm_asset module',
+    'access callback' => 'farm_asset_properties_access',
     'required' => TRUE,
     'schema field' => 'changed',
   );
-  $properties['active'] = array(
-    'label' => t('Active'),
-    'description' => t('Whether the asset is active.'),
+  $properties['archived'] = array(
+    'label' => t('Archived'),
+    'type' => 'date',
+    'description' => t('The timestamp when the asset was archived.'),
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer farm_asset module',
-    'schema field' => 'active',
-    'type' => 'boolean',
+    'access callback' => 'farm_asset_properties_access',
+    'schema field' => 'archived',
   );
 }
 
@@ -314,18 +324,15 @@ function farm_asset_entity_view($entity, $type, $view_mode, $langcode) {
     return;
   }
 
-  // Add the asset's "active" status.
-  if ($entity->active) {
-    $status = 'Yes';
+  // If the asset is archived, display a message and the archived date.
+  if (!empty($entity->archived)) {
+    drupal_set_message(t('This asset is archived. Archived assets should not be edited or deleted unless they contain information that is incorrect.'), 'warning');
+    $date = format_date($entity->archived);
+    $entity->content['archived'] = array(
+      '#markup' => '<div><strong>' . t('Archived') . ':</strong> ' . $date . '</div>',
+      '#weight' => -100,
+    );
   }
-  else {
-    $status = 'No';
-    drupal_set_message(t('This asset is no longer active. Inactive assets should be considered "archived" and should not be edited or deleted unless they contain information that is incorrect.'), 'warning');
-  }
-  $entity->content['active'] = array(
-    '#markup' => '<div><strong>Active:</strong> ' . $status . '</div>',
-    '#weight' => -100,
-  );
 }
 
 /**
@@ -342,6 +349,78 @@ function farm_asset_entity_presave($entity, $type) {
   if (isset($entity->feeds_item->asset_changed)) {
     $entity->changed = $entity->feeds_item->asset_changed;
   }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function farm_asset_action_info() {
+  return array(
+    'farm_asset_archive_action' => array(
+      'type' => 'farm_asset',
+      'label' => t('Archive'),
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+    'farm_asset_unarchive_action' => array(
+      'type' => 'farm_asset',
+      'label' => t('Unarchive'),
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/***************************************************************
+ * Asset action callbacks
+ * *************************************************************/
+
+/**
+ * Action function for farm_asset_archive_action.
+ *
+ * Archives an asset.
+ *
+ * @param FarmAsset $asset
+ *   The asset entity object.
+ * @param array $context
+ *   Array with parameters for this action.
+ */
+function farm_asset_archive_action(FarmAsset $asset, $context = array()) {
+
+  // Only proceed if the asset is not already archived.
+  if (!empty($asset->archived)) {
+    return;
+  }
+
+  // Archive the asset.
+  $asset->archived = REQUEST_TIME;
+
+  // Save the asset.
+  farm_asset_save($asset);
+}
+
+/**
+ * Action function for farm_asset_unarchive_action.
+ *
+ * Un-archives an asset.
+ *
+ * @param FarmAsset $asset
+ *   The asset entity object.
+ * @param array $context
+ *   Array with parameters for this action.
+ */
+function farm_asset_unarchive_action(FarmAsset $asset, $context = array()) {
+
+  // Only proceed if the asset is already archived.
+  if (empty($asset->archived)) {
+    return;
+  }
+
+  // Un-archive the asset..
+  $asset->archived = NULL;
+
+  // Save the asset.
+  farm_asset_save($asset);
 }
 
 /****************************************************************
@@ -531,6 +610,98 @@ function farm_asset_add_access($account = NULL) {
  */
 function farm_asset_type_access($op, FarmAssetType $farm_asset_type = NULL) {
   return user_access('administer farm_asset types');
+}
+
+/**
+ * Access callback for the farm_asset autocomplete path.
+ *
+ * @param string $asset_type
+ *   The asset type to filter to, or "all" for no filtering.
+ *
+ * @return bool
+ *   Returns TRUE or FALSE to grant or deny access to the path.
+ */
+function farm_asset_autocomplete_access($asset_type) {
+  if ($asset_type == 'all' || strpos($asset_type, '+') !== FALSE) {
+    return user_access('view farm assets');
+  }
+  return user_access('view any ' . $asset_type . ' farm assets');
+}
+
+
+/**
+ * Access callback for farm_asset properties.
+ */
+function farm_asset_properties_access($op, $property, $entity = NULL, $account = NULL) {
+
+  // Delegate to the general farm_asset access callback, based on the $op.
+  switch ($op) {
+    case 'view':
+      return farm_asset_access('view', $entity, $account);
+    case 'edit':
+      return farm_asset_access('update', $entity, $account);
+  }
+
+  // Otherwise, deny access.
+  return FALSE;
+}
+
+/***************************************************************
+ * Farm asset page callbacks.
+ * *************************************************************/
+
+/**
+ * Page callback for the farm_asset autocomplete path.
+ *
+ * @param string $asset_type
+ *   The asset type to filter to. If this is set to 'all' then no filtering
+ *   will be performed. Multiple asset types can be specified as a single
+ *   string, separated by plus characters (+). ie: "animal+group"
+ * @param string $string
+ *   The string to search for.
+ *
+ * @return array
+ *   Returns an array of matching assets in JSON form.
+ */
+function farm_asset_autocomplete($asset_type, $string) {
+
+  // Search the database for assets with matching names
+  $query = db_select('farm_asset', 'fa')
+    ->fields('fa', array('id', 'name', 'archived'))
+    ->condition('name', '%' . db_like($string) . '%', 'LIKE')
+    ->orderBy('name', 'ASC')
+    ->range(0, 10);
+
+  // If the asset type is not "all", filter by asset type.
+  if ($asset_type != 'all') {
+    $asset_types = array();
+    if (strpos($asset_type, '+') !== FALSE) {
+      $asset_types = explode('+', $asset_type);
+    }
+    else {
+      $asset_types[] = $asset_type;
+    }
+    $query->condition('type', $asset_types, 'IN');
+  }
+
+  // Execute the query.
+  $result = $query->execute();
+
+  // Save matches to an array, including the asset name and ID.
+  $matches = array();
+  foreach ($result as $row) {
+    $match = t('@asset_name [id: @asset_id]', array('@asset_name' => $row->name, '@asset_id' => $row->id));
+    if (!empty($row->archived)) {
+      $match .= ' (' . t('archived') . ')';
+    }
+    $matches[] = $match;
+  }
+
+  // Map to an associative array.
+  $matches = drupal_map_assoc($matches);
+
+  // Return the matches as JSON.
+  drupal_json_output($matches);
 }
 
 /***************************************************************

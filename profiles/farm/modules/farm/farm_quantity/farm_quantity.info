@@ -3,7 +3,6 @@ description = Provides a framework for dealing with quantities.
 core = 7.x
 package = farmOS
 dependencies[] = ctools
-dependencies[] = farm_log
 dependencies[] = features
 dependencies[] = field_collection
 dependencies[] = fraction
@@ -26,9 +25,8 @@ features[field_instance][] = field_collection_item-field_farm_quantity-field_far
 features[taxonomy][] = farm_quantity_units
 features[variable][] = pathauto_taxonomy_term_farm_quantity_units_pattern
 
-; Information added by Drupal.org packaging script on 2017-12-31
-version = "7.x-1.0-beta16"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
 core = "7.x"
 project = "farm"
-datestamp = "1514737389"
-
+datestamp = "1526654589"

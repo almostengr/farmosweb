@@ -1,0 +1,12 @@
+name = Farm Area Import
+description = A tool for importing multiple area geometries from a single KML file.
+core = 7.x
+package = farmOS (beta)
+dependencies[] = farm_area
+dependencies[] = geophp
+
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
+core = "7.x"
+project = "farm"
+datestamp = "1526654589"

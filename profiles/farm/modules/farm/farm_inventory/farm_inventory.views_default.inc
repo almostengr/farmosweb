@@ -35,6 +35,9 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '25, 50, 100, 250, 500';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'name' => 'name',
@@ -63,6 +66,10 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['content'] = 'Select the asset you would like to reference and click "Submit". Use the filters to narrow down the list.';
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result']['id'] = 'result';
+  $handler->display->display_options['footer']['result']['table'] = 'views';
+  $handler->display->display_options['footer']['result']['field'] = 'result';
   /* No results behavior: Global: Unfiltered text */
   $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
@@ -77,11 +84,6 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['relationships']['membership']['id'] = 'membership';
   $handler->display->display_options['relationships']['membership']['table'] = 'farm_asset';
   $handler->display->display_options['relationships']['membership']['field'] = 'membership';
-  /* Relationship: Entity Reference: Referenced Entity */
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['id'] = 'field_farm_group_target_id';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['table'] = 'field_data_field_farm_group';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['field'] = 'field_farm_group_target_id';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['relationship'] = 'membership';
   /* Field: Entity Reference View Widget Checkbox: Farm asset */
   $handler->display->display_options['fields']['entityreference_view_widget']['id'] = 'entityreference_view_widget';
   $handler->display->display_options['fields']['entityreference_view_widget']['table'] = 'farm_asset';
@@ -123,6 +125,13 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['sorts']['type']['field'] = 'type';
   $handler->display->display_options['sorts']['type']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['type']['expose']['label'] = 'Asset type';
+  /* Sort criterion: Farm asset: Farm asset ID */
+  $handler->display->display_options['sorts']['id']['id'] = 'id';
+  $handler->display->display_options['sorts']['id']['table'] = 'farm_asset';
+  $handler->display->display_options['sorts']['id']['field'] = 'id';
+  $handler->display->display_options['sorts']['id']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['id']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['id']['expose']['label'] = 'Asset ID';
   /* Contextual filter: Farm asset: Farm asset ID */
   $handler->display->display_options['arguments']['id']['id'] = 'id';
   $handler->display->display_options['arguments']['id']['table'] = 'farm_asset';
@@ -159,18 +168,6 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  /* Filter criterion: Farm asset: Name */
-  $handler->display->display_options['filters']['name_1']['id'] = 'name_1';
-  $handler->display->display_options['filters']['name_1']['table'] = 'farm_asset';
-  $handler->display->display_options['filters']['name_1']['field'] = 'name';
-  $handler->display->display_options['filters']['name_1']['relationship'] = 'field_farm_group_target_id';
-  $handler->display->display_options['filters']['name_1']['operator'] = 'contains';
-  $handler->display->display_options['filters']['name_1']['group'] = 1;
-  $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Group';
-  $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
   /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
@@ -184,17 +181,29 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['filters']['field_farm_move_to_tid']['expose']['operator'] = 'field_farm_move_to_tid_op';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['expose']['identifier'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['vocabulary'] = 'farm_areas';
-  /* Filter criterion: Farm asset: Active */
-  $handler->display->display_options['filters']['active']['id'] = 'active';
-  $handler->display->display_options['filters']['active']['table'] = 'farm_asset';
-  $handler->display->display_options['filters']['active']['field'] = 'active';
-  $handler->display->display_options['filters']['active']['value'] = '1';
-  $handler->display->display_options['filters']['active']['group'] = 1;
-  $handler->display->display_options['filters']['active']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['active']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['active']['expose']['label'] = 'Active';
-  $handler->display->display_options['filters']['active']['expose']['operator'] = 'active_op';
-  $handler->display->display_options['filters']['active']['expose']['identifier'] = 'active';
+  /* Filter criterion: Field collection item: Group (field_farm_group) */
+  $handler->display->display_options['filters']['field_farm_group_target_id']['id'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['table'] = 'field_data_field_farm_group';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['field'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['relationship'] = 'membership';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_group_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['operator_id'] = 'field_farm_group_target_id_op';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['label'] = 'Group';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['operator'] = 'field_farm_group_target_id_op';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['identifier'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['multiple'] = TRUE;
+  /* Filter criterion: Farm asset: Archived (boolean) */
+  $handler->display->display_options['filters']['archived_boolean']['id'] = 'archived_boolean';
+  $handler->display->display_options['filters']['archived_boolean']['table'] = 'farm_asset';
+  $handler->display->display_options['filters']['archived_boolean']['field'] = 'archived_boolean';
+  $handler->display->display_options['filters']['archived_boolean']['value'] = '0';
+  $handler->display->display_options['filters']['archived_boolean']['group'] = 1;
+  $handler->display->display_options['filters']['archived_boolean']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['archived_boolean']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['label'] = 'Archived';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['operator'] = 'archived_boolean_op';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['identifier'] = 'archived_boolean';
 
   /* Display: Entity Reference View Widget */
   $handler = $view->new_display('entityreference_view_widget', 'Entity Reference View Widget', 'entityreference_view_widget');
@@ -254,16 +263,17 @@ function farm_inventory_views_default_views() {
     t('next ›'),
     t('last »'),
     t('Select the asset you would like to reference and click "Submit". Use the filters to narrow down the list.'),
+    t('Displaying @start - @end of @total'),
     t('No assets found.'),
     t('Latest movement'),
     t('Group membership'),
-    t('Farm asset entity referenced from field_farm_group'),
     t('Asset type'),
     t('Location'),
     t('Group'),
     t('Name'),
+    t('Asset ID'),
     t('All'),
-    t('Active'),
+    t('Archived'),
     t('Entity Reference View Widget'),
     t('Select asset'),
   );
@@ -294,6 +304,9 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '25, 50, 100, 250, 500';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
@@ -304,6 +317,7 @@ function farm_inventory_views_default_views() {
     'field_farm_inventory_asset' => 'field_farm_inventory_asset',
     'field_farm_inventory_value' => 'field_farm_inventory_value',
     'type' => 'type',
+    'field_farm_flags' => 'field_farm_flags',
     'field_farm_log_category' => 'field_farm_log_category',
     'field_farm_log_owner' => 'field_farm_log_owner',
   );
@@ -363,6 +377,11 @@ function farm_inventory_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_flags' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_farm_log_category' => array(
       'align' => '',
       'separator' => '',
@@ -381,6 +400,10 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['empty'] = TRUE;
   $handler->display->display_options['header']['area_text_custom']['content'] = 'This lists all logs that include asset inventory adjustments. If a log contains more than one inventory adjustment, it will be listed more than once in this list. Multiple log types are included in this list, and are specified in the "Log type" column.';
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result']['id'] = 'result';
+  $handler->display->display_options['footer']['result']['table'] = 'views';
+  $handler->display->display_options['footer']['result']['field'] = 'result';
   /* No results behavior: Global: Unfiltered text */
   $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
@@ -414,6 +437,14 @@ function farm_inventory_views_default_views() {
       'label' => '',
     ),
     'action::log_clone_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::farm_flags_action' => array(
       'selected' => 1,
       'postpone_processing' => 0,
       'skip_confirmation' => 1,
@@ -500,6 +531,11 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'log';
   $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Field: Field: Flags */
+  $handler->display->display_options['fields']['field_farm_flags']['id'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['field'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['delta_offset'] = '0';
   /* Field: Log: Log category */
   $handler->display->display_options['fields']['field_farm_log_category']['id'] = 'field_farm_log_category';
   $handler->display->display_options['fields']['field_farm_log_category']['table'] = 'field_data_field_farm_log_category';
@@ -535,6 +571,13 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['sorts']['type']['field'] = 'type';
   $handler->display->display_options['sorts']['type']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['type']['expose']['label'] = 'Log type';
+  /* Sort criterion: Log: Log ID */
+  $handler->display->display_options['sorts']['id']['id'] = 'id';
+  $handler->display->display_options['sorts']['id']['table'] = 'log';
+  $handler->display->display_options['sorts']['id']['field'] = 'id';
+  $handler->display->display_options['sorts']['id']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['id']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['id']['expose']['label'] = 'Log ID';
   /* Contextual filter: Field collection item: Asset (field_farm_inventory_asset) */
   $handler->display->display_options['arguments']['field_farm_inventory_asset_target_id']['id'] = 'field_farm_inventory_asset_target_id';
   $handler->display->display_options['arguments']['field_farm_inventory_asset_target_id']['table'] = 'field_data_field_farm_inventory_asset';
@@ -569,6 +612,17 @@ function farm_inventory_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Log type';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  /* Filter criterion: Field: Flags (field_farm_flags) */
+  $handler->display->display_options['filters']['field_farm_flags_value']['id'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['field'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_flags_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator_id'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['label'] = 'Flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['identifier'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['multiple'] = TRUE;
   /* Filter criterion: Log: Log category (field_farm_log_category) */
   $handler->display->display_options['filters']['field_farm_log_category_tid']['id'] = 'field_farm_log_category_tid';
   $handler->display->display_options['filters']['field_farm_log_category_tid']['table'] = 'field_data_field_farm_log_category';
@@ -671,6 +725,7 @@ function farm_inventory_views_default_views() {
     t('next ›'),
     t('last »'),
     t('This lists all logs that include asset inventory adjustments. If a log contains more than one inventory adjustment, it will be listed more than once in this list. Multiple log types are included in this list, and are specified in the "Log type" column.'),
+    t('Displaying @start - @end of @total'),
     t('No logs of inventory adjustments found.'),
     t('field_farm_inventory'),
     t('Log'),
@@ -685,6 +740,7 @@ function farm_inventory_views_default_views() {
     t('Asset'),
     t('Adjustment value'),
     t('Log type'),
+    t('Flags'),
     t('Categories'),
     t('Assigned to'),
     t('All'),

@@ -5,9 +5,8 @@ package = "Log"
 dependencies[] = log
 dependencies[] = views_bulk_operations
 
-; Information added by Drupal.org packaging script on 2017-12-28
-version = "7.x-1.10"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.12"
 core = "7.x"
 project = "log"
-datestamp = "1514477587"
-
+datestamp = "1526650999"

@@ -210,7 +210,7 @@ function farm_area_details_json($aid) {
 function farm_area_openlayers_object_preprocess_alter(&$build, $context) {
 
   // If the object is not a Map, bail.
-  if (!$context instanceof  Drupal\openlayers\Types\MapInterface) {
+  if (!$context instanceof Drupal\openlayers\Types\MapInterface) {
     return;
   }
 
@@ -244,11 +244,6 @@ function farm_area_page_build(&$page) {
     return;
   }
 
-  // If dashboard maps are disabled in the farm_map module settings, bail.
-  if (!variable_get('farm_map_show', TRUE)) {
-    return;
-  }
-
   // If this is the farm dashboard, display the areas map.
   $current_path = current_path();
   $map_paths = array(
@@ -259,11 +254,8 @@ function farm_area_page_build(&$page) {
   );
   if (in_array($current_path, $map_paths)) {
 
-    // Load the areas map.
-    $map = \Drupal\openlayers\Openlayers::load('Map', 'farm_areas');
-
     // Build the map and add it to the page content.
-    $page['content']['farm_areas'] = $map->build();
+    $page['content']['farm_areas'] = farm_map_build('farm_areas');
 
     // Set the weight to -100 so that it appears on top.
     $page['content']['farm_areas']['#weight'] = -100;
@@ -343,7 +335,8 @@ function farm_area_calculate_area($area_id) {
   // Get WKT from the field. If empty, bail.
   if (!empty($area->field_farm_geofield[LANGUAGE_NONE][0]['geom'])) {
     $geom = $area->field_farm_geofield[LANGUAGE_NONE][0]['geom'];
-  } else {
+  }
+  else {
     return '';
   }
 
@@ -381,7 +374,7 @@ function farm_area_format_calculated_area($measurement) {
   }
 
   // Get the system of measurement.
-  $unit_system = variable_get('farm_quantity_unit_system', 'metric');
+  $unit_system = farm_quantity_system_of_measurement();
 
   // Switch through available unit systems and generate a formatted string.
   $conversion = '';

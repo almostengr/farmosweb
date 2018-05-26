@@ -13,17 +13,47 @@ function farm_equipment_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_farm_areas|log|farm_maintenance|form';
+  $field_group->group_name = 'group_farm_areas';
+  $field_group->entity_type = 'log';
+  $field_group->bundle = 'farm_maintenance';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_farm_location';
+  $field_group->data = array(
+    'label' => 'Areas',
+    'weight' => '19',
+    'children' => array(
+      0 => 'field_farm_area',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Areas',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-farm-areas field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'open',
+    ),
+  );
+  $field_groups['group_farm_areas|log|farm_maintenance|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_farm_assets|log|farm_maintenance|form';
   $field_group->group_name = 'group_farm_assets';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_maintenance';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_references';
+  $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Assets',
     'weight' => '2',
     'children' => array(
       0 => 'field_farm_asset',
+      1 => 'field_farm_movement',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -50,7 +80,7 @@ function farm_equipment_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -79,7 +109,7 @@ function farm_equipment_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -169,7 +199,8 @@ function farm_equipment_field_group_info() {
       1 => 'field_farm_manufacturer',
       2 => 'field_farm_model',
       3 => 'field_farm_serial_number',
-      4 => 'name',
+      4 => 'field_farm_flags',
+      5 => 'name',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -197,10 +228,11 @@ function farm_equipment_field_group_info() {
     'weight' => '1',
     'children' => array(
       0 => 'field_farm_notes',
-      1 => 'name',
-      2 => 'timestamp',
-      3 => 'group_farm_category',
-      4 => 'group_farm_assignment',
+      1 => 'field_farm_flags',
+      2 => 'name',
+      3 => 'timestamp',
+      4 => 'group_farm_category',
+      5 => 'group_farm_assignment',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -213,6 +245,35 @@ function farm_equipment_field_group_info() {
     ),
   );
   $field_groups['group_farm_general|log|farm_maintenance|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_farm_geometry|log|farm_maintenance|form';
+  $field_group->group_name = 'group_farm_geometry';
+  $field_group->entity_type = 'log';
+  $field_group->bundle = 'farm_maintenance';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_farm_location';
+  $field_group->data = array(
+    'label' => 'Geometry',
+    'weight' => '20',
+    'children' => array(
+      0 => 'field_farm_geofield',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Geometry',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-farm-geometry field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $field_groups['group_farm_geometry|log|farm_maintenance|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -243,54 +304,29 @@ function farm_equipment_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_movement|log|farm_maintenance|form';
-  $field_group->group_name = 'group_farm_movement';
+  $field_group->identifier = 'group_farm_location|log|farm_maintenance|form';
+  $field_group->group_name = 'group_farm_location';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_maintenance';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
-    'label' => 'Movement',
+    'label' => 'Location',
     'weight' => '3',
     'children' => array(
-      0 => 'field_farm_movement',
+      0 => 'group_farm_geometry',
+      1 => 'group_farm_areas',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
       'formatter' => '',
       'instance_settings' => array(
-        'classes' => 'group-farm-movement field-group-field_group_easy_responsive_tabs_nav_item',
+        'classes' => 'group-farm-location field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
       ),
     ),
   );
-  $field_groups['group_farm_movement|log|farm_maintenance|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_references|log|farm_maintenance|form';
-  $field_group->group_name = 'group_farm_references';
-  $field_group->entity_type = 'log';
-  $field_group->bundle = 'farm_maintenance';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_tabs';
-  $field_group->data = array(
-    'label' => 'References',
-    'weight' => '2',
-    'children' => array(
-      0 => 'group_farm_assets',
-    ),
-    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
-    'format_settings' => array(
-      'formatter' => '',
-      'instance_settings' => array(
-        'classes' => 'group-farm-references field-group-field_group_easy_responsive_tabs_nav_item',
-        'required_fields' => 1,
-      ),
-    ),
-  );
-  $field_groups['group_farm_references|log|farm_maintenance|form'] = $field_group;
+  $field_groups['group_farm_location|log|farm_maintenance|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -341,11 +377,11 @@ function farm_equipment_field_group_info() {
     'label' => 'Tabs',
     'weight' => '0',
     'children' => array(
-      0 => 'group_farm_files',
-      1 => 'group_farm_general',
-      2 => 'group_farm_references',
-      3 => 'group_farm_movement',
-      4 => 'group_farm_inventory',
+      0 => 'group_farm_assets',
+      1 => 'group_farm_files',
+      2 => 'group_farm_general',
+      3 => 'group_farm_inventory',
+      4 => 'group_farm_location',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
     'format_settings' => array(
@@ -369,14 +405,15 @@ function farm_equipment_field_group_info() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Areas');
   t('Assets');
   t('Assignment');
   t('Category');
   t('Files');
   t('General');
+  t('Geometry');
   t('Inventory');
-  t('Movement');
-  t('References');
+  t('Location');
   t('Tabs');
 
   return $field_groups;

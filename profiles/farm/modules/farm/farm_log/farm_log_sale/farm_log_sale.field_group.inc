@@ -18,23 +18,20 @@ function farm_log_sale_field_group_info() {
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_sale';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_references';
+  $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Assets',
-    'weight' => '3',
+    'weight' => '2',
     'children' => array(
       0 => 'field_farm_asset',
     ),
-    'format_type' => 'fieldset',
+    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
-      'label' => 'Assets',
+      'formatter' => '',
       'instance_settings' => array(
+        'classes' => '',
         'required_fields' => 1,
-        'id' => '',
-        'classes' => 'group-farm-assets field-group-fieldset',
-        'description' => '',
       ),
-      'formatter' => 'open',
     ),
   );
   $field_groups['group_farm_assets|log|farm_sale|form'] = $field_group;
@@ -50,7 +47,7 @@ function farm_log_sale_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '12',
+    'weight' => '11',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -107,7 +104,7 @@ function farm_log_sale_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '11',
+    'weight' => '10',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -146,9 +143,10 @@ function farm_log_sale_field_group_info() {
       5 => 'field_farm_invoice_number',
       6 => 'field_farm_quantity_value',
       7 => 'field_farm_quantity_units',
-      8 => 'timestamp',
-      9 => 'group_farm_category',
-      10 => 'group_farm_assignment',
+      8 => 'field_farm_flags',
+      9 => 'timestamp',
+      10 => 'group_farm_category',
+      11 => 'group_farm_assignment',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -191,32 +189,6 @@ function farm_log_sale_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_references|log|farm_sale|form';
-  $field_group->group_name = 'group_farm_references';
-  $field_group->entity_type = 'log';
-  $field_group->bundle = 'farm_sale';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_tabs';
-  $field_group->data = array(
-    'label' => 'References',
-    'weight' => '2',
-    'children' => array(
-      0 => 'group_farm_assets',
-    ),
-    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
-    'format_settings' => array(
-      'formatter' => '',
-      'instance_settings' => array(
-        'classes' => 'group-farm-references field-group-field_group_easy_responsive_tabs_nav_item',
-        'required_fields' => 1,
-      ),
-    ),
-  );
-  $field_groups['group_farm_references|log|farm_sale|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
   $field_group->identifier = 'group_farm_tabs|log|farm_sale|form';
   $field_group->group_name = 'group_farm_tabs';
   $field_group->entity_type = 'log';
@@ -228,8 +200,8 @@ function farm_log_sale_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'group_farm_general',
-      1 => 'group_farm_attachments',
-      2 => 'group_farm_references',
+      1 => 'group_farm_assets',
+      2 => 'group_farm_attachments',
       3 => 'group_farm_inventory',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
@@ -260,7 +232,6 @@ function farm_log_sale_field_group_info() {
   t('Files');
   t('General');
   t('Inventory');
-  t('References');
   t('Tabs');
 
   return $field_groups;

@@ -1,0 +1,14 @@
+name = Farm Flags
+description = Provides a general purpose record flagging system.
+core = 7.x
+package = farmOS
+dependencies[] = features
+dependencies[] = list
+features[features_api][] = api:2
+features[field_base][] = field_farm_flags
+
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
+core = "7.x"
+project = "farm"
+datestamp = "1526654589"

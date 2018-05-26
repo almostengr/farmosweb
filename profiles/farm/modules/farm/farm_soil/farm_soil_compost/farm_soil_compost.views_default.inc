@@ -35,6 +35,9 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '25, 50, 100, 250, 500';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
@@ -42,9 +45,10 @@ function farm_soil_compost_views_default_views() {
     'field_farm_images' => 'field_farm_images',
     'name' => 'name',
     'field_farm_description' => 'field_farm_description',
+    'field_farm_flags' => 'field_farm_flags',
     'field_farm_group' => 'field_farm_group',
     'field_farm_move_to' => 'field_farm_move_to',
-    'active' => 'active',
+    'archived' => 'archived',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -79,6 +83,11 @@ function farm_soil_compost_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_flags' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_farm_group' => array(
       'align' => '',
       'separator' => '',
@@ -89,7 +98,7 @@ function farm_soil_compost_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'active' => array(
+    'archived' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -98,6 +107,10 @@ function farm_soil_compost_views_default_views() {
     ),
   );
   $handler->display->display_options['style_options']['empty_table'] = TRUE;
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result']['id'] = 'result';
+  $handler->display->display_options['footer']['result']['table'] = 'views';
+  $handler->display->display_options['footer']['result']['field'] = 'result';
   /* No results behavior: Global: Unfiltered text */
   $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
@@ -112,11 +125,6 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['relationships']['membership']['id'] = 'membership';
   $handler->display->display_options['relationships']['membership']['table'] = 'farm_asset';
   $handler->display->display_options['relationships']['membership']['field'] = 'membership';
-  /* Relationship: Entity Reference: Referenced Entity */
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['id'] = 'field_farm_group_target_id';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['table'] = 'field_data_field_farm_group';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['field'] = 'field_farm_group_target_id';
-  $handler->display->display_options['relationships']['field_farm_group_target_id']['relationship'] = 'membership';
   /* Field: Bulk operations: Farm asset */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_farm_asset';
@@ -127,6 +135,21 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::farm_log_asset_action' => array(
+      'selected' => 1,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::farm_asset_archive_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
     'action::views_bulk_operations_delete_item' => array(
       'selected' => 1,
       'postpone_processing' => 0,
@@ -138,6 +161,14 @@ function farm_soil_compost_views_default_views() {
         'log' => 0,
       ),
     ),
+    'action::farm_flags_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
     'action::farm_group_asset_membership_action' => array(
       'selected' => 1,
       'skip_confirmation' => 1,
@@ -148,6 +179,14 @@ function farm_soil_compost_views_default_views() {
     'action::farm_movement_asset_move_action' => array(
       'selected' => 1,
       'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::farm_asset_unarchive_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
       'skip_permission_check' => 0,
       'override_label' => 0,
       'label' => '',
@@ -186,6 +225,11 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['fields']['field_farm_description']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_farm_description']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['field_farm_description']['alter']['trim'] = TRUE;
+  /* Field: Field: Flags */
+  $handler->display->display_options['fields']['field_farm_flags']['id'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['field'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['delta_offset'] = '0';
   /* Field: Field collection item: Group */
   $handler->display->display_options['fields']['field_farm_group']['id'] = 'field_farm_group';
   $handler->display->display_options['fields']['field_farm_group']['table'] = 'field_data_field_farm_group';
@@ -202,17 +246,26 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['fields']['field_farm_move_to']['field'] = 'field_farm_move_to';
   $handler->display->display_options['fields']['field_farm_move_to']['relationship'] = 'latest_movement';
   $handler->display->display_options['fields']['field_farm_move_to']['label'] = 'Location';
-  /* Field: Farm asset: Active */
-  $handler->display->display_options['fields']['active']['id'] = 'active';
-  $handler->display->display_options['fields']['active']['table'] = 'farm_asset';
-  $handler->display->display_options['fields']['active']['field'] = 'active';
-  $handler->display->display_options['fields']['active']['not'] = 0;
+  /* Field: Farm asset: Archived */
+  $handler->display->display_options['fields']['archived']['id'] = 'archived';
+  $handler->display->display_options['fields']['archived']['table'] = 'farm_asset';
+  $handler->display->display_options['fields']['archived']['field'] = 'archived';
+  $handler->display->display_options['fields']['archived']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['archived']['custom_date_format'] = 'M j Y';
+  $handler->display->display_options['fields']['archived']['second_date_format'] = 'long';
   /* Sort criterion: Farm asset: Name */
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'farm_asset';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['name']['expose']['label'] = 'Name';
+  /* Sort criterion: Farm asset: Farm asset ID */
+  $handler->display->display_options['sorts']['id']['id'] = 'id';
+  $handler->display->display_options['sorts']['id']['table'] = 'farm_asset';
+  $handler->display->display_options['sorts']['id']['field'] = 'id';
+  $handler->display->display_options['sorts']['id']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['id']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['id']['expose']['label'] = 'Asset ID';
   /* Contextual filter: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['arguments']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
@@ -248,18 +301,6 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
-  /* Filter criterion: Farm asset: Name */
-  $handler->display->display_options['filters']['name_1']['id'] = 'name_1';
-  $handler->display->display_options['filters']['name_1']['table'] = 'farm_asset';
-  $handler->display->display_options['filters']['name_1']['field'] = 'name';
-  $handler->display->display_options['filters']['name_1']['relationship'] = 'field_farm_group_target_id';
-  $handler->display->display_options['filters']['name_1']['operator'] = 'contains';
-  $handler->display->display_options['filters']['name_1']['group'] = 1;
-  $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Group';
-  $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
   /* Filter criterion: Field collection item: Movement to (field_farm_move_to) */
   $handler->display->display_options['filters']['field_farm_move_to_tid']['id'] = 'field_farm_move_to_tid';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['table'] = 'field_data_field_farm_move_to';
@@ -275,17 +316,40 @@ function farm_soil_compost_views_default_views() {
   $handler->display->display_options['filters']['field_farm_move_to_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['vocabulary'] = 'farm_areas';
   $handler->display->display_options['filters']['field_farm_move_to_tid']['hierarchy'] = 1;
-  /* Filter criterion: Farm asset: Active */
-  $handler->display->display_options['filters']['active']['id'] = 'active';
-  $handler->display->display_options['filters']['active']['table'] = 'farm_asset';
-  $handler->display->display_options['filters']['active']['field'] = 'active';
-  $handler->display->display_options['filters']['active']['value'] = '1';
-  $handler->display->display_options['filters']['active']['group'] = 1;
-  $handler->display->display_options['filters']['active']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['active']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['active']['expose']['label'] = 'Active';
-  $handler->display->display_options['filters']['active']['expose']['operator'] = 'active_op';
-  $handler->display->display_options['filters']['active']['expose']['identifier'] = 'active';
+  /* Filter criterion: Field collection item: Group (field_farm_group) */
+  $handler->display->display_options['filters']['field_farm_group_target_id']['id'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['table'] = 'field_data_field_farm_group';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['field'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['relationship'] = 'membership';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_group_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['operator_id'] = 'field_farm_group_target_id_op';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['label'] = 'Group';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['operator'] = 'field_farm_group_target_id_op';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['identifier'] = 'field_farm_group_target_id';
+  $handler->display->display_options['filters']['field_farm_group_target_id']['expose']['multiple'] = TRUE;
+  /* Filter criterion: Field: Flags (field_farm_flags) */
+  $handler->display->display_options['filters']['field_farm_flags_value']['id'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['field'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_flags_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator_id'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['label'] = 'Flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['identifier'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['multiple'] = TRUE;
+  /* Filter criterion: Farm asset: Archived (boolean) */
+  $handler->display->display_options['filters']['archived_boolean']['id'] = 'archived_boolean';
+  $handler->display->display_options['filters']['archived_boolean']['table'] = 'farm_asset';
+  $handler->display->display_options['filters']['archived_boolean']['field'] = 'archived_boolean';
+  $handler->display->display_options['filters']['archived_boolean']['value'] = '0';
+  $handler->display->display_options['filters']['archived_boolean']['group'] = 1;
+  $handler->display->display_options['filters']['archived_boolean']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['archived_boolean']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['label'] = 'Archived';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['operator'] = 'archived_boolean_op';
+  $handler->display->display_options['filters']['archived_boolean']['expose']['identifier'] = 'archived_boolean';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -336,10 +400,10 @@ function farm_soil_compost_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('Displaying @start - @end of @total'),
     t('No compost found.'),
     t('Latest movement'),
     t('Group membership'),
-    t('Farm asset entity referenced from field_farm_group'),
     t('Farm asset'),
     t('- Choose an operation -'),
     t('Delete'),
@@ -347,9 +411,10 @@ function farm_soil_compost_views_default_views() {
     t('.'),
     t('Name'),
     t('Description'),
+    t('Flags'),
     t('Group'),
     t('Location'),
-    t('Active'),
+    t('Archived'),
     t('All'),
     t('Compost in %1'),
     t('Page'),

@@ -94,6 +94,13 @@ function hook_farm_ui_entities() {
         // pages, and will show a link in the area details popup.
         'areas' => TRUE,
 
+        // The position of an asset ID contextual filter argument in the log
+        // View, which will be used to filter the logs to only include ones
+        // that reference a particular asset. This is used when logs Views are
+        // added to asset record pages, to show logs associated with the asset.
+        // This is optional, and will default to 1 if omitted.
+        'log_view_asset_arg' => 1,
+
         // Define the weight of this log type relative to others (optional).
         // This will be used to sort the log Views displayed on entities, as
         // well as action links displayed at the top of the page.
@@ -240,6 +247,28 @@ function hook_farm_ui_actions() {
     ),
   );
   return $actions;
+}
+
+/**
+ * Alter area link in area details created by Farm UI.
+ *
+ * @param $link
+ *   An array with keys for the link 'href' and 'title', which will be used
+ *   directly in the l() function.
+ * @param $entity_info
+ *   Information about the entity type that the link is being built for. This
+ *   will contain keys:
+ *     - entity_type: The entity type.
+ *     - bundle: The entity bundle.
+ *     - entity_ids: An array of entity IDs that are extracted from the entity
+ *       View results (which may be paged, in which case you only get the
+ *       first page).
+ */
+function hook_farm_area_link_alter(&$link, $entity_info) {
+  $link = array(
+    'title' => 'New title',
+    'href' => 'new-path',
+  );
 }
 
 /**

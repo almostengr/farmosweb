@@ -19,6 +19,14 @@ function farm_livestock_farm_ui_entities() {
       ),
     ),
     'log' => array(
+      'farm_birth' => array(
+        'label' => t('Birth record'),
+        'label_plural' => t('Birth records'),
+        'view' => 'farm_log_birth',
+        'farm_asset' => 'animal',
+        'log_view_asset_arg' => 3,
+        'weight' => 20,
+      ),
       'farm_medical' => array(
         'label' => t('Medical record'),
         'label_plural' => t('Medical records'),
@@ -66,10 +74,43 @@ function farm_livestock_farm_log_categories() {
  */
 function farm_livestock_farm_log_categories_populate($log) {
   $categories = array();
-  if ($log->type == 'farm_medical') {
+  if (in_array($log->type, array('farm_birth', 'farm_medical'))) {
     $categories[] = 'Animals';
   }
   return $categories;
+}
+
+/**
+ * Implements hook_farm_log_prepopulate_reference_fields().
+ */
+function farm_livestock_farm_log_prepopulate_reference_fields($log_type) {
+
+  // Allow field_farm_mother to be prepopulated in birth log forms.
+  if ($log_type == 'farm_birth') {
+    return array(
+      'field_farm_mother' => array(
+        'entity_type' => 'farm_asset',
+        'url_param' => 'farm_asset',
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_farm_log_prepopulate_reference_fields_alter().
+ */
+function farm_livestock_farm_log_prepopulate_reference_fields_alter(&$fields, $log_type) {
+
+  // Do not prepopulate field_farm_asset in birth log forms, because that is
+  // the children reference field. When the "Add birth record" action is
+  // clicked, we assume that the user wants to create a birth record from the
+  // context of a mother animal. So field_farm_mother is prepopulated instead.
+  // See farm_livestock_farm_log_prepopulate_reference_fields() above.
+  if ($log_type == 'farm_birth') {
+    if (!empty($fields['field_farm_asset'])) {
+      unset($fields['field_farm_asset']);
+    }
+  }
 }
 
 /**
@@ -133,6 +174,30 @@ function farm_livestock_feeds_importer_default_alter($importers) {
     );
     $importer_mappings =& $importers[$name]->config['processor']['config']['mappings'];
     $importer_mappings = array_merge($importer_mappings, $mappings);
+  }
+
+  // Add/alter field mappings on birth logs.
+  $name = 'log_farm_birth';
+  if (!empty($importers[$name])) {
+
+    // Add Mother ID mapping.
+    $mappings = array(
+      array(
+        'source' => 'Mother ID',
+        'target' => 'field_farm_mother',
+        'unique' => FALSE,
+        'language' => 'und',
+      ),
+    );
+    $importer_mappings =& $importers[$name]->config['processor']['config']['mappings'];
+    $importer_mappings = array_merge($importer_mappings, $mappings);
+
+    // Change "Asset IDs" to "Children IDs".
+    foreach ($importer_mappings as &$mapping) {
+      if ($mapping['source'] == 'Asset IDs') {
+        $mapping['source'] = 'Children IDs';
+      }
+    }
   }
 }
 
@@ -224,6 +289,137 @@ function farm_livestock_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Implements hook_preprocess_field().
+ */
+function farm_livestock_preprocess_field(&$variables, $hook) {
+
+  // Only act on field_farm_date on animal assets.
+  $element = $variables['element'];
+  if (empty($element['#field_name']) || $element['#field_name'] != 'field_farm_date') {
+    return;
+  }
+  if (!($element['#entity_type'] == 'farm_asset' && $element['#bundle'] == 'animal')) {
+    return;
+  }
+
+  // If the field is blank, bail.
+  if (empty($element['#items'][0]['value']) || empty($variables['items'][0]['#markup'])) {
+    return;
+  }
+
+  // Get the asset ID.
+  if (empty($element['#object']->id)) {
+    return;
+  }
+  $asset_id = $element['#object']->id;
+
+  // Search for this asset's birth log.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'log')
+    ->entityCondition('bundle', 'farm_birth')
+    ->fieldCondition('field_farm_asset', 'target_id', $asset_id);
+  $result = $query->execute();
+
+  // Load only the first log.
+  $log = NULL;
+  if (isset($result['log'])) {
+    $log_ids = array_keys($result['log']);
+    $log_id = reset($log_ids);
+    $log = log_load($log_id);
+  }
+
+  // If a log exists, link the birth date field to it.
+  if (!empty($log)) {
+    $birthdate = $variables['items'][0]['#markup'];
+    $log_uri = entity_uri('log', $log);
+    $variables['items'][0]['#markup'] = '<a href="' . url($log_uri['path']) . '">' . $birthdate . '</a>';
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function farm_livestock_entity_insert($entity, $type) {
+
+  // If this is a birth log, sync children.
+  if ($type == 'log' && $entity->type == 'farm_birth') {
+    farm_livestock_birth_log_sync($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function farm_livestock_entity_update($entity, $type) {
+
+  // If this is a birth log, sync children.
+  if ($type == 'log' && $entity->type == 'farm_birth') {
+    farm_livestock_birth_log_sync($entity);
+  }
+}
+
+/**
+ * Sync information in children animals if a birth log is saved.
+ *
+ * @param Log $log
+ *   The log entity that is being created or updated.
+ */
+function farm_livestock_birth_log_sync($log) {
+
+  // Load log entity metadata wrapper.
+  $log_wrapper = entity_metadata_wrapper('log', $log);
+
+  // Get the mother animal asset ID from the birth log.
+  $mother_id = $log_wrapper->field_farm_mother->getIdentifier();
+
+  // Iterate through the children assets.
+  foreach ($log_wrapper->field_farm_asset->getIterator() as $delta => $child_wrapper) {
+
+    // We will only save the child asset if we need to.
+    $save = FALSE;
+
+    // If the animal's date of birth does not match the timestamp of the birth
+    // log, sync it.
+    if ($child_wrapper->field_farm_date->value() != $log->timestamp) {
+      $child_wrapper->field_farm_date->set($log->timestamp);
+      drupal_set_message(t('<a href="!asset_path">@asset_label</a>\'s date of birth has been updated to match their birth log.', array('!asset_path' => url('farm/asset/' . $child_wrapper->getIdentifier()), '@asset_label' => $child_wrapper->label())));
+      $save = TRUE;
+    }
+
+    // If a mother is specified, make sure that it is listed as one of the
+    // child's parents.
+    if (!empty($mother_id)) {
+
+      // Iterate through the child's parents to see if the mother is listed.
+      $mother_exists = FALSE;
+      foreach ($child_wrapper->field_farm_parent->getIterator() as $delta => $parent_wrapper) {
+        if ($parent_wrapper->getIdentifier() == $mother_id) {
+          $mother_exists = TRUE;
+        }
+      }
+
+      // If the mother is not one of the child's parents, add her.
+      if (!$mother_exists) {
+        $child_wrapper->field_farm_parent[] = $mother_id;
+        $message_args = array(
+          '!mother_path' => url('farm/asset/' . $log_wrapper->field_farm_mother->getIdentifier()),
+          '@mother_label' => $log_wrapper->field_farm_mother->label(),
+          '!child_path' => url('farm/asset/' . $child_wrapper->getIdentifier()),
+          '@child_label' => $child_wrapper->label(),
+        );
+        drupal_set_message(t('<a href="!mother_path">@mother_label</a> was added to <a href="!child_path">@child_label</a>\'s parents.', $message_args));
+        $save = TRUE;
+      }
+    }
+
+    // Save the asset, if necessary.
+    if ($save) {
+      $child_wrapper->save();
+    }
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function farm_livestock_form_farm_asset_form_alter(&$form, &$form_state, $form_id) {
@@ -253,6 +449,7 @@ function farm_livestock_form_farm_asset_form_alter(&$form, &$form_state, $form_i
     '#type' => 'textfield',
     '#title' => t('Weight'),
     '#default_value' => !empty($weight['value']) ? $weight['value'] : '',
+    '#element_validate' => array('element_validate_number'),
   );
   $form['weight']['units'] = array(
     '#type' => 'textfield',
@@ -316,6 +513,199 @@ function farm_livestock_asset_form_submit(array $form, array &$form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function farm_livestock_form_log_form_alter(&$form, &$form_state, $form_id) {
+
+  // Only act on the birth log form.
+  if (!(!empty($form['log']['#value']->type) && $form['log']['#value']->type == 'farm_birth')) {
+    return;
+  }
+
+  // If this is a new birth log form, display a link to the birth quick form
+  // for convenience.
+  if (!empty($form['log']['#value']->is_new)) {
+    drupal_set_message(t('Tip: Use the <a href="@path">Birth Quick Form</a> to quickly record animal births and create child animal records at the same time.', array('@path' => url('farm/quick/birth'))));
+  }
+
+  // Add validation to make sure that the same child is not referenced in
+  // multiple birth logs.
+  $form['#validate'][] = 'farm_livestock_birth_log_form_validate';
+}
+
+/**
+ * Validate handler for the birth log form.
+ *
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form state array.
+ */
+function farm_livestock_birth_log_form_validate(array $form, array &$form_state) {
+
+  // Get the log ID (if available).
+  $log_id = 0;
+  if (!empty($form_state['values']['log']->id)) {
+    $log_id = $form_state['values']['log']->id;
+  }
+
+  // Get the referenced assets.
+  $asset_ids = array();
+  if (!empty($form_state['values']['field_farm_asset'][LANGUAGE_NONE])) {
+    foreach ($form_state['values']['field_farm_asset'][LANGUAGE_NONE] as $asset_reference) {
+      if (empty($asset_reference['target_id'])) {
+        continue;
+      }
+      $asset_ids[] = $asset_reference['target_id'];
+    }
+  }
+
+  // If there are assets, look up birth logs that reference them.
+  if (!empty($asset_ids)) {
+
+    // Perform an entity field query to find logs that reference the assets.
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'log')
+      ->entityCondition('bundle', 'farm_birth')
+      ->propertyCondition('id', $log_id, '!=')
+      ->fieldCondition('field_farm_asset', 'target_id', $asset_ids);
+    $result = $query->execute();
+    if (isset($result['log'])) {
+      $log_ids = array_keys($result['log']);
+      $logs = entity_load('log', $log_ids);
+    }
+
+    // If matching logs were found, set form error(s).
+    if (!empty($logs)) {
+      foreach ($logs as $log) {
+        $log_label = entity_label('log', $log);
+        $log_uri = entity_uri('log', $log);
+        form_set_error('field_farm_asset', t('The existing birth log <a href="@log_path">%log_name</a> already references one or more of the children. More than one birth log cannot reference the same child.', array('%child_name' => '', '@log_path' => url($log_uri['path']), '%log_name' => $log_label)));
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function farm_livestock_action_info() {
+  return array(
+    'farm_livestock_weight_action' => array(
+      'type' => 'farm_asset',
+      'label' => t('Weight'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
+      'aggregate' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Configuration form for farm_livestock_weight_action.
+ *
+ * @param array $context
+ *   The context passed into the action form function.
+ * @param array $form_state
+ *   The form state passed into the action form function.
+ *
+ * @return array
+ *   Returns a form array.
+ */
+function farm_livestock_weight_action_form(array $context, array $form_state) {
+
+  // Date field.
+  $form['date'] = array(
+    '#type' => 'date_select',
+    '#title' => t('Date'),
+    '#date_format' => 'M j Y',
+    '#date_type' => DATE_FORMAT_UNIX,
+    '#date_year_range' => '-10:+3',
+    '#default_value' => date('Y-m-d H:i', REQUEST_TIME),
+    '#required' => TRUE,
+  );
+
+  // Weight.
+  $form['weight'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Weight'),
+    '#element_validate' => array('element_validate_number'),
+    '#required' => TRUE,
+  );
+
+  // Units.
+  $form['units'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Units'),
+    '#autocomplete_path' => 'taxonomy/autocomplete/field_farm_quantity_units',
+    '#required' => TRUE,
+  );
+
+  // Return the form.
+  return $form;
+}
+
+/**
+ * Submit handler for farm_livestock_weight_action configuration form.
+ *
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form state array.
+ *
+ * @return array
+ *   Returns an array that will end up in the action's context.
+ */
+function farm_livestock_weight_action_submit(array $form, array $form_state) {
+
+  // Start to build the context array.
+  $context = array();
+
+  // Convert the date to a timestamp.
+  $timestamp = strtotime($form_state['values']['date']);
+
+  // The action form only includes month, day, and year. If the measurement is
+  // today, then we assume that the current time should also be included.
+  if (date('Ymd', $timestamp) == date('Ymd', REQUEST_TIME)) {
+    $context['timestamp'] = REQUEST_TIME;
+  }
+
+  // Otherwise, the measurement is in the past/future, so don't include a time.
+  else {
+    $context['timestamp'] = $timestamp;
+  }
+
+  // Add the weight and units fields.
+  $context['weight'] = $form_state['values']['weight'];
+  $context['units'] = $form_state['values']['units'];
+
+  // Return the context array.
+  return $context;
+}
+
+/**
+ * Action function for farm_livestock_weight_action.
+ *
+ * Creates a new weight observation log for the specified assets.
+ *
+ * @param array $assets
+ *   An array of asset entities.
+ * @param array $context
+ *   Array with parameters for this action.
+ */
+function farm_livestock_weight_action(array $assets, $context = array()) {
+
+  // If we're missing assets, weight, units, or a timestamp, bail.
+  if (empty($assets) || empty($context['weight']) || empty($context['units']) || empty($context['timestamp'])) {
+    drupal_set_message('Could not set weights because required information was missing.', 'error');
+    return;
+  }
+
+  // Set the animal weights.
+  farm_livestock_weight_set($assets, $context['weight'], $context['units'], $context['timestamp']);
+}
+
+/**
  * Helper function for retrieving the weight of an animal.
  *
  * @param FarmAsset $asset
@@ -329,7 +719,7 @@ function farm_livestock_asset_form_submit(array $form, array &$form_state) {
 function farm_livestock_animal_weight($asset) {
 
   // Load the latest log with a 'weight' quantity measurement for this asset.
-  $log = farm_quantity_asset_log($asset, 'weight');
+  $log = farm_quantity_log_asset($asset, 'weight');
 
   // if no weight observation log exists for asset
   if (empty($log)) {
@@ -353,8 +743,8 @@ function farm_livestock_animal_weight($asset) {
 /**
  * Create a weight measurement log associated with an animal.
  *
- * @param FarmAsset $asset
- *   The asset to add quantity measurements to.
+ * @param array $assets
+ *   The assets to add a weight measurement to.
  * @param string $weight
  *   The animal's current weight.
  * @param string $units
@@ -368,81 +758,32 @@ function farm_livestock_animal_weight($asset) {
  * @return \Log
  *   Returns the log that was created.
  */
-function farm_livestock_weight_set($asset, $weight, $units, $timestamp = REQUEST_TIME, $done = TRUE) {
+function farm_livestock_weight_set($assets, $weight, $units, $timestamp = REQUEST_TIME, $done = TRUE) {
+
+  // The log will be an observation.
+  $log_type = 'farm_observation';
+
+  // Set the name to: "Weight of [assets] is [weight] [units]".
+  $assets_summary = farm_log_entity_label_summary('farm_asset', $assets);
+  $log_name = t('Weight of !assets is @weight @units', array('!assets' => $assets_summary, '@weight' => $weight, '@units' => $units));
+
+  // If $assets isn't an array, wrap it.
+  if (!is_array($assets)) {
+    $assets = array($assets);
+  }
+
+  // Assemble an array of measurements.
+  $measurements = array(
+    array(
+      'measure' => 'weight',
+      'value' => $weight,
+      'units' => $units,
+      'label' => '',
+    ),
+  );
 
   // Create a new log entity.
-  $log = entity_create('log', array('type' => 'farm_observation'));
-
-  // Create an entity wrapper for the log.
-  $log_wrapper = entity_metadata_wrapper('log', $log);
-
-  // Set the name to: "Current weight: [value]".
-  $log_name = t('Current weight') . ': ' . check_plain($weight) . ' ' . check_plain($units);
-  $log_wrapper->name->set($log_name);
-
-  // Set the date.
-  $log_wrapper->timestamp->set($timestamp);
-
-  // Add the asset to the asset reference field.
-  $log_wrapper->field_farm_asset[] = $asset;
-
-  // Create a new quantity field_collection entity attached to the log.
-  $quantity = entity_create('field_collection_item', array('field_name' => 'field_farm_quantity'));
-  $quantity->setHostEntity('log', $log);
-
-  // Create an entity wrapper for the quantity.
-  $quantity_wrapper = entity_metadata_wrapper('field_collection_item', $quantity);
-
-  // Set the quantity measure.
-  $quantity_wrapper->field_farm_quantity_measure->set('weight');
-
-  // Set the quantity value.
-  $value_fraction = fraction_from_decimal($weight);
-  $quantity_wrapper->field_farm_quantity_value->numerator->set($value_fraction->getNumerator());
-  $quantity_wrapper->field_farm_quantity_value->denominator->set($value_fraction->getDenominator());
-
-  // Look up the units taxonomy term.
-  $units_terms = taxonomy_get_term_by_name($units, 'farm_quantity_units');
-
-  // If terms were found, use the first one.
-  if (!empty($units_terms)) {
-    $units_term = reset($units_terms);
-  }
-
-  // If a term wasn't found, create it.
-  else {
-    $farm_units = taxonomy_vocabulary_machine_name_load('farm_quantity_units');
-    $units_term = new stdClass();
-    $units_term->name = check_plain($units);
-    $units_term->vid = $farm_units->vid;
-    taxonomy_term_save($units_term);
-  }
-
-  // Set the quantity units.
-  $quantity_wrapper->field_farm_quantity_units = $units_term;
-
-  // Set the log's done status.
-  if (!empty($done)) {
-    $log_wrapper->done->set(TRUE);
-  }
-  else {
-    $log_wrapper->done->set(FALSE);
-  }
-
-  // Set the log owner.
-  global $user;
-  $log_wrapper->field_farm_log_owner[] = $user;
-
-  // Save the quantity.
-  $quantity_wrapper->save();
-
-  // Save the log.
-  $log_wrapper->save();
-
-  // Set a message.
-  $label = entity_label('log', $log);
-  $uri = entity_uri('log', $log);
-  drupal_set_message('Log created: ' . l($label, $uri['path']));
+  $log = farm_quantity_log_create($log_type, $log_name, $timestamp, $done, $assets, $measurements);
 
   // Return the log.
   return $log;

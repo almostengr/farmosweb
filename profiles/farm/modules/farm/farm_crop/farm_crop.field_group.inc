@@ -21,7 +21,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '9',
+    'weight' => '6',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -50,7 +50,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '-1',
+    'weight' => '4',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -79,7 +79,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '8',
+    'weight' => '5',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -108,7 +108,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '-2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -165,7 +165,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Files',
-    'weight' => '5',
+    'weight' => '6',
     'children' => array(
       0 => 'field_farm_files',
       1 => 'field_farm_images',
@@ -193,7 +193,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Files',
-    'weight' => '5',
+    'weight' => '6',
     'children' => array(
       0 => 'field_farm_files',
       1 => 'field_farm_images',
@@ -226,7 +226,8 @@ function farm_crop_field_group_info() {
       0 => 'field_farm_crop',
       1 => 'field_farm_description',
       2 => 'field_farm_season',
-      3 => 'name',
+      3 => 'field_farm_flags',
+      4 => 'name',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -256,9 +257,10 @@ function farm_crop_field_group_info() {
       0 => 'field_farm_asset',
       1 => 'field_farm_notes',
       2 => 'field_farm_seed_source',
-      3 => 'timestamp',
-      4 => 'group_farm_assignment',
-      5 => 'group_farm_category',
+      3 => 'field_farm_flags',
+      4 => 'timestamp',
+      5 => 'group_farm_assignment',
+      6 => 'group_farm_category',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -287,9 +289,10 @@ function farm_crop_field_group_info() {
     'children' => array(
       0 => 'field_farm_asset',
       1 => 'field_farm_notes',
-      2 => 'timestamp',
-      3 => 'group_farm_assignment',
-      4 => 'group_farm_category',
+      2 => 'field_farm_flags',
+      3 => 'timestamp',
+      4 => 'group_farm_assignment',
+      5 => 'group_farm_category',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -314,7 +317,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Inventory',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_farm_inventory',
     ),
@@ -340,7 +343,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Inventory',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_farm_inventory',
     ),
@@ -384,15 +387,15 @@ function farm_crop_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_movement|log|farm_seeding|form';
-  $field_group->group_name = 'group_farm_movement';
+  $field_group->identifier = 'group_farm_location|log|farm_seeding|form';
+  $field_group->group_name = 'group_farm_location';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_seeding';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
-    'label' => 'Movement',
-    'weight' => '3',
+    'label' => 'Location',
+    'weight' => '2',
     'children' => array(
       0 => 'field_farm_movement',
     ),
@@ -400,25 +403,25 @@ function farm_crop_field_group_info() {
     'format_settings' => array(
       'formatter' => '',
       'instance_settings' => array(
-        'classes' => 'group-farm-movement field-group-field_group_easy_responsive_tabs_nav_item',
+        'classes' => 'group-farm-location field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
       ),
     ),
   );
-  $field_groups['group_farm_movement|log|farm_seeding|form'] = $field_group;
+  $field_groups['group_farm_location|log|farm_seeding|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_movement|log|farm_transplanting|form';
-  $field_group->group_name = 'group_farm_movement';
+  $field_group->identifier = 'group_farm_location|log|farm_transplanting|form';
+  $field_group->group_name = 'group_farm_location';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_transplanting';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
-    'label' => 'Movement',
-    'weight' => '3',
+    'label' => 'Location',
+    'weight' => '2',
     'children' => array(
       0 => 'field_farm_movement',
     ),
@@ -426,12 +429,12 @@ function farm_crop_field_group_info() {
     'format_settings' => array(
       'formatter' => '',
       'instance_settings' => array(
-        'classes' => 'group-farm-movement field-group-field_group_easy_responsive_tabs_nav_item',
+        'classes' => 'group-farm-location field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
       ),
     ),
   );
-  $field_groups['group_farm_movement|log|farm_transplanting|form'] = $field_group;
+  $field_groups['group_farm_location|log|farm_transplanting|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -444,7 +447,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Quantity',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_farm_quantity',
     ),
@@ -470,7 +473,7 @@ function farm_crop_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Quantity',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_farm_quantity',
     ),
@@ -537,9 +540,9 @@ function farm_crop_field_group_info() {
     'children' => array(
       0 => 'group_farm_files',
       1 => 'group_farm_general',
-      2 => 'group_farm_movement',
-      3 => 'group_farm_quantity',
-      4 => 'group_farm_inventory',
+      2 => 'group_farm_quantity',
+      3 => 'group_farm_inventory',
+      4 => 'group_farm_location',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
     'format_settings' => array(
@@ -576,9 +579,9 @@ function farm_crop_field_group_info() {
     'children' => array(
       0 => 'group_farm_files',
       1 => 'group_farm_general',
-      2 => 'group_farm_movement',
-      3 => 'group_farm_quantity',
-      4 => 'group_farm_inventory',
+      2 => 'group_farm_quantity',
+      3 => 'group_farm_inventory',
+      4 => 'group_farm_location',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
     'format_settings' => array(
@@ -608,7 +611,7 @@ function farm_crop_field_group_info() {
   t('General');
   t('Inventory');
   t('Lineage');
-  t('Movement');
+  t('Location');
   t('Quantity');
   t('Tabs');
 

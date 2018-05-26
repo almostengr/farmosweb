@@ -52,9 +52,8 @@ settings[bootstrap_cdn_custom_css_min] = '//cdn.jsdelivr.net/bootswatch/3.3.7/si
 settings[bootstrap_cdn_custom_js] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.js'
 settings[bootstrap_cdn_custom_js_min] = '//cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js'
 
-; Information added by Drupal.org packaging script on 2017-12-31
-version = "7.x-1.0-beta16"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
 core = "7.x"
 project = "farm"
-datestamp = "1514737389"
-
+datestamp = "1526654589"

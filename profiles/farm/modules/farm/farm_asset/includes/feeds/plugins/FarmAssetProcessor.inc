@@ -152,7 +152,7 @@ class FarmAssetProcessor extends FeedsProcessor {
       '#title' => t('Author'),
       '#description' => t('Select the author of the assets to be created. If this is left empty, they will be assigned to the user running the import, or "anonymous" in the case of automated imports.'),
       '#autocomplete_path' => 'user/autocomplete',
-      '#default_value' => empty($author->name) ?  '' : check_plain($author->name),
+      '#default_value' => empty($author->name) ? '' : check_plain($author->name),
     );
     $form['authorize'] = array(
       '#type' => 'checkbox',
@@ -189,6 +189,13 @@ class FarmAssetProcessor extends FeedsProcessor {
         // always overwrites this value (though before invoking
         // hook_entity_presave()).
         $target_asset->feeds_item->asset_changed = feeds_to_unixtime($value, REQUEST_TIME);
+        break;
+      case 'archived':
+        // If the 'archived' property is set to TRUE, then use the current
+        // timestamp.
+        if ($value == TRUE) {
+          $target_asset->archived = REQUEST_TIME;
+        }
         break;
       case 'user_name':
         if ($user = user_load_by_name($value)) {
@@ -240,9 +247,9 @@ class FarmAssetProcessor extends FeedsProcessor {
       'name' => t('Updated date'),
       'description' => t('The Unix timestamp when an asset has been last updated.'),
     );
-    $targets['active'] = array(
-      'name' => t('Active'),
-      'description' => t('Whether an asset is active or not. 1 stands for active, 0 for not active.'),
+    $targets['archived'] = array(
+      'name' => t('archived'),
+      'description' => t('The Unix timestamp when an asset was archived.'),
     );
 
     $this->getHookTargets($targets);

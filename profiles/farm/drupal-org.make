@@ -19,7 +19,7 @@ projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = "2.13"
 
 projects[ctools][subdir] = "contrib"
-projects[ctools][version] = "1.12"
+projects[ctools][version] = "1.14"
 ; Patch to fix Issue #2643108: Entity reference popup not centered in Linux
 projects[ctools][patch][] = "http://www.drupal.org/files/issues/ctools-fix_modal_position_after_ajax-1803104-25.patch"
 
@@ -27,15 +27,13 @@ projects[date][subdir] = "contrib"
 projects[date][version] = "2.10"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = "1.8"
+projects[entity][version] = "1.9"
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = "1.5"
 
 projects[entityreference_view_widget][subdir] = "contrib"
-projects[entityreference_view_widget][version] = "2.0-rc7"
-; Patch to fix blank checkboxes.
-projects[entityreference_view_widget][patch][] = "http://www.drupal.org/files/issues/entityreference_view_widget_suffix-2524296-2.patch"
+projects[entityreference_view_widget][version] = "2.1"
 
 projects[exif_orientation][subdir] = "contrib"
 projects[exif_orientation][version] = "1.2"
@@ -86,19 +84,21 @@ projects[inline_entity_form][subdir] = "contrib"
 projects[inline_entity_form][version] = "1.8"
 
 projects[job_scheduler][subdir] = "contrib"
-projects[job_scheduler][version] = "2.0-alpha3"
+projects[job_scheduler][version] = "2.0"
 
 projects[jquery_update][subdir] = "contrib"
 projects[jquery_update][version] = "3.0-alpha5"
 
 projects[libraries][subdir] = "contrib"
 projects[libraries][version] = "2.3"
+; Patch to fix issue on PHP 7.
+projects[libraries][patch][] = "http://www.drupal.org/files/issues/libraries-version-callback-reference-parameter-fix-2779591-11.patch"
 
 projects[libraries_cdn][subdir] = "contrib"
 projects[libraries_cdn][version] = "1.7"
 
 projects[log][subdir] = "contrib"
-projects[log][version] = "1.10"
+projects[log][version] = "1.12"
 
 projects[multiupload_filefield_widget][subdir] = "contrib"
 projects[multiupload_filefield_widget][version] = "1.13"
@@ -128,6 +128,8 @@ projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_g
 projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_googlemaps_refresh-2644580-19.patch"
 ; Issue #2911611: Update ZoomToSource Component: use new view.animate() method.
 projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_ol4_zoomtosource-2911611-4.patch"
+; Issue #2946213: Google maps do not support fractional zoom
+projects[openlayers][patch][] = "http://www.drupal.org/files/issues/openlayers_googlemaps_fractional_zoom-2946213-2.patch"
 
 projects[openlayers_geolocate_button][subdir] = "contrib"
 projects[openlayers_geolocate_button][version] = "3.2"
@@ -159,12 +161,10 @@ projects[token][subdir] = "contrib"
 projects[token][version] = "1.7"
 
 projects[views][subdir] = "contrib"
-projects[views][version] = "3.18"
+projects[views][version] = "3.20"
 
 projects[views_bulk_operations][subdir] = "contrib"
-projects[views_bulk_operations][version] = "3.4"
-; Issue #2473889: rules component with list as parameter creates a notice
-projects[views_bulk_operations][patch][] = "http://www.drupal.org/files/issues/vbo_missing_account_decl-2473889-7.patch"
+projects[views_bulk_operations][version] = "3.5"
 
 projects[views_data_export][subdir] = "contrib"
 projects[views_data_export][version] = "3.2"
@@ -189,11 +189,7 @@ projects[module_filter][version] = "2.1"
 ; Themes
 ; -----------------------------------------------------------------------------
 
-projects[bootstrap][version] = "3.15"
-; Issue #2634358: Multiple collapsible fieldsets have broken triggers in BS3.3.4
-projects[bootstrap][patch][] = "http://www.drupal.org/files/issues/bootstrap_multifieldset-2634358-10.patch"
-; Issue #2910624: Collapsible fieldsets inside vertical tabs are disabled
-projects[bootstrap][patch][] = "http://www.drupal.org/files/issues/bootstrap_vertical_tabs_collapsible_after_2634358-2910624-4.patch"
+projects[bootstrap][version] = "3.20"
 
 ; -----------------------------------------------------------------------------
 ; Libraries

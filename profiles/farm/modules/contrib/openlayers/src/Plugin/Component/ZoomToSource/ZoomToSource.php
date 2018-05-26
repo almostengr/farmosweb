@@ -57,35 +57,11 @@ class ZoomToSource extends Component {
       '#description' => t('If enabled the zoom to source only will fire once at map build. And ignore change events on the source.'),
     );
 
-    $form['options']['enableAnimations'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Enable animations'),
-      '#default_value' => isset($form_state['item']->options['enableAnimations']) ? $form_state['item']->options['enableAnimations'] : FALSE,
-      '#description' => t('Enable pan and zoom animation.'),
-    );
-
-    $form['options']['animations'] = array(
-      '#type' => 'fieldset',
-      '#title' => 'Animations options',
-      '#states' => array(
-        'visible' => array(
-          'input[name="options[enableAnimations]"' => array('checked' => TRUE),
-        ),
-      ),
-    );
-
-    $form['options']['animations']['pan'] = array(
+    $form['options']['duration'] = array(
       '#type' => 'textfield',
-      '#title' => t('Pan animation duration'),
-      '#default_value' => isset($form_state['item']->options['animations']['pan']) ? $form_state['item']->options['animations']['pan'] : '500',
-      '#description' => t('Duration of the pan animation.'),
-    );
-
-    $form['options']['animations']['zoom'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Zoom animation duration'),
-      '#default_value' => isset($form_state['item']->options['animations']['zoom']) ? $form_state['item']->options['animations']['zoom'] : '500',
-      '#description' => t('Duration of the zoom animation.'),
+      '#title' => t('Animation duration'),
+      '#default_value' => isset($form_state['item']->options['duration']) ? $form_state['item']->options['duration'] : '500',
+      '#description' => t('Duration of the animation.'),
     );
   }
 }

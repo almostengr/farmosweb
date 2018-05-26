@@ -35,6 +35,9 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '25, 50, 100, 250, 500';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
@@ -51,6 +54,7 @@ function farm_log_sale_views_default_views() {
     'field_farm_unit_price' => 'field_farm_unit_price',
     'field_farm_total_price' => 'field_farm_total_price',
     'field_farm_notes' => 'field_farm_notes',
+    'field_farm_flags' => 'field_farm_flags',
     'field_farm_log_category' => 'field_farm_log_category',
     'field_farm_log_owner' => 'field_farm_log_owner',
   );
@@ -150,6 +154,11 @@ function farm_log_sale_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_farm_flags' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_farm_log_category' => array(
       'align' => '',
       'separator' => '',
@@ -162,6 +171,10 @@ function farm_log_sale_views_default_views() {
     ),
   );
   $handler->display->display_options['style_options']['empty_table'] = TRUE;
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result']['id'] = 'result';
+  $handler->display->display_options['footer']['result']['table'] = 'views';
+  $handler->display->display_options['footer']['result']['field'] = 'result';
   /* No results behavior: Global: Unfiltered text */
   $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
@@ -204,6 +217,14 @@ function farm_log_sale_views_default_views() {
       'settings' => array(
         'log' => 0,
       ),
+    ),
+    'action::farm_flags_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'skip_permission_check' => 0,
+      'override_label' => 0,
+      'label' => '',
     ),
     'action::log_done_action' => array(
       'selected' => 1,
@@ -320,6 +341,11 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['fields']['field_farm_notes']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_farm_notes']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['field_farm_notes']['alter']['trim'] = TRUE;
+  /* Field: Field: Flags */
+  $handler->display->display_options['fields']['field_farm_flags']['id'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['field'] = 'field_farm_flags';
+  $handler->display->display_options['fields']['field_farm_flags']['delta_offset'] = '0';
   /* Field: Log: Log category */
   $handler->display->display_options['fields']['field_farm_log_category']['id'] = 'field_farm_log_category';
   $handler->display->display_options['fields']['field_farm_log_category']['table'] = 'field_data_field_farm_log_category';
@@ -349,6 +375,13 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['sorts']['name']['field'] = 'name';
   $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['name']['expose']['label'] = 'Log name';
+  /* Sort criterion: Log: Log ID */
+  $handler->display->display_options['sorts']['id']['id'] = 'id';
+  $handler->display->display_options['sorts']['id']['table'] = 'log';
+  $handler->display->display_options['sorts']['id']['field'] = 'id';
+  $handler->display->display_options['sorts']['id']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['id']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['id']['expose']['label'] = 'Log ID';
   /* Contextual filter: Log: Assets (field_farm_asset) */
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['id'] = 'field_farm_asset_target_id';
   $handler->display->display_options['arguments']['field_farm_asset_target_id']['table'] = 'field_data_field_farm_asset';
@@ -380,6 +413,17 @@ function farm_log_sale_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['label'] = 'Log name';
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  /* Filter criterion: Field: Flags (field_farm_flags) */
+  $handler->display->display_options['filters']['field_farm_flags_value']['id'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['table'] = 'field_data_field_farm_flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['field'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_farm_flags_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator_id'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['label'] = 'Flags';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['operator'] = 'field_farm_flags_value_op';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['identifier'] = 'field_farm_flags_value';
+  $handler->display->display_options['filters']['field_farm_flags_value']['expose']['multiple'] = TRUE;
   /* Filter criterion: Log: Log category (field_farm_log_category) */
   $handler->display->display_options['filters']['field_farm_log_category_tid']['id'] = 'field_farm_log_category_tid';
   $handler->display->display_options['filters']['field_farm_log_category_tid']['table'] = 'field_data_field_farm_log_category';
@@ -480,6 +524,7 @@ function farm_log_sale_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('Displaying @start - @end of @total'),
     t('No sales found.'),
     t('Log'),
     t('- Choose an operation -'),
@@ -500,6 +545,7 @@ function farm_log_sale_views_default_views() {
     t('Unit price'),
     t('Total price'),
     t('Notes'),
+    t('Flags'),
     t('Categories'),
     t('Assigned to'),
     t('All'),

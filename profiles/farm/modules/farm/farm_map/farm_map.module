@@ -50,6 +50,66 @@ function farm_map_menu() {
 }
 
 /**
+ * Build a map render array.
+ *
+ * @param string $map_name
+ *   The machine name of the map.
+ * @param bool $fieldset
+ *   Whether or not to wrap the map in a fieldset.
+ * @param string $title
+ *   Whether or not to wrap the map in a fieldset.
+ * @param bool $collapsed
+ *   Whether or not to collapse the fieldset by default.
+ *
+ * @return array
+ *   Returns a Drupal render array.
+ */
+function farm_map_build($map_name, $fieldset = FALSE, $title = '', $collapsed = FALSE) {
+
+  // Start with an empty build.
+  $build = array();
+
+  // If maps are disabled, bail.
+  if (!variable_get('farm_map_show', TRUE)) {
+    return $build;
+  }
+
+  // Load the map.
+  $map = \Drupal\openlayers\Openlayers::load('Map', $map_name);
+
+  // If the map didn't load, bail.
+  if (empty($map)) {
+    return $build;
+  }
+
+  // Build the map.
+  $build = $map->build();
+
+  // Wrap the map in a fieldset, if desired.
+  if (!empty($fieldset)) {
+
+    // Create the fieldset.
+    $build = array(
+      '#type' => 'fieldset',
+      '#title' => $title,
+      '#collapsible' => TRUE,
+      '#collapsed' => $collapsed,
+      'farm_map' => $build,
+    );
+
+    // Add 'collapsible' and 'collapsed' classes. This is necessary when
+    // rendering the fieldset outside of a form.
+    // See: https://www.drupal.org/node/1099132
+    drupal_add_library('system', 'drupal.collapse');
+    $build['#attributes']['class'][] = 'collapsible';
+    $build['#attributes']['class'][] = 'collapsed';
+  }
+
+  // Return the build.
+  return $build;
+}
+
+/**
  * Map settings form.
  */
 function farm_map_settings_form($form, &$form_state) {
@@ -80,7 +140,7 @@ function farm_map_settings_form($form, &$form_state) {
   $form['farm_map_google_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Google Maps API Key'),
-    '#description' => t('Google Maps layers require that you obtain an API key. Refer to the <a href="@doc">Google Maps API Key</a> documentation on farmOS.org for instructions.', array('@doc' => 'http://farmos.org/hosting/googlemaps')),
+    '#description' => t('Google Maps layers require that you obtain an API key. Refer to the <a href="@doc">Google Maps API Key</a> documentation on farmOS.org for instructions.', array('@doc' => 'https://farmos.org/hosting/googlemaps')),
     '#default_value' => variable_get('farm_map_google_api_key', ''),
   );
 
@@ -164,9 +224,16 @@ function farm_map_geofield_populate(&$entity, $geoms = array()) {
     // Convert to a GeoPHP geometry object.
     $geometry = geoPHP::load($geom, 'wkt');
 
-    // If this is a geometry collection, then extract its components and add
-    // them individually to the array.
-    if ($geometry->geometryType() == 'GeometryCollection') {
+    // If this is a geometry collection, multi-point, multi-linestring, or
+    // multi-polygon, then extract its components and add them individually to
+    // the array.
+    $multigeometries = array(
+      'GeometryCollection',
+      'MultiPoint',
+      'MultiLineSting',
+      'MultiPolygon',
+    );
+    if (in_array($geometry->geometryType(), $multigeometries)) {
 
       // Iterate through the geometry components and add each to the array.
       $components = $geometry->getComponents();
@@ -311,13 +378,13 @@ function farm_map_distance($p1, $p2) {
   if (geoPHP::bcmathInstalled()) {
     $length = bcsqrt(
       bcadd(
-        bcpow(bcmul(bcsub($p1->getX(),$p2->getX()), $lon_deg_len), '2'),
+        bcpow(bcmul(bcsub($p1->getX(), $p2->getX()), $lon_deg_len), '2'),
         bcpow(bcmul(bcsub($p1->getY(), $p2->getY()), $lat_deg_len), '2')
       )
     );
   }
   else {
-    $length = sqrt(pow((($p1->getX() - $p2->getX()) * $lon_deg_len), 2) + pow((($p1->getY()- $p2->getY()) * $lat_deg_len), 2));
+    $length = sqrt(pow((($p1->getX() - $p2->getX()) * $lon_deg_len), 2) + pow((($p1->getY() - $p2->getY()) * $lat_deg_len), 2));
   }
 
   // Return the length as a string.

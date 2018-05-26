@@ -31,10 +31,11 @@ features[field_base][] = field_farm_people
 features[filter][] = farm_format
 features[taxonomy][] = farm_log_categories
 features[variable][] = pathauto_taxonomy_term_farm_log_categories_pattern
+files[] = views/handlers/farm_fields_handler_filter_entity.inc
+files[] = views/handlers/farm_fields_handler_filter_log_owner.inc
 
-; Information added by Drupal.org packaging script on 2017-12-31
-version = "7.x-1.0-beta16"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
 core = "7.x"
 project = "farm"
-datestamp = "1514737389"
-
+datestamp = "1526654589"

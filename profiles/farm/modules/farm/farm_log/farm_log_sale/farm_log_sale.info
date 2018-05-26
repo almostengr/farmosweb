@@ -10,6 +10,7 @@ dependencies[] = entityreference_view_widget
 dependencies[] = farm_asset
 dependencies[] = farm_asset_views
 dependencies[] = farm_fields
+dependencies[] = farm_flags
 dependencies[] = farm_inventory
 dependencies[] = farm_quantity
 dependencies[] = features
@@ -18,6 +19,7 @@ dependencies[] = field_group
 dependencies[] = field_group_easy_responsive_tabs
 dependencies[] = file
 dependencies[] = fraction
+dependencies[] = list
 dependencies[] = log
 dependencies[] = multiupload_filefield_widget
 dependencies[] = multiupload_imagefield_widget
@@ -39,11 +41,11 @@ features[field_group][] = group_farm_attachments|log|farm_sale|form
 features[field_group][] = group_farm_category|log|farm_sale|form
 features[field_group][] = group_farm_general|log|farm_sale|form
 features[field_group][] = group_farm_inventory|log|farm_sale|form
-features[field_group][] = group_farm_references|log|farm_sale|form
 features[field_group][] = group_farm_tabs|log|farm_sale|form
 features[field_instance][] = log-farm_sale-field_farm_asset
 features[field_instance][] = log-farm_sale-field_farm_customer
 features[field_instance][] = log-farm_sale-field_farm_files
+features[field_instance][] = log-farm_sale-field_farm_flags
 features[field_instance][] = log-farm_sale-field_farm_images
 features[field_instance][] = log-farm_sale-field_farm_inventory
 features[field_instance][] = log-farm_sale-field_farm_invoice_number
@@ -58,9 +60,8 @@ features[field_instance][] = log-farm_sale-field_farm_unit_price
 features[log_type][] = farm_sale
 features[views_view][] = farm_log_sale
 
-; Information added by Drupal.org packaging script on 2017-12-31
-version = "7.x-1.0-beta16"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
 core = "7.x"
 project = "farm"
-datestamp = "1514737389"
-
+datestamp = "1526654589"

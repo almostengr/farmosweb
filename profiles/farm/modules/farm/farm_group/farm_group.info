@@ -11,13 +11,16 @@ dependencies[] = farm_asset
 dependencies[] = farm_asset_children
 dependencies[] = farm_asset_views
 dependencies[] = farm_fields
+dependencies[] = farm_flags
 dependencies[] = features
 dependencies[] = field_collection
 dependencies[] = field_group
 dependencies[] = field_group_easy_responsive_tabs
 dependencies[] = file
 dependencies[] = image
+dependencies[] = list
 dependencies[] = multiupload_filefield_widget
+dependencies[] = options
 dependencies[] = text
 dependencies[] = views
 dependencies[] = views_data_export
@@ -33,6 +36,7 @@ features[field_group][] = group_farm_lineage|farm_asset|group|form
 features[field_group][] = group_farm_tabs|farm_asset|group|form
 features[field_instance][] = farm_asset-group-field_farm_description
 features[field_instance][] = farm_asset-group-field_farm_files
+features[field_instance][] = farm_asset-group-field_farm_flags
 features[field_instance][] = farm_asset-group-field_farm_images
 features[field_instance][] = farm_asset-group-field_farm_parent
 features[field_instance][] = field_collection_item-field_farm_membership-field_farm_group
@@ -40,11 +44,11 @@ features[views_view][] = farm_group_entityreference_view
 features[views_view][] = farm_group_log
 features[views_view][] = farm_group_members
 features[views_view][] = farm_groups
+files[] = views/handlers/farm_group_handler_filter_asset_group.inc
 files[] = views/handlers/farm_group_handler_relationship_membership.inc
 
-; Information added by Drupal.org packaging script on 2017-12-31
-version = "7.x-1.0-beta16"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-1.0-beta18"
 core = "7.x"
 project = "farm"
-datestamp = "1514737389"
-
+datestamp = "1526654589"

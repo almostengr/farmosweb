@@ -18,10 +18,10 @@ function farm_log_input_field_group_info() {
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_input';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_references';
+  $field_group->parent_name = 'group_farm_location';
   $field_group->data = array(
     'label' => 'Areas',
-    'weight' => '3',
+    'weight' => '19',
     'children' => array(
       0 => 'field_farm_area',
     ),
@@ -47,23 +47,21 @@ function farm_log_input_field_group_info() {
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_input';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_references';
+  $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Assets',
     'weight' => '2',
     'children' => array(
       0 => 'field_farm_asset',
+      1 => 'field_farm_movement',
     ),
-    'format_type' => 'fieldset',
+    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
-      'label' => 'Assets',
+      'formatter' => '',
       'instance_settings' => array(
+        'classes' => '',
         'required_fields' => 1,
-        'id' => '',
-        'classes' => 'group-farm-assets field-group-fieldset',
-        'description' => '',
       ),
-      'formatter' => 'open',
     ),
   );
   $field_groups['group_farm_assets|log|farm_input|form'] = $field_group;
@@ -79,7 +77,7 @@ function farm_log_input_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Assignment',
-    'weight' => '9',
+    'weight' => '10',
     'children' => array(
       0 => 'field_farm_log_owner',
     ),
@@ -108,7 +106,7 @@ function farm_log_input_field_group_info() {
   $field_group->parent_name = 'group_farm_general';
   $field_group->data = array(
     'label' => 'Category',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(
       0 => 'field_farm_log_category',
     ),
@@ -137,7 +135,7 @@ function farm_log_input_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Files',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
       0 => 'field_farm_files',
       1 => 'field_farm_images',
@@ -174,10 +172,11 @@ function farm_log_input_field_group_info() {
       4 => 'field_farm_notes',
       5 => 'field_farm_date_purchase',
       6 => 'field_farm_lot_number',
-      7 => 'name',
-      8 => 'timestamp',
-      9 => 'group_farm_category',
-      10 => 'group_farm_assignment',
+      7 => 'field_farm_flags',
+      8 => 'name',
+      9 => 'timestamp',
+      10 => 'group_farm_category',
+      11 => 'group_farm_assignment',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
@@ -199,20 +198,23 @@ function farm_log_input_field_group_info() {
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_input';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_tabs';
+  $field_group->parent_name = 'group_farm_location';
   $field_group->data = array(
     'label' => 'Geometry',
-    'weight' => '4',
+    'weight' => '20',
     'children' => array(
       0 => 'field_farm_geofield',
     ),
-    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
+    'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => '',
+      'label' => 'Geometry',
       'instance_settings' => array(
-        'classes' => 'group-farm-geometry field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
+        'id' => '',
+        'classes' => '',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $field_groups['group_farm_geometry|log|farm_input|form'] = $field_group;
@@ -228,7 +230,7 @@ function farm_log_input_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Inventory',
-    'weight' => '6',
+    'weight' => '7',
     'children' => array(
       0 => 'field_farm_inventory',
     ),
@@ -246,28 +248,29 @@ function farm_log_input_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_movement|log|farm_input|form';
-  $field_group->group_name = 'group_farm_movement';
+  $field_group->identifier = 'group_farm_location|log|farm_input|form';
+  $field_group->group_name = 'group_farm_location';
   $field_group->entity_type = 'log';
   $field_group->bundle = 'farm_input';
   $field_group->mode = 'form';
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
-    'label' => 'Movement',
-    'weight' => '5',
+    'label' => 'Location',
+    'weight' => '4',
     'children' => array(
-      0 => 'field_farm_movement',
+      0 => 'group_farm_areas',
+      1 => 'group_farm_geometry',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav_item',
     'format_settings' => array(
       'formatter' => '',
       'instance_settings' => array(
-        'classes' => 'group-farm-movement field-group-field_group_easy_responsive_tabs_nav_item',
+        'classes' => 'group-farm-location field-group-field_group_easy_responsive_tabs_nav_item',
         'required_fields' => 1,
       ),
     ),
   );
-  $field_groups['group_farm_movement|log|farm_input|form'] = $field_group;
+  $field_groups['group_farm_location|log|farm_input|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -280,7 +283,7 @@ function farm_log_input_field_group_info() {
   $field_group->parent_name = 'group_farm_tabs';
   $field_group->data = array(
     'label' => 'Quantity',
-    'weight' => '3',
+    'weight' => '5',
     'children' => array(
       0 => 'field_farm_quantity',
     ),
@@ -298,33 +301,6 @@ function farm_log_input_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_farm_references|log|farm_input|form';
-  $field_group->group_name = 'group_farm_references';
-  $field_group->entity_type = 'log';
-  $field_group->bundle = 'farm_input';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_farm_tabs';
-  $field_group->data = array(
-    'label' => 'References',
-    'weight' => '2',
-    'children' => array(
-      0 => 'group_farm_areas',
-      1 => 'group_farm_assets',
-    ),
-    'format_type' => 'field_group_easy_responsive_tabs_nav_item',
-    'format_settings' => array(
-      'formatter' => '',
-      'instance_settings' => array(
-        'classes' => 'group-farm-references field-group-field_group_easy_responsive_tabs_nav_item',
-        'required_fields' => 1,
-      ),
-    ),
-  );
-  $field_groups['group_farm_references|log|farm_input|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
   $field_group->identifier = 'group_farm_tabs|log|farm_input|form';
   $field_group->group_name = 'group_farm_tabs';
   $field_group->entity_type = 'log';
@@ -335,13 +311,12 @@ function farm_log_input_field_group_info() {
     'label' => 'Tabs',
     'weight' => '0',
     'children' => array(
-      0 => 'group_farm_files',
-      1 => 'group_farm_general',
-      2 => 'group_farm_references',
-      3 => 'group_farm_geometry',
-      4 => 'group_farm_movement',
-      5 => 'group_farm_quantity',
-      6 => 'group_farm_inventory',
+      0 => 'group_farm_assets',
+      1 => 'group_farm_files',
+      2 => 'group_farm_general',
+      3 => 'group_farm_quantity',
+      4 => 'group_farm_inventory',
+      5 => 'group_farm_location',
     ),
     'format_type' => 'field_group_easy_responsive_tabs_nav',
     'format_settings' => array(
@@ -373,9 +348,8 @@ function farm_log_input_field_group_info() {
   t('General');
   t('Geometry');
   t('Inventory');
-  t('Movement');
+  t('Location');
   t('Quantity');
-  t('References');
   t('Tabs');
 
   return $field_groups;

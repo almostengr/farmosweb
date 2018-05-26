@@ -136,7 +136,7 @@ function farm_log_input_field_default_field_instances() {
         'label_position' => 'above',
         'no_fieldset' => 0,
         'text_parts' => array(),
-        'year_range' => '-3:+3',
+        'year_range' => '-10:+3',
       ),
       'type' => 'date_select',
       'weight' => 6,
@@ -155,7 +155,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_table',
-        'weight' => 15,
+        'weight' => 16,
       ),
       'token' => array(
         'label' => 'above',
@@ -186,6 +186,37 @@ function farm_log_input_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'log-farm_input-field_farm_flags'.
+  $field_instances['log-farm_input-field_farm_flags'] = array(
+    'bundle' => 'farm_input',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Add flags to this log to enable better sorting and filtering of records.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 12,
+      ),
+    ),
+    'entity_type' => 'log',
+    'field_name' => 'field_farm_flags',
+    'label' => 'Flags',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'log-farm_input-field_farm_geofield'.
   $field_instances['log-farm_input-field_farm_geofield'] = array(
     'bundle' => 'farm_input',
@@ -201,7 +232,7 @@ function farm_log_input_field_default_field_instances() {
           'map_layer_preset' => 'farm_map_geofield_formatter:openlayers_geofield_layer_formatter',
         ),
         'type' => 'openlayers_geofield',
-        'weight' => 16,
+        'weight' => 17,
       ),
       'token' => array(
         'label' => 'above',
@@ -273,7 +304,7 @@ function farm_log_input_field_default_field_instances() {
           'colorbox_node_style_first' => 'large',
         ),
         'type' => 'colorbox',
-        'weight' => 14,
+        'weight' => 15,
       ),
       'token' => array(
         'label' => 'above',
@@ -474,7 +505,7 @@ function farm_log_input_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 12,
+        'weight' => 13,
       ),
     ),
     'entity_type' => 'log',
@@ -508,7 +539,7 @@ function farm_log_input_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 13,
+        'weight' => 14,
       ),
     ),
     'entity_type' => 'log',
@@ -630,7 +661,7 @@ function farm_log_input_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -715,6 +746,7 @@ function farm_log_input_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Add flags to this log to enable better sorting and filtering of records.');
   t('Application method');
   t('Areas');
   t('Assets');
@@ -722,6 +754,7 @@ function farm_log_input_field_default_field_instances() {
   t('Date purchased');
   t('Describe the quantity of this input, using a value, unit, and measure. For example, if you used 10 gallons of liquid fertilizer, enter "10" in the Value field, and "gallons" in the Units field. As you type the unit, you will have the option of selecting from units that you\'ve entered in the past.');
   t('Files');
+  t('Flags');
   t('Geometry');
   t('How was this input applied?');
   t('If the manufacturer assigned this input a lot number, enter it here.');

@@ -90,53 +90,86 @@ function farm_theme_preprocess_menu_tree(&$variables) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_preprocess_views_view().
  */
-function farm_theme_form_alter(&$form, &$form_state, $form_id) {
+function farm_theme_preprocess_views_view(&$vars) {
 
-  // Views Exposed (filters and sort) form:
-  if ($form_id == 'views_exposed_form') {
-
-    /* Wrap the exposed form in a Bootstrap collapsible panel. */
-
-    // Collapsible panel ID.
-    $panel_head_id = $form['#id'] . '-panel-heading';
-    $panel_body_id = $form['#id'] . '-panel-body';
-
-    // Collapse by default.
-    $collapse = TRUE;
-
-    // If the form was submitted (if there are values in $_GET other than 'q'),
-    // do not collapse the form.
-    if (count($_GET) > 1) {
-      $collapse = FALSE;
+  // If the View has a 'footer' or 'feed_icon', wrap it in a div with the
+  // 'text-center' class.
+  $center_elements = array(
+    'footer',
+    'feed_icon',
+  );
+  foreach ($center_elements as $element) {
+    if (!empty($vars[$element])) {
+      $vars[$element] = '<div class="text-center">' . $vars[$element] . '</div>';
     }
+  }
+}
 
-    // Set attributes depending on the collapsed state (used in HTML below).
-    if ($collapse) {
-      $collapse_class = '';
-      $aria_expanded = 'false';
-    } else {
-      $collapse_class = ' in';
-      $aria_expanded = 'true';
-    }
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function farm_theme_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
 
-    // Form prefix HTML:
-    $form['#prefix'] = '
+  /* Wrap the exposed form in a Bootstrap collapsible panel. */
+
+  // Collapsible panel ID.
+  $panel_head_id = $form['#id'] . '-panel-heading';
+  $panel_body_id = $form['#id'] . '-panel-body';
+
+  // Collapse by default.
+  $collapse = TRUE;
+
+  // If the form was submitted (if there are values in $_GET other than 'q'),
+  // do not collapse the form.
+  if (count($_GET) > 1) {
+    $collapse = FALSE;
+  }
+
+  // Set attributes depending on the collapsed state (used in HTML below).
+  if ($collapse) {
+    $collapse_class = '';
+    $aria_expanded = 'false';
+  }
+  else {
+    $collapse_class = ' in';
+    $aria_expanded = 'true';
+  }
+
+  // Form prefix HTML:
+  $form['#prefix'] = '
 <fieldset class="panel panel-default collapsible">
-  <legend class="panel-heading" role="tab" id="' . $panel_head_id . '">
-    <a class="panel-title fieldset-legend collapsed" data-toggle="collapse" href="#' . $panel_body_id . '" aria-expanded="' . $aria_expanded . '" aria-controls="' . $panel_body_id . '">
-      Filter/Sort
-    </a>
-  </legend>
-  <div id="' . $panel_body_id . '" class="panel-collapse collapse' . $collapse_class . '" role="tabpanel" aria-labelledby="' . $panel_head_id . '">
-    <div class="panel-body">';
+<legend class="panel-heading" role="tab" id="' . $panel_head_id . '">
+  <a class="panel-title fieldset-legend collapsed" data-toggle="collapse" href="#' . $panel_body_id . '" aria-expanded="' . $aria_expanded . '" aria-controls="' . $panel_body_id . '">
+    Filter/Sort
+  </a>
+</legend>
+<div id="' . $panel_body_id . '" class="panel-collapse collapse' . $collapse_class . '" role="tabpanel" aria-labelledby="' . $panel_head_id . '">
+  <div class="panel-body">';
 
-    // Form suffix HTML:
-    $form['#suffix'] = '
-    </div>
+  // Form suffix HTML:
+  $form['#suffix'] = '
   </div>
+</div>
 </fieldset>';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function farm_theme_form_log_form_alter(&$form, &$form_state, $form_id) {
+
+  // Collapse the "Movement" and "Group Membership" fieldsets in log forms.
+  $collapse_fieldsets = array(
+    'field_farm_movement',
+    'field_farm_membership',
+  );
+  foreach ($collapse_fieldsets as $fieldset) {
+    if (!empty($form[$fieldset][LANGUAGE_NONE][0])) {
+      $form[$fieldset][LANGUAGE_NONE][0]['#collapsible'] = TRUE;
+      $form[$fieldset][LANGUAGE_NONE][0]['#collapsed'] = TRUE;
+    }
   }
 }
 
@@ -151,12 +184,15 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
   // Move VBO buttons to the bottom.
   $form['select']['#weight'] = 100;
 
-  // Move the "Assign", "Clone", "Group", and "Delete" actions to the end of
-  // the list.
+  // Move the "Assign", "Clone", "Group", "Archive", "Unarchive", and "Delete"
+  // actions to the end of the list.
   $end_actions = array(
+    'action::farm_flags_action',
     'action::farm_log_assign_action',
     'action::log_clone_action',
     'action::farm_group_asset_membership_action',
+    'action::farm_asset_archive_action',
+    'action::farm_asset_unarchive_action',
     'action::views_bulk_operations_delete_item',
   );
   $i = 0;
@@ -171,7 +207,7 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
     'views_bulk_operations_config_form',
     'views_bulk_operations_confirm_form',
   );
-  if (!empty($form_state['step']) && in_array($form_state['step'],  $vbo_steps)) {
+  if (!empty($form_state['step']) && in_array($form_state['step'], $vbo_steps)) {
 
     // Set the title to '<none>' so that Views doesn't do drupal_set_title().
     // See https://www.drupal.org/node/2905171.
@@ -193,13 +229,17 @@ function farm_theme_views_bulk_operations_form_alter(&$form, &$form_state, $vbo)
 function farm_theme_bootstrap_colorize_text_alter(&$texts) {
 
   // Colorize VBO action buttons.
+  $texts['matches'][t('Flag')] = 'info';
   $texts['matches'][t('Move')] = 'success';
+  $texts['matches'][t('Weight')] = 'default';
   $texts['matches'][t('Group')] = 'warning';
   $texts['matches'][t('Done')] = 'success';
   $texts['matches'][t('Not Done')] = 'danger';
   $texts['matches'][t('Reschedule')] = 'warning';
   $texts['matches'][t('Assign')] = 'info';
   $texts['matches'][t('Clone')] = 'default';
+  $texts['matches'][t('Archive')] = 'danger';
+  $texts['matches'][t('Unarchive')] = 'default';
   $texts['matches'][t('Delete')] = 'primary';
 }
 
@@ -209,14 +249,43 @@ function farm_theme_bootstrap_colorize_text_alter(&$texts) {
 function farm_theme_bootstrap_iconize_text_alter(&$texts) {
 
   // Iconize VBO action buttons.
+  $texts['matches'][t('Flag')] = 'flag';
   $texts['matches'][t('Move')] = 'globe';
+  $texts['matches'][t('Weight')] = 'scale';
   $texts['matches'][t('Group')] = 'bookmark';
   $texts['matches'][t('Done')] = 'check';
   $texts['matches'][t('Not Done')] = 'unchecked';
   $texts['matches'][t('Reschedule')] = 'calendar';
   $texts['matches'][t('Assign')] = 'user';
   $texts['matches'][t('Clone')] = 'plus';
+  $texts['matches'][t('Archive')] = 'eye-close';
+  $texts['matches'][t('Unarchive')] = 'eye-open';
   $texts['matches'][t('Delete')] = 'trash';
+}
+
+/**
+ * Implements hook_farm_flags_classes_alter().
+ */
+function farm_theme_farm_flags_classes_alter($flag, &$classes) {
+
+  // Render all flags as extra small buttons using Bootstrap's classes.
+  $classes[] = 'btn';
+  $classes[] = 'btn-xs';
+
+  // Add a button style class based on the flag used.
+  switch ($flag) {
+    case 'priority':
+      $classes[] = 'btn-primary';
+      break;
+    case 'monitor':
+      $classes[] = 'btn-danger';
+      break;
+    case 'review':
+      $classes[] = 'btn-warning';
+      break;
+    default:
+      $classes[] = 'btn-default';
+  }
 }
 
 /**
@@ -287,6 +356,21 @@ function farm_theme_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Implements hook_entityreference_view_widget_rows_alter().
+ */
+function farm_theme_entityreference_view_widget_rows_alter(&$rows, $entities, $settings) {
+
+  // Fix "Checkbox titles missing with Bootstrap theme" in Entity Reference
+  // View Widget. See issue:
+  // https://www.drupal.org/project/entityreference_view_widget/issues/2524296
+  foreach (element_children($rows) as $key => $child) {
+    if ($rows[$key]['target_id']['#type'] == 'checkbox') {
+      $rows[$key]['target_id']['#title'] = $rows[$key]['target_id']['#field_suffix'];
+    }
+  }
+}
+
+/**
  * Implements hook_page_alter().
  */
 function farm_theme_page_alter(&$page) {
@@ -337,7 +421,7 @@ function farm_theme_preprocess_page(&$vars) {
   $vars['page']['footer']['farmos'] = array(
     '#type' => 'markup',
     '#prefix' => '<div style="text-align: center;"><small>',
-    '#markup' => t('Powered by') . ' ' . l(t('farmOS'), 'http://farmos.org'),
+    '#markup' => t('Powered by') . ' ' . l(t('farmOS'), 'https://farmos.org'),
     '#suffix' => '</small></div>',
   );
 }
