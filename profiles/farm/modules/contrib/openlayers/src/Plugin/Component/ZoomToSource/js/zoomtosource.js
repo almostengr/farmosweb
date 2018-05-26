@@ -40,8 +40,16 @@ Drupal.openlayers.pluginManager.register({
       if (!data.opt.process_once || !data.opt.processed_once) {
         data.opt.processed_once = true;
 
-        var animate_options = {
-          duration: data.opt.duration,
+        if (data.opt.enableAnimations === 1) {
+          var animationPan = ol.animation.pan({
+            duration: data.opt.animations.pan,
+            source: map.getView().getCenter()
+          });
+          var animationZoom = ol.animation.zoom({
+            duration: data.opt.animations.zoom,
+            resolution: map.getView().getResolution()
+          });
+          map.beforeRender(animationPan, animationZoom);
         }
 
         var maxExtent = calculateMaxExtent();
@@ -51,16 +59,15 @@ Drupal.openlayers.pluginManager.register({
 
         if (data.opt.zoom !== 'disabled') {
           if (data.opt.zoom !== 'auto') {
-            animate_options.zoom = data.opt.zoom
+            map.getView().setZoom(data.opt.zoom);
           } else {
-            animate_options.zoom = map.getView().getZoom();
-            if (data.opt.max_zoom !== undefined && data.opt.max_zoom > 0 && animate_options.zoom > data.opt.max_zoom) {
-              animate_options.zoom = data.opt.max_zoom;
+            var zoom = map.getView().getZoom();
+            if (data.opt.max_zoom !== undefined && data.opt.max_zoom > 0 && zoom > data.opt.max_zoom) {
+              zoom = data.opt.max_zoom;
             }
+            map.getView().setZoom(zoom);
           }
         }
-
-        map.getView().animate(animate_options);
       }
     };
 

@@ -21,16 +21,8 @@ Drupal.openlayers.pluginManager.register({
       var center = ol.proj.transform(data.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
       gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
     });
-    var mapTypeId = gmap.getMapTypeId();
     data.map.getView().on('change:resolution', function() {
       gmap.setZoom(data.map.getView().getZoom());
-
-      // If gmap won't zoom in any farther, switch to ROADMAP.
-      if (gmap.getZoom() < data.map.getView().getZoom()) {
-        gmap.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-      } else {
-        gmap.setMapTypeId(mapTypeId);
-      }
     });
 
     data.map.getView().setCenter(data.map.getView().getCenter());
@@ -66,17 +58,17 @@ Drupal.openlayers.pluginManager.register({
    */
   scriptLoading: false,
   attach: function(context, settings) {
-    // There seem cases in which google is already defind, but the loading isn't
+    // There are cases in which google is already defined, but the loading isn't
     // finished, so make sure we'll wait till the loading is complete before
     // calling the initialize function ourselves.
     if (Drupal.openlayers.pluginManager.getPlugin('openlayers.Source:GoogleMaps').scriptLoading) {
       return;
     }
-    if (typeof google === 'undefined') {
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
       Drupal.openlayers.pluginManager.getPlugin('openlayers.Source:GoogleMaps').scriptLoading = true;
 
       var params = {
-        v: 3.29,
+        v: 3,
         callback: 'Drupal.openlayers.openlayers_source_internal_googlemaps_initialize'
       };
 
@@ -123,7 +115,7 @@ Drupal.openlayers.pluginManager.register({
  */
 Drupal.openlayers.openlayers_source_internal_googlemaps_initialize = function() {
   Drupal.openlayers.pluginManager.getPlugin('openlayers.Source:GoogleMaps').scriptLoading = false;
-  jQuery('.openlayers.gmap-map').each(function() {
+  jQuery('.openlayers.gmap-map').once('gmap-init').each(function() {
     var map_id = jQuery(this).attr('id').replace('gmap-', '');
     var callback = Drupal.openlayers.asyncIsReadyCallbacks[map_id.replace(/[^0-9a-z]/gi, '_')];
     if (callback !== undefined) {
@@ -131,45 +123,3 @@ Drupal.openlayers.openlayers_source_internal_googlemaps_initialize = function() 
     }
   });
 };
-
-/**
- * Ensure that maps loaded into invisible elements are refreshed properly.
- */
-(function ($) {
-  Drupal.behaviors.openlayers_source_googlemaps_refresh = {
-    attach: function (context, settings) {
-
-      // Refresh maps inside fieldsets when they are opened.
-      $('fieldset:has(.openlayers-container)', context).bind('collapsed', function (e) {
-        var fieldset = this;
-        if (!e.value) {
-          Drupal.behaviors.openlayers_source_googlemaps_refresh.map_refresh(fieldset);
-        }
-      });
-
-      // Refresh maps inside Easy Responsive Tab when they are activated.
-      var wrapper_class = '.field-group-easy-responsive-tabs-nav-wrapper';
-      jQuery(wrapper_class + ' [role=tab]', context).on('tabactivate', function(e, tab) {
-        var map_container = $(tab).closest(wrapper_class).find('.resp-tab-content-active .openlayers-container');
-        if (map_container.length !== 0) {
-          Drupal.behaviors.openlayers_source_googlemaps_refresh.map_refresh(map_container);
-        }
-      });
-    },
-
-    // Define a function for refreshing maps. Dispatch a window resize event
-    // to cause Google Maps to refresh, then update Openlayers map size after
-    // a brief pause.
-    map_refresh: function(context) {
-      window.dispatchEvent(new Event('resize'));
-      window.setTimeout(function() {
-        $('.openlayers-map', context).each(function (index, elem) {
-          var map = Drupal.openlayers.getMapById($(elem).attr('id'));
-          if (map && map.map !== undefined) {
-            map.map.updateSize();
-          }
-        });
-      }, 250);
-    }
-  };
-}(jQuery));
