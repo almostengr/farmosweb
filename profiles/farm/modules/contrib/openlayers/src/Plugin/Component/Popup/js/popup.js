@@ -93,6 +93,9 @@ Drupal.openlayers.pluginManager.register({
           container.style.display = 'block';
           overlay.setPosition(evt.coordinate);
         }
+
+        // Allow other code to be triggered when a popup is displayed.
+        jQuery(document).trigger('openlayers.Component:Popup', { 'overlay': overlay, 'evt': evt });
       }
     });
   }

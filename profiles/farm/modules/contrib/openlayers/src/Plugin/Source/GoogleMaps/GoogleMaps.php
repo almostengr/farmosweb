@@ -45,7 +45,7 @@ class GoogleMaps extends Source {
     $form['options']['channel'] = array(
       '#title' => t('Channel'),
       '#type' => 'textfield',
-      '#default_value' => $this->getOption('channel', ''),
+      '#default_value' => $this->getOption('client', ''),
     );
     $form['options']['mapTypeId'] = array(
       '#title' => t('Mapy Type'),

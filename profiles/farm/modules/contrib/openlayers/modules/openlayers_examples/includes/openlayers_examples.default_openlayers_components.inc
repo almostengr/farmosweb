@@ -66,13 +66,9 @@ function openlayers_examples_default_openlayers_components() {
   $ol_component->factory_service = 'openlayers.Component:ZoomToSource';
   $ol_component->options = array(
     'source' => array('views_geojson_openlayers_examples_geojson_feed_2'),
-    'animations' => array(
-      'pan' => '500',
-      'zoom' => '500',
-    ),
+    'duration' => '500',
     'zoom' => 'auto',
     'max_zoom' => 15,
-    'enableAnimations' => 1,
     'process_once' => 1,
   );
   $export['openlayers_examples_component_zoom_to_source'] = $ol_component;
@@ -88,12 +84,8 @@ function openlayers_examples_default_openlayers_components() {
     'source' => array(
       'openlayers_examples_source_geojson_london_tube_lines',
     ),
-    'animations' => array(
-      'pan' => 500,
-      'zoom' => 500,
-    ),
+    'duration' => '500',
     'zoom' => 'auto',
-    'enableAnimations' => 1,
     'max_zoom' => 15,
     'process_once' => 1,
   );
@@ -535,12 +527,8 @@ osm.on(\'postcompose\', function(event) {
     'source' => array(
       'openlayers_examples_source_geojson_london_tube_lines' => 'openlayers_examples_source_geojson_london_tube_lines',
     ),
-    'animations' => array(
-      'pan' => 500,
-      'zoom' => 500,
-    ),
+    'duration' => '500',
     'zoom' => 'auto',
-    'enableAnimations' => 1,
     'max_zoom' => 15,
     'process_once' => 1,
   );
